@@ -1,0 +1,55 @@
+---
+// „Zkus si to bez účtu": izometrický node + simulace nasazení. Ceny bere z pricing.json.
+import pricing from "../data/pricing.json";
+---
+<section id="zkus" class="tryit">
+  <div class="wrap grid">
+    <div class="iso reveal" aria-hidden="true">
+      <div class="status">Node: <b id="nodest">3 appky · 1,1 GB volné</b></div>
+      <div class="node" id="node"></div>
+    </div>
+    <div class="form reveal" data-i="1">
+      <div class="step">ZKUS SI TO</div>
+      <h2>Bez účtu, bez karty.</h2>
+      <p class="sub" style="font-size:15px">Napiš název repa — ukázka předvede, co Grove Cloud udělá: detekci stacku, cenu a nasazení na node vedle. Ostré nasazení pak trvá stejně dlouho.</p>
+      <form class="row" id="tryform">
+        <label class="sr" for="repo">Název GitHub repa</label>
+        <input id="repo" name="repo" placeholder="grovetechai/moje-appka" value="grovetechai/defender-example" autocomplete="off" />
+        <button class="btn" type="submit">Nasadit</button>
+      </form>
+      <div class="detect" id="detect" aria-live="polite"></div>
+      <pre class="log mono" id="log">$ čekám…</pre>
+    </div>
+  </div>
+  <script type="application/json" id="pricing-data" set:html={JSON.stringify(pricing)}></script>
+</section>
+<script src="../scripts/tryit.ts"></script>
+<style>
+  .tryit { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .iso { position: relative; height: 460px; perspective: 1200px; }
+  .node { position: absolute; left: 50%; bottom: 40px; width: 300px; height: 300px; transform: translateX(-50%) rotateX(58deg) rotateZ(45deg); transform-style: preserve-3d; background: linear-gradient(135deg, #0f2a6b, #071a40); border-radius: 10px; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 40px 60px -20px rgba(8,32,84,.5); }
+  .node::after { content: "Hetzner node · Norimberk · EU"; position: absolute; left: 12px; top: 12px; font-size: 10px; letter-spacing: .14em; color: #9eb4e6; transform: rotateZ(-45deg) rotateX(-58deg); transform-origin: left top; white-space: nowrap; }
+  .status { position: absolute; left: 0; top: 0; font-size: 12px; color: var(--muted); }
+  .status b { color: var(--navy); }
+  .form { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 26px; }
+  .row { display: flex; gap: 10px; margin-top: 18px; }
+  .row input { flex: 1; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 15px; font-family: inherit; min-width: 0; }
+  .row input:focus-visible { outline: 3px solid var(--blue2); outline-offset: 1px; }
+  .detect { margin-top: 14px; font-size: 13px; color: var(--muted); min-height: 20px; }
+  .detect :global(b) { color: var(--navy); }
+  .log { margin-top: 14px; background: #0b1226; color: #c9d4ee; border-radius: 10px; padding: 14px; font-size: 12px; line-height: 1.7; min-height: 130px; white-space: pre-wrap; }
+  .log :global(.ok) { color: #59d98f; } .log :global(.red) { color: var(--red); }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .iso { height: 360px; } }
+</style>
+<style is:global>
+  /* Krabice appek na nodu — vkládá je tryit.ts. */
+  .gc-box { position: absolute; width: 90px; height: 90px; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.2,.9,.2,1.05), opacity .5s; }
+  .gc-box .f { position: absolute; inset: 0; background: var(--c); border: 1px solid rgba(255,255,255,.15); }
+  .gc-box .top { transform: translateZ(var(--h)); }
+  .gc-box .top span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; transform: rotateZ(-45deg); text-align: center; padding: 6px; line-height: 1.15; word-break: break-word; }
+  .gc-box .s1 { top: 100%; left: 0; width: 90px; height: var(--h); transform-origin: top; transform: rotateX(90deg); background: color-mix(in srgb, var(--c) 62%, #000); }
+  .gc-box .s2 { left: 100%; top: 0; width: var(--h); height: 90px; transform-origin: left; transform: rotateY(-90deg); background: color-mix(in srgb, var(--c) 80%, #000); }
+  .gc-box.drop { transform: translateZ(600px); opacity: 0; }
+</style>

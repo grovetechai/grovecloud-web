@@ -1,0 +1,201 @@
+{
+  "generatedAt": "2026-09-04T07:22:06.106Z",
+  "source": "shared/grovecloud-pricing.ts + shared/grovecloud-plans.ts",
+  "eurCzk": 25,
+  "tiers": [
+    {
+      "key": "starter",
+      "name": "Starter",
+      "tagline": "Statický web nebo SPA za stovku. Bez starostí a bez serveru.",
+      "sla": "bez garance dostupnosti",
+      "response": "reakce do 3 pracovních dnů",
+      "includes": [
+        "Hosting statického webu nebo SPA",
+        "Adresa a certifikát v ceně",
+        "Automatický bezpečnostní sken po každém nasazení",
+        "Denní zálohy"
+      ],
+      "operator": "Bez AI operátora — hlídáme dostupnost, zásahy řešíme ručně",
+      "highlighted": false,
+      "comingSoon": false,
+      "onRequest": false
+    },
+    {
+      "key": "host",
+      "name": "Secure Host",
+      "tagline": "Appka běží a je hlídaná. Základ pro klidný provoz.",
+      "sla": "99,5 % dostupnost",
+      "response": "reakce do 1 pracovního dne",
+      "includes": [
+        "Hosting a provoz aplikace",
+        "Nepřetržitá bezpečnostní ochrana (Defender)",
+        "Aktualizace, záplaty a zálohy v ceně",
+        "AI podpora (stavové dotazy, vysvětlení)"
+      ],
+      "operator": "AI operátor L1 — diagnostika a návrhy",
+      "highlighted": false,
+      "comingSoon": true,
+      "onRequest": false
+    },
+    {
+      "key": "pro",
+      "name": "Secure Pro",
+      "tagline": "Appka se sama léčí. Rychlá reakce a autonomní ochrana.",
+      "sla": "99,9 % dostupnost",
+      "response": "reakce do 4 h (pracovní doba)",
+      "includes": [
+        "Vše ze Secure Host",
+        "AI operátor L2 — sám řeší nízkoriziko (restart, cert, blok IP)",
+        "Prioritní bezpečnostní reakce",
+        "Garantovaná pracovní doba podpory"
+      ],
+      "operator": "AI operátor L2 — self-healing, kód přes schválení",
+      "highlighted": true,
+      "comingSoon": true,
+      "onRequest": false
+    },
+    {
+      "key": "business",
+      "name": "Business",
+      "tagline": "Kritický provoz. Nejvyšší priorita a rozšířené záruky.",
+      "sla": "99,9 %+ dostupnost",
+      "response": "reakce 1–2 h, prioritně",
+      "includes": [
+        "Vše ze Secure Pro",
+        "Prioritní eskalace na člověka",
+        "Rozšířená podpora a reporting",
+        "Pojištění profesní odpovědnosti"
+      ],
+      "operator": "AI operátor L2–L3 (předschválené typy oprav)",
+      "highlighted": false,
+      "comingSoon": false,
+      "onRequest": true
+    }
+  ],
+  "stacks": [
+    {
+      "key": "static",
+      "label": "Statický web / SPA",
+      "desc": "React/Vue build, Lovable, v0 — bez serveru",
+      "starterAvailable": true,
+      "prices": {
+        "starter": {
+          "czk": 99,
+          "eur": 3.96,
+          "overageEur": 0
+        },
+        "host": {
+          "czk": 980,
+          "eur": 39,
+          "overageEur": 0
+        },
+        "pro": {
+          "czk": 1730,
+          "eur": 69,
+          "overageEur": 0
+        },
+        "business": {
+          "czk": 3230,
+          "eur": 129,
+          "overageEur": 0
+        }
+      }
+    },
+    {
+      "key": "ssr",
+      "label": "SSR appka (Next.js / Nuxt)",
+      "desc": "Server-side rendering, běžící Node proces",
+      "starterAvailable": false,
+      "prices": {
+        "starter": null,
+        "host": {
+          "czk": 1730,
+          "eur": 69,
+          "overageEur": 0
+        },
+        "pro": {
+          "czk": 2480,
+          "eur": 99,
+          "overageEur": 0
+        },
+        "business": {
+          "czk": 3980,
+          "eur": 159,
+          "overageEur": 0
+        }
+      }
+    },
+    {
+      "key": "api",
+      "label": "API / backend (Express, FastAPI)",
+      "desc": "REST/GraphQL služba, DB externí",
+      "starterAvailable": false,
+      "prices": {
+        "starter": null,
+        "host": {
+          "czk": 1730,
+          "eur": 69,
+          "overageEur": 0
+        },
+        "pro": {
+          "czk": 2480,
+          "eur": 99,
+          "overageEur": 0
+        },
+        "business": {
+          "czk": 3980,
+          "eur": 159,
+          "overageEur": 0
+        }
+      }
+    },
+    {
+      "key": "fullstack",
+      "label": "Fullstack (frontend + API)",
+      "desc": "SSR + API v jednom, DB externí",
+      "starterAvailable": false,
+      "prices": {
+        "starter": null,
+        "host": {
+          "czk": 2730,
+          "eur": 109,
+          "overageEur": 49
+        },
+        "pro": {
+          "czk": 2980,
+          "eur": 119,
+          "overageEur": 0
+        },
+        "business": {
+          "czk": 4480,
+          "eur": 179,
+          "overageEur": 0
+        }
+      }
+    },
+    {
+      "key": "heavy",
+      "label": "Náročná appka / worker",
+      "desc": "Fronty, zpracování, vyšší paměť",
+      "starterAvailable": false,
+      "prices": {
+        "starter": null,
+        "host": {
+          "czk": 3730,
+          "eur": 149,
+          "overageEur": 89
+        },
+        "pro": {
+          "czk": 5480,
+          "eur": 219,
+          "overageEur": 49
+        },
+        "business": {
+          "czk": 5980,
+          "eur": 239,
+          "overageEur": 0
+        }
+      }
+    }
+  ]
+}

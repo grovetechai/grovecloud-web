@@ -1,0 +1,19 @@
+---
+import Base from "../layouts/Base.astro";
+import Pricing from "../components/Pricing.astro";
+---
+<Base title="Cena — Grove Cloud" description="Ceník Grove Cloud: Starter 99 Kč pro statický web, Secure Host, Secure Pro a Business podle toho, co appka potřebuje. Stejná čísla jako v aplikaci." path="/cena">
+  <Pricing />
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2 class="reveal">Jak se cena počítá</h2>
+      <p class="sub reveal" data-i="1">Cena tarifu je pevná a zahrnuje paměť podle typu appky. Když appka potřebuje víc, připočte se příplatek za každých započatých 512 MB — bez překvapení na faktuře, částku vidíš předem v onboardingu. Statický web nebo SPA běží bez vlastního kontejneru na sdíleném serveru, proto je za 99 Kč. Dynamická appka (Next.js, Express, FastAPI…) dostane vlastní kontejner a Defender.</p>
+      <ul class="list reveal" data-i="2">
+        <li>Žádný poplatek za člena týmu — platíš za appku, ne za lidi.</li>
+        <li>Adresa <span class="mono">appka.grovecloud.cz</span> a certifikát jsou v ceně; vlastní doména taky.</li>
+        <li>Sken po každém nasazení a denní zálohy jsou ve všech tarifech.</li>
+        <li>Zrušit můžeš kdykoli, effekt ke konci měsíce.</li>
+      </ul>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,26 @@
+---
+const path = Astro.url.pathname;
+const items = [
+  { href: "/jak-to-funguje", label: "Jak to funguje" },
+  { href: "/bezpecnost", label: "Bezpečnost" },
+  { href: "/cena", label: "Cena" },
+];
+// Aplikace zatím běží na grovetechai.com (fáze 1); app.grovecloud.cz je fáze 3.
+const APP = "https://grovetechai.com/grovecloud";
+---
+<header class="hdr">
+  <a class="logo" href="/" aria-label="Grove Cloud — domů"><i></i>Grove Cloud <small>by Grove Tech AI</small></a>
+  <nav aria-label="Hlavní">
+    {items.map((i) => <a href={i.href} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
+    <a href={APP} class="login" rel="noopener">Přihlásit</a>
+  </nav>
+</header>
+<style>
+  .hdr { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: rgba(255,255,255,.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; }
+  .logo i { width: 22px; height: 22px; background: var(--navy); display: inline-block; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+  .logo small { font-weight: 500; color: var(--muted); margin-left: 6px; font-size: 12px; }
+  nav a { margin-left: 22px; color: var(--muted); text-decoration: none; font-size: 14px; }
+  nav a[aria-current="page"], nav a.login { color: var(--navy); font-weight: 700; }
+  @media (max-width: 700px) { .hdr { padding: 12px 18px; } nav a { margin-left: 14px; font-size: 13px; } .logo small { display: none; } }
+</style>

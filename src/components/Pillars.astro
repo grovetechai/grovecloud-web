@@ -1,0 +1,32 @@
+---
+const kroky = [
+  { n: "01", h: "Připoj GitHub", p: "Vyber repo. Detekce projde kořen i podsložky (client/, server/, apps/) a řekne, z čeho se appka skládá — a proč si to myslí." },
+  { n: "02", h: "Klikni Nasadit", p: "Statika jde na sdílený server za 99 Kč, dynamické appky do vlastního kontejneru. Adresa tvoje-appka.grovecloud.cz s certifikátem hned." },
+  { n: "03", h: "Pushni a zapomeň", p: "Každý git push nasadí novou verzi a spustí bezpečnostní sken. Když se něco pokazí, vrátíš se jedním klikem na předchozí build." },
+];
+const bezpecnost = [
+  { n: "SKEN", h: "Po každém nasazení", p: "Hlavičky, TLS, uniklé klíče, malware, phishing na naší doméně. Výsledek vidíš u appky dřív, než ho uvidí útočník." },
+  { n: "DEFENDER", h: "Ochrana za běhu", p: "Runtime ochrana AI vrstvy — prompt injection, únik dat, podezřelé requesty. Stejný Defender jako na grovetechai.com." },
+  { n: "EU", h: "Data v Evropě", p: "Servery v Německu, česká podpora, faktura v Kč. Žádný seat pricing v dolarech." },
+];
+---
+<section id="jak">
+  <div class="wrap">
+    <div class="step">01 · NASAZENÍ</div>
+    <h2 class="reveal">Tři kroky. Žádný server, žádný Docker, žádné 3 ráno.</h2>
+    <p class="sub reveal" data-i="1">Grove Cloud si repo přečte sám: pozná Next.js, Vite, Astro, Express, FastAPI i vlastní Dockerfile a navrhne build, start i port.</p>
+    <div class="grid3">
+      {kroky.map((k, i) => <div class="card reveal" data-i={i}><div class="n">{k.n}</div><h3>{k.h}</h3><p>{k.p}</p></div>)}
+    </div>
+  </div>
+</section>
+<section id="bezpecnost-sekce" style="padding-top:0">
+  <div class="wrap">
+    <div class="step">02 · BEZPEČNOST</div>
+    <h2 class="reveal">Hosting, který se po každém nasazení sám zkontroluje.</h2>
+    <p class="sub reveal" data-i="1">V roce 2026 unikla data z tisíců appek napsaných AI. Tady je po každém nasazení 185+ kontrol, Defender za běhu a denní zálohy — v ceně, ne jako doplněk.</p>
+    <div class="grid3">
+      {bezpecnost.map((k, i) => <div class="card reveal" data-i={i}><div class="n">{k.n}</div><h3>{k.h}</h3><p>{k.p}</p></div>)}
+    </div>
+  </div>
+</section>

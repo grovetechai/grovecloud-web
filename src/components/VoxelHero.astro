@@ -1,0 +1,36 @@
+---
+// Hero: nápis GROVE CLOUD složený z voxelů, které se sletí z prostoru a reagují
+// na myš. Text je i v DOM (sr-only) kvůli SEO a čtečkám — canvas je jen vizuál.
+const APP = "https://grovetechai.com/grovecloud";
+---
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Managed hosting pro appky psané AI · sken po každém nasazení · EU</div>
+    <h1 class="sr">Grove Cloud — nasaď appku z GitHubu, my ji hostujeme, skenujeme a hlídáme</h1>
+    <canvas id="vox" width="1100" height="300" aria-hidden="true"></canvas>
+    <p class="lead">Nasaď z GitHubu na pár kliknutí. My appku hostujeme, skenujeme a hlídáme — od 99 Kč měsíčně.</p>
+    <div class="cta">
+      <a class="btn red" id="cta-deploy" href={APP} rel="noopener">Nasadit z GitHubu →</a>
+      <a class="btn ghost" href="#zkus">Zkus si to bez účtu</a>
+    </div>
+    <p class="hint">Pohni myší nad titulkem — kostky se rozestoupí a zase složí.</p>
+    <div class="kpis">
+      <div><b>99 Kč</b>statický web / SPA</div>
+      <div><b>&lt; 3 min</b>od repa k adrese</div>
+      <div><b>185+</b>kontrol po každém deployi</div>
+      <div><b>EU</b>data i podpora</div>
+    </div>
+  </div>
+</div>
+<script src="../scripts/voxel.ts"></script>
+<style>
+  .hero { padding: 56px 0 30px; text-align: center; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  canvas { width: 100%; max-width: 1100px; height: auto; display: block; margin: 6px auto 0; }
+  .lead { margin: 6px auto 0; font-size: 19px; color: var(--muted); max-width: 640px; }
+  .cta { margin-top: 26px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .hint { margin-top: 12px; font-size: 12px; color: var(--muted); }
+  .kpis { margin-top: 34px; display: flex; gap: 40px; justify-content: center; color: var(--muted); font-size: 13px; flex-wrap: wrap; }
+  .kpis b { display: block; color: var(--navy); font-size: 22px; }
+  @media (max-width: 700px) { .hint { display: none; } .kpis { gap: 22px; } }
+</style>

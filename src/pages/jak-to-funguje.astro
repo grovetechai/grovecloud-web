@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import Pillars from "../components/Pillars.astro";
+import TryIt from "../components/TryIt.astro";
+const APP = "https://grovetechai.com/grovecloud";
+---
+<Base title="Jak to funguje — Grove Cloud" description="Připoj GitHub, klikni Nasadit. Grove Cloud pozná stack, postaví appku, dá jí adresu a certifikát, po každém pushi nasadí novou verzi a proskenuje ji." path="/jak-to-funguje">
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <div class="eyebrow">Jak to funguje</div>
+      <h1 class="reveal" style="font-size:clamp(34px,4.6vw,54px);margin-top:10px">Od repa k běžící, hlídané appce.</h1>
+      <p class="sub reveal" data-i="1">Žádný Dockerfile psát nemusíš (ale když ho máš, použijeme ho). Detekce přečte package.json v kořeni i podsložkách, requirements.txt, go.mod nebo composer.json a rozhodne, jestli jde o statiku, SSR, API nebo fullstack — a ukáže ti proč.</p>
+      <p style="margin-top:22px"><a class="btn red" href={APP} rel="noopener">Nasadit z GitHubu →</a></p>
+    </div>
+  </section>
+  <Pillars />
+  <TryIt />
+  <section>
+    <div class="wrap">
+      <h2 class="reveal">Co dostaneš u každé appky</h2>
+      <div class="grid3">
+        <div class="card reveal"><div class="n">DEPLOY</div><h3>Historie a rollback</h3><p>Každé nasazení má verzi. Vrátit se na předchozí je jedno kliknutí, ne noční směna.</p></div>
+        <div class="card reveal" data-i="1"><div class="n">AUTO</div><h3>Nasazení po pushi</h3><p>Webhook z GitHubu s ověřeným podpisem. Vybereš větev, zbytek běží sám.</p></div>
+        <div class="card reveal" data-i="2"><div class="n">ENV</div><h3>Trezor na tajemství</h3><p>Klíče a proměnné prostředí mimo repo, šifrované, viditelné jen tobě.</p></div>
+        <div class="card reveal"><div class="n">LOGY</div><h3>Logy bez SSH</h3><p>Výstup appky přímo v prohlížeči, filtr podle času a úrovně.</p></div>
+        <div class="card reveal" data-i="1"><div class="n">DOMÉNA</div><h3>Vlastní doména</h3><p>Ukážeme přesný DNS záznam, ověříme ho a teprve pak vystavíme certifikát. Bez tápání.</p></div>
+        <div class="card reveal" data-i="2"><div class="n">SKEN</div><h3>Report u appky</h3><p>Výsledek bezpečnostního skenu po každém nasazení — stejný report jako na grovetechai.com.</p></div>
+      </div>
+    </div>
+  </section>
+</Base>

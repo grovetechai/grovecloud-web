@@ -1,0 +1,19 @@
+---
+const G = "https://grovetechai.com";
+---
+<footer class="ftr">
+  <div>
+    Grove Cloud je produkt <a href={G} rel="noopener">Grove Tech AI s.r.o.</a> ·
+    <a href={`${G}/scanner`} rel="noopener">Scanner</a> ·
+    <a href={`${G}/pentest`} rel="noopener">Pentest</a> ·
+    <a href={`${G}/defender`} rel="noopener">Defender</a> ·
+    <a href={`${G}/terms`} rel="noopener">Podmínky</a> ·
+    <a href={`${G}/privacy`} rel="noopener">Soukromí</a>
+  </div>
+  <div class="mono">tento web běží na Grove Cloud · Starter 99 Kč</div>
+</footer>
+<style>
+  .ftr { padding: 40px 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .ftr a { color: var(--navy); text-decoration: none; }
+  .ftr a:hover { text-decoration: underline; }
+</style>
