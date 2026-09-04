@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T13:08:58.143Z",
+  "generatedAt": "2026-09-04T13:41:00.444Z",
   "source": "shared/grovecloud-pricing.ts + shared/grovecloud-plans.ts",
   "eurCzk": 25,
   "tiers": [
@@ -8,14 +8,14 @@
       "name": "Starter",
       "tagline": "Statický web nebo SPA za stovku. Bez starostí a bez serveru.",
       "sla": "bez garance dostupnosti",
-      "response": "reakce do 3 pracovních dnů",
+      "response": "odpovídáme v pracovní dny",
       "includes": [
         "Hosting statického webu nebo SPA",
         "Adresa a certifikát v ceně",
         "Automatický bezpečnostní sken po každém nasazení",
-        "Denní zálohy"
+        "Návrat na předchozí verzi jedním kliknutím"
       ],
-      "operator": "Bez AI operátora — hlídáme dostupnost, zásahy řešíme ručně",
+      "operator": "Bez automatických zásahů — hlídáme dostupnost, řešíme ručně",
       "highlighted": false,
       "comingSoon": false,
       "onRequest": false
@@ -23,33 +23,33 @@
     {
       "key": "host",
       "name": "Secure Host",
-      "tagline": "Appka běží a je hlídaná. Základ pro klidný provoz.",
-      "sla": "99,5 % dostupnost",
-      "response": "reakce do 1 pracovního dne",
+      "tagline": "Appka běží ve vlastním kontejneru a někdo se dívá, jestli běží.",
+      "sla": "kontrola dostupnosti každých 10 minut",
+      "response": "odpovídáme v pracovní dny",
       "includes": [
-        "Hosting a provoz aplikace",
-        "Nepřetržitá bezpečnostní ochrana (Defender)",
-        "Aktualizace, záplaty a zálohy v ceně",
-        "AI podpora (stavové dotazy, vysvětlení)"
+        "Hosting a provoz aplikace ve vlastním kontejneru",
+        "Sken po každém nasazení + verzované image a rollback",
+        "Hlídání běhu a odezvy, upozornění při výpadku",
+        "Bezpečnostní hlavičky a TLS v ceně"
       ],
-      "operator": "AI operátor L1 — diagnostika a návrhy",
+      "operator": "Hlídání každých 10 minut — problém nahlásíme a navrhneme řešení",
       "highlighted": false,
       "comingSoon": false,
       "onRequest": false
     },
     {
       "key": "pro",
-      "name": "Secure Pro",
-      "tagline": "Appka se sama léčí. Rychlá reakce a autonomní ochrana.",
-      "sla": "99,9 % dostupnost",
-      "response": "reakce do 4 h (pracovní doba)",
+      "name": "Secure Plus",
+      "tagline": "Když appka spadne, nastartuje se sama. Bez čekání na člověka.",
+      "sla": "kontrola každých 10 minut + automatický restart",
+      "response": "odpovídáme v pracovní dny, přednostně",
       "includes": [
         "Vše ze Secure Host",
-        "AI operátor L2 — sám řeší nízkoriziko (restart, cert, blok IP)",
-        "Prioritní bezpečnostní reakce",
-        "Garantovaná pracovní doba podpory"
+        "Automatický restart spadlé appky bez čekání na člověka",
+        "Detekce smyčky pádů — místo dalšího restartu voláme člověka",
+        "Upozornění, když appka přerůstá tarif"
       ],
-      "operator": "AI operátor L2 — self-healing, kód přes schválení",
+      "operator": "Automatický restart, eskalace na člověka u všeho ostatního",
       "highlighted": true,
       "comingSoon": false,
       "onRequest": false
@@ -57,16 +57,16 @@
     {
       "key": "business",
       "name": "Business",
-      "tagline": "Kritický provoz. Nejvyšší priorita a rozšířené záruky.",
-      "sla": "99,9 %+ dostupnost",
-      "response": "reakce 1–2 h, prioritně",
+      "tagline": "Kritický provoz. Podmínky se domlouvají, ne kupují z ceníku.",
+      "sla": "dostupnost a reakce podle smlouvy",
+      "response": "dohodnutá reakční doba, prioritně",
       "includes": [
-        "Vše ze Secure Pro",
+        "Vše ze Secure Plus",
         "Prioritní eskalace na člověka",
-        "Rozšířená podpora a reporting",
+        "Pravidelný report o provozu a bezpečnosti",
         "Smlouva na míru (SLA, limit odpovědnosti, zpracování dat)"
       ],
-      "operator": "AI operátor L2–L3 (předschválené typy oprav)",
+      "operator": "Stejné automatické zásahy jako Secure Plus, navíc člověk na telefonu",
       "highlighted": false,
       "comingSoon": false,
       "onRequest": true
