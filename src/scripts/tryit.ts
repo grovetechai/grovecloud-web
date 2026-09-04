@@ -1,154 +1,245 @@
-// Simulace nasazení: detekce stacku podle názvu repa (jen ukázka), cena z pricing.json,
-// deploy log a nová krabice na izometrickém nodu. Nic neposílá na server.
-type Pricing = { stacks: { key: string; label: string; prices: Record<string, { czk: number } | null> }[] };
-const dataEl = document.getElementById("pricing-data");
+// Skutečný bezpečnostní sken z webu grovecloud.cz.
+//
+// Volá POST https://grovetechai.com/api/security-scan (stejný endpoint jako
+// scanner) a paralelně čte skutečný průběh z /api/security-scan/progress/:id.
+// Server má pro naše originy povolený CORS (server/routes.ts, grovecloudCors)
+// a odpověď posílá BEZ cookies — sken tedy vždy běží jako anonymní.
+//
+// Anonymní limity jsou tvrdé (1 sken / IP / den) a to je v pořádku: tohle je
+// ukázka, ne hosting skenů zdarma. Když limit dojde, pošleme člověka na účet.
+
+const API = "https://grovetechai.com";
+
 const node = document.getElementById("node");
-const log = document.getElementById("log");
-const detect = document.getElementById("detect");
-const nodest = document.getElementById("nodest");
 const form = document.getElementById("tryform") as HTMLFormElement | null;
-const repoInput = document.getElementById("repo") as HTMLInputElement | null;
+const vstup = document.getElementById("repo") as HTMLInputElement | null;
+const btn = document.getElementById("trybtn") as HTMLButtonElement | null;
+const detect = document.getElementById("detect");
 const scan = document.getElementById("scan");
 const chips = document.getElementById("chips");
 const ringarc = document.getElementById("ringarc");
 const ringnum = document.getElementById("ringnum");
+const scantitle = document.getElementById("scantitle");
 const scanmeta = document.getElementById("scanmeta");
 const scanverdict = document.getElementById("scanverdict");
+const nalezy = document.getElementById("nalezy");
+const reportlink = document.getElementById("reportlink") as HTMLAnchorElement | null;
 
-/** Kategorie skenu — stejné, jaké má report na grovetechai.com. */
-const KATEGORIE: Array<{ n: string; pocet: number; warn?: boolean }> = [
-  { n: "TLS a certifikát", pocet: 18 },
-  { n: "Bezpečnostní hlavičky", pocet: 24 },
-  { n: "Zranitelnosti závislostí", pocet: 41 },
-  { n: "Malware a phishing", pocet: 22 },
-  { n: "Únik dat a tajemství", pocet: 19 },
-  { n: "GDPR a cookies", pocet: 17, warn: true },
-  { n: "Výkon", pocet: 21 },
-  { n: "SEO a AI čitelnost", pocet: 23, warn: true },
-];
-const KONTROL_CELKEM = KATEGORIE.reduce((a, k) => a + k.pocet, 0);
+const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 const OBVOD = 2 * Math.PI * 46;
 const bezAnimace = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
 
-/** Doběhne prstenec i číslo na cílové skóre. */
+/* ── Ozdoba: kostky na izometrickém nodu ─────────────────────────────────── */
+const slots = [[10, 10], [110, 10], [210, 10], [10, 110], [110, 110], [210, 110]];
+let used = 0;
+function addBox(text: string, color: string, h: number) {
+  if (!node || used >= slots.length) return;
+  const [x, y] = slots[used++];
+  const b = document.createElement("div");
+  b.className = "gc-box drop";
+  b.style.left = x + "px"; b.style.top = y + "px";
+  b.style.setProperty("--c", color); b.style.setProperty("--h", h + "px");
+  b.innerHTML = `<div class="f top"><span>${esc(text)}</span></div><div class="f s1"></div><div class="f s2"></div>`;
+  node.appendChild(b);
+  requestAnimationFrame(() => requestAnimationFrame(() => b.classList.remove("drop")));
+}
+addBox("grovecloud.cz · statika", "#2A5BD9", 24);
+addBox("api.firma.cz · Express", "#1A4BC0", 60);
+addBox("shop.demo · Next.js", "#123C9A", 60);
+
+/* ── Fáze skenu ──────────────────────────────────────────────────────────── */
+// Klíče jsou stabilní kontrakt serveru (server/scan-progress-bus.ts → ScanPhase).
+// Ukazujeme jen bezpečnostní část — sken měří i SEO, výkon a GDPR, ale tady
+// prodáváme zabezpečený hosting a míchat do toho SEO by jen rozostřilo pointu.
+const FAZE: Array<{ key: string; label: string }> = [
+  { key: "fetch", label: "Stažení stránky" },
+  { key: "security", label: "Hlavičky a TLS" },
+  { key: "surface", label: "Aktivní sondy" },
+  { key: "cve", label: "Známé zranitelnosti" },
+  { key: "malware", label: "Malware a phishing" },
+  { key: "nis2", label: "DNS a NIS2" },
+  { key: "scoring", label: "Vyhodnocení" },
+];
+
+const chipEls = new Map<string, HTMLElement>();
+function postavChipy() {
+  if (!chips) return;
+  chips.innerHTML = "";
+  chipEls.clear();
+  for (const f of FAZE) {
+    const el = document.createElement("span");
+    el.className = "gc-chip";
+    el.innerHTML = `<span class="dot"></span>${esc(f.label)}`;
+    chips.appendChild(el);
+    chipEls.set(f.key, el);
+  }
+}
+
+function barvaSkore(v: number) { return v >= 80 ? "#16a34a" : v >= 50 ? "#b45309" : "#dc2626"; }
+
+function nastavRing(v: number | null) {
+  const barva = v === null ? "#5b6478" : barvaSkore(v);
+  ringarc?.setAttribute("stroke", barva);
+  ringarc?.setAttribute("stroke-dashoffset", String(OBVOD * (1 - (v ?? 0) / 100)));
+  if (ringnum) {
+    ringnum.textContent = v === null ? "–" : String(v);
+    ringnum.setAttribute("style", `fill:${barva}`);
+  }
+}
+
 function dojedSkore(cil: number) {
-  const barva = cil >= 80 ? "#16a34a" : cil >= 50 ? "#b45309" : "#dc2626";
-  const nastav = (v: number) => {
-    ringarc?.setAttribute("stroke", barva);
-    ringarc?.setAttribute("stroke-dashoffset", String(OBVOD * (1 - v / 100)));
-    if (ringnum) { ringnum.textContent = String(v); (ringnum as unknown as SVGElement).setAttribute("style", `fill:${barva}`); }
-  };
-  if (bezAnimace) { nastav(cil); return; }
+  if (bezAnimace) { nastavRing(cil); return; }
   const start = performance.now();
   const krok = (t: number) => {
     const p = Math.min(1, (t - start) / 1100);
-    nastav(Math.round(cil * (1 - Math.pow(1 - p, 3))));
+    nastavRing(Math.round(cil * (1 - Math.pow(1 - p, 3))));
     if (p < 1) requestAnimationFrame(krok);
   };
   requestAnimationFrame(krok);
 }
 
-/**
- * Ukázka skenu po nasazení: kategorie naskakují jedna po druhé, počet kontrol
- * roste, na konci dojede skóre. Nic se doopravdy neskenuje — je to ukázka
- * toho, co klient uvidí v aplikaci po ostrém nasazení.
- */
-function spustSken(hotovo?: () => void) {
-  if (!scan || !chips || !scanmeta || !scanverdict) { hotovo?.(); return; }
+/* ── Chybové stavy ───────────────────────────────────────────────────────── */
+// Server vrací strojové kódy; člověk potřebuje větu a cestu ven.
+function chybaText(stav: number, data: any): string {
+  const kod = String(data?.error || data?.code || "");
+  const odkaz = `<a href="${API}/scanner" rel="noopener">Otevřít scanner na grovetechai.com</a>`;
+  if (kod === "anon_limit") return `Denní limit skenu bez účtu je vyčerpaný. S účtem zdarma máš dva denně. ${odkaz}`;
+  if (kod === "free_limit") return `Vyčerpaný denní limit tvého účtu. ${odkaz}`;
+  if (kod === "rate_limit") return `Moc pokusů z jedné adresy. Zkus to za chvíli znovu.`;
+  if (kod === "scan_in_progress") return `Tenhle web se právě skenuje. Chvíli počkej a zkus to znovu.`;
+  if (kod === "captcha_required" || kod === "datacenter_blocked" || kod === "captcha_failed")
+    return `Skenuješ přes VPN nebo firemní síť, tam potřebujeme ověření. ${odkaz}`;
+  if (kod === "blocked_url") return `Tuhle adresu skenovat nejde — musí být veřejně dostupná.`;
+  if (kod === "invalid_url") return `Tohle nevypadá jako adresa webu. Zkus třeba <b>mujweb.cz</b>.`;
+  if (kod === "scan_failed") return data?.messageCs || `Sken se nepodařilo dokončit. Je web dostupný z internetu?`;
+  if (stav === 0) return `Nepodařilo se spojit se skenerem. Zkus to prosím znovu.`;
+  return data?.messageCs || `Sken se nepodařilo dokončit (${stav}). Zkus to prosím znovu.`;
+}
+
+const SEV: Record<string, { label: string; barva: string }> = {
+  critical: { label: "kritické", barva: "#dc2626" },
+  high: { label: "vysoké", barva: "#ea580c" },
+  medium: { label: "střední", barva: "#b45309" },
+  low: { label: "nízké", barva: "#5b6478" },
+  info: { label: "info", barva: "#5b6478" },
+  ok: { label: "ok", barva: "#16a34a" },
+};
+
+function verdikt(risk: string | null, score: number): string {
+  if (risk === "critical" || score < 50) return "Vážné nálezy";
+  if (risk === "high" || score < 70) return "Je co opravit";
+  if (risk === "medium" || score < 85) return "Drobnosti k doladění";
+  return "V pořádku";
+}
+
+/* ── Běh ─────────────────────────────────────────────────────────────────── */
+let bezi = false;
+
+async function spustSken(url: string) {
+  if (!scan || !detect || !scanmeta || !scantitle || !scanverdict || !nalezy || !reportlink) return;
+
+  bezi = true;
+  if (btn) { btn.disabled = true; btn.textContent = "Skenuji…"; }
+  detect.className = "detect";
+  detect.textContent = "";
   scan.hidden = false;
-  chips.innerHTML = "";
+  reportlink.hidden = true;
+  nalezy.innerHTML = "";
   scanverdict.textContent = "";
-  dojedSkore(0);
+  scantitle.textContent = "Skenuji " + url;
+  scanmeta.textContent = "navazuji spojení";
+  postavChipy();
+  nastavRing(null);
 
-  const prvky = KATEGORIE.map((k) => {
-    const el = document.createElement("span");
-    el.className = "gc-chip";
-    el.innerHTML = `<span class="dot"></span>${k.n}`;
-    chips.appendChild(el);
-    return el;
-  });
+  // progressId si generuje klient (server ho jen validuje na [A-Za-z0-9_-]{8,64}).
+  const progressId = Array.from(crypto.getRandomValues(new Uint8Array(12)))
+    .map((b) => b.toString(36).padStart(2, "0")).join("").slice(0, 24);
 
-  let i = 0, hotovoKontrol = 0;
-  const dalsi = () => {
-    if (i >= KATEGORIE.length) {
-      const nalezu = KATEGORIE.filter((k) => k.warn).length;
-      scanverdict.innerHTML = `<b>0 kritických</b> · ${nalezu} doporučení · report dostaneš do účtu`;
-      dojedSkore(96);
-      hotovo?.();
+  const zacatek = Date.now();
+  const tick = window.setInterval(async () => {
+    try {
+      const r = await fetch(`${API}/api/security-scan/progress/${progressId}`, { cache: "no-store" });
+      const d = await r.json();
+      for (const f of (Array.isArray(d.done) ? d.done : [])) chipEls.get(String(f))?.classList.add("on");
+      const hotovo = chips?.querySelectorAll(".gc-chip.on").length ?? 0;
+      scanmeta.textContent = `${hotovo} / ${FAZE.length} fází · ${Math.round((Date.now() - zacatek) / 1000)} s`;
+    } catch { /* průběh je ozdoba, sken běží dál */ }
+  }, 1200);
+
+  try {
+    const r = await fetch(`${API}/api/security-scan`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url, progressId }),
+    });
+    const data = await r.json().catch(() => ({}));
+    window.clearInterval(tick);
+
+    if (!r.ok) {
+      scan.hidden = true;
+      detect.className = "detect err";
+      detect.innerHTML = chybaText(r.status, data);
       return;
     }
-    const k = KATEGORIE[i];
-    prvky[i].classList.add("on");
-    if (k.warn) prvky[i].classList.add("warn");
-    hotovoKontrol += k.pocet;
-    scanmeta.textContent = `${hotovoKontrol} / ${KONTROL_CELKEM} kontrol`;
-    i++;
-    setTimeout(dalsi, bezAnimace ? 0 : 190);
-  };
-  dalsi();
-}
 
-if (dataEl && node && log && detect && nodest && form && repoInput) {
-  const pricing = JSON.parse(dataEl.textContent || "{}") as Pricing;
-  const czk = (stack: string, tier: string) => pricing.stacks.find((s) => s.key === stack)?.prices[tier]?.czk ?? null;
-  const label = (stack: string) => pricing.stacks.find((s) => s.key === stack)?.label ?? stack;
-  const fmt = (n: number) => n.toLocaleString("cs-CZ");
+    // Bezpečnostní skóre je poctivější než celkové — návštěvník tu řeší
+    // bezpečnost, ne SEO. Fallback na celkové, kdyby chybělo.
+    const skore: number = Number.isFinite(data?.securityScore) ? data.securityScore : Number(data?.score ?? 0);
+    const risk: string | null = data?.securityRisk ?? data?.riskLevel ?? null;
 
-  const slots = [[10, 10], [110, 10], [210, 10], [10, 110], [110, 110], [210, 110], [10, 210], [110, 210], [210, 210]];
-  let used = 0;
-  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+    for (const el of chipEls.values()) el.classList.add("on");
+    scantitle.innerHTML = `Bezpečnost webu <b>${esc(url)}</b>: ${esc(verdikt(risk, skore))}`;
+    scanmeta.textContent = `hotovo za ${Math.round((Date.now() - zacatek) / 1000)} s`;
+    dojedSkore(skore);
 
-  function addBox(text: string, color: string, h: number) {
-    if (used >= slots.length) return;
-    const [x, y] = slots[used++];
-    const b = document.createElement("div");
-    b.className = "gc-box drop";
-    b.style.left = x + "px"; b.style.top = y + "px";
-    b.style.setProperty("--c", color); b.style.setProperty("--h", h + "px");
-    b.innerHTML = `<div class="f top"><span>${esc(text)}</span></div><div class="f s1"></div><div class="f s2"></div>`;
-    node!.appendChild(b);
-    requestAnimationFrame(() => requestAnimationFrame(() => b.classList.remove("drop")));
+    // Počty bereme jen z bezpečnostní kategorie — `lockedSeverityCounts` je to,
+    // co jsme našli, ale v ukázce neukazujeme celé.
+    const sec = data?.categories?.security ?? {};
+    const videt: any[] = Array.isArray(sec.findings) ? sec.findings.filter((f: any) => f.severity !== "ok") : [];
+    const zamceno: Record<string, number> = sec.lockedSeverityCounts ?? {};
+    const soucty: Record<string, number> = { ...zamceno };
+    for (const f of videt) soucty[f.severity] = (soucty[f.severity] ?? 0) + 1;
+
+    const poradi = ["critical", "high", "medium", "low"];
+    const popis = poradi.filter((s) => soucty[s]).map((s) => `${soucty[s]} ${SEV[s].label}`).join(" · ");
+    scanverdict.textContent = popis ? `Bezpečnostní nálezy: ${popis}` : "Žádné bezpečnostní nálezy.";
+
+    for (const f of videt.slice(0, 2)) {
+      const s = SEV[f.severity] ?? SEV.low;
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="sev" style="background:${s.barva}18;color:${s.barva}">${esc(s.label)}</span>`
+        + `<span>${esc(String(f.titleCs || f.titleEn || f.id))}</span>`;
+      nalezy.appendChild(li);
+    }
+
+    if (data?.shareToken) {
+      reportlink.href = `${API}/report/${encodeURIComponent(String(data.shareToken))}`;
+      reportlink.target = "_blank";
+      reportlink.hidden = false;
+      reportlink.textContent = popis ? "Otevřít celý report ↗" : "Otevřít report ↗";
+    }
+  } catch {
+    window.clearInterval(tick);
+    scan.hidden = true;
+    detect.className = "detect err";
+    detect.innerHTML = chybaText(0, {});
+  } finally {
+    bezi = false;
+    if (btn) { btn.disabled = false; btn.textContent = "Zkontrolovat"; }
   }
-  addBox("sjednej.cz · statika", "#2A5BD9", 24);
-  addBox("api.firma.cz · Express", "#1A4BC0", 60);
-  addBox("shop.demo · Next.js", "#123C9A", 60);
-
-  const guesses = [
-    { re: /next|shop|app|defender/i, st: "ssr", fw: "Next.js", why: "v závislostech je next", h: 60, c: "#123C9A" },
-    { re: /api|server|backend/i, st: "api", fw: "Express", why: "v závislostech je express (v server/)", h: 60, c: "#1A4BC0" },
-    { re: /.*/, st: "static", fw: "Vite + React", why: "jen frontend bez serveru", h: 24, c: "#2A5BD9" },
-  ];
-
-  let running = false;
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (running) return;
-    const repo = (repoInput.value.trim() || "grovetechai/moje-appka").replace(/[^\w./-]/g, "").slice(0, 60);
-    const g = guesses.find((g) => g.re.test(repo))!;
-    const name = repo.split("/").pop() || "appka";
-    const cena = g.st === "static" ? `Starter <b>${fmt(czk("static", "starter") ?? 99)} Kč</b>` : `Secure Host od <b>${fmt(czk(g.st, "host") ?? 0)} Kč</b>`;
-    detect.innerHTML = `Detekce: <b>${g.fw}</b> · ${g.why} · typ <b>${esc(label(g.st))}</b> · ${cena}`;
-    const lines = [
-      `$ git clone github.com/${esc(repo)}`,
-      `✓ přečteno package.json (kořen + podsložky)`,
-      `✓ stack: ${g.fw} · jistota vysoká`,
-      `$ build …`,
-      `✓ build 21 s`,
-      g.st === "static" ? `✓ statika → sdílený server` : `✓ kontejner 512 MB → node`,
-      `✓ https://${esc(name)}.grovecloud.cz · certifikát OK`,
-      `$ sken ${KONTROL_CELKEM} kontrol …`,
-    ];
-    log.innerHTML = ""; running = true;
-    let i = 0;
-    const t = setInterval(() => {
-      log.innerHTML += lines[i] + "\n"; i++;
-      if (i === 5) addBox(`${name} · ${g.fw}`, g.c, g.h);
-      if (i >= lines.length) {
-        clearInterval(t);
-        nodest.textContent = `${used} appek · ${(1.1 - used * 0.15).toFixed(1).replace(".", ",")} GB volné`;
-        // Sken je pointa — teprve po něm je „nasazeno".
-        spustSken(() => { running = false; });
-      }
-    }, 260);
-  });
 }
+
+form?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (bezi || !vstup || !detect) return;
+  const raw = vstup.value.trim();
+  if (!raw) {
+    detect.className = "detect err";
+    detect.textContent = "Napiš adresu webu, třeba mujweb.cz.";
+    vstup.focus();
+    return;
+  }
+  // Doplníme schéma, ať uživatel nemusí psát https://. Zbytek validuje server.
+  const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  void spustSken(url.slice(0, 500));
+});
