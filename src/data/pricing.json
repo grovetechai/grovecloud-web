@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T07:22:06.106Z",
+  "generatedAt": "2026-09-04T13:08:58.143Z",
   "source": "shared/grovecloud-pricing.ts + shared/grovecloud-plans.ts",
   "eurCzk": 25,
   "tiers": [
@@ -34,7 +34,7 @@
       ],
       "operator": "AI operátor L1 — diagnostika a návrhy",
       "highlighted": false,
-      "comingSoon": true,
+      "comingSoon": false,
       "onRequest": false
     },
     {
@@ -51,7 +51,7 @@
       ],
       "operator": "AI operátor L2 — self-healing, kód přes schválení",
       "highlighted": true,
-      "comingSoon": true,
+      "comingSoon": false,
       "onRequest": false
     },
     {
@@ -64,7 +64,7 @@
         "Vše ze Secure Pro",
         "Prioritní eskalace na člověka",
         "Rozšířená podpora a reporting",
-        "Pojištění profesní odpovědnosti"
+        "Smlouva na míru (SLA, limit odpovědnosti, zpracování dat)"
       ],
       "operator": "AI operátor L2–L3 (předschválené typy oprav)",
       "highlighted": false,
