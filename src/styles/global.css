@@ -3,7 +3,12 @@
   --navy2: #071a40;
   --blue: #1a4bc0;
   --blue2: #2a5bd9;
+  /* Značková červená pro plochy a akcenty. */
   --red: #fd192f;
+  /* Tmavší odstín pro tlačítka a text na červené: bílý text na #FD192F má
+     kontrast jen 3,92:1 (WCAG AA žádá 4,5:1). #C80B1F dává 5,96:1 a od
+     značkové barvy se okem skoro neliší. */
+  --red-ink: #c80b1f;
   --ink: #0b1226;
   --muted: #5b6478;
   --line: #e6e9f0;
@@ -24,7 +29,11 @@ h1, h2, h3 { letter-spacing: -.02em; line-height: 1.08; }
 h2 { font-size: clamp(28px, 3.4vw, 38px); }
 .sub { color: var(--muted); font-size: 17px; max-width: 640px; margin-top: 12px; }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; background: var(--navy); color: #fff; text-decoration: none; font-weight: 700; border: 0; cursor: pointer; font-size: 15px; font-family: inherit; }
-.btn.red { background: var(--red); }
+.btn.red { background: var(--red-ink); }
+/* WCAG 2.2 (2.5.8): klikací plocha aspoň 24×24 px — týká se i odkazů v hlavičce
+   a patičce, které jsou samostatné ovládací prvky, ne text v odstavci. */
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 0 0 10px 0; font-weight: 700; text-decoration: none; }
+.skip-link:focus { left: 0; }
 .btn.ghost { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
 .btn:focus-visible { outline: 3px solid var(--blue2); outline-offset: 2px; }
 section { padding: 90px 0; }

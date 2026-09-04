@@ -13,6 +13,43 @@ interface Props {
 const { title, description, path = "/" } = Astro.props;
 const site = "https://grovecloud.cz";
 const canonical = site + (path === "/" ? "/" : path);
+
+// Strukturovaná data (JSON-LD). Bez nich vyhledávače i AI jen hádají, co
+// stránka znamená — a náš vlastní skener to hlásí jako nález.
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site}/#org`,
+      name: "Grove Cloud",
+      url: site,
+      parentOrganization: { "@type": "Organization", name: "Grove Tech AI s.r.o.", url: "https://grovetechai.com" },
+      areaServed: "CZ",
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site}/#web`,
+      url: site,
+      name: "Grove Cloud",
+      inLanguage: "cs-CZ",
+      publisher: { "@id": `${site}/#org` },
+    },
+    {
+      "@type": "Service",
+      name: "Grove Cloud — managed hosting",
+      serviceType: "Managed hosting se zabezpečením",
+      provider: { "@id": `${site}/#org` },
+      offers: {
+        "@type": "Offer",
+        name: "Starter",
+        price: "99",
+        priceCurrency: "CZK",
+        description: "Statický web nebo SPA včetně adresy, certifikátu, denních záloh a bezpečnostního skenu po každém nasazení.",
+      },
+    },
+  ],
+};
 ---
 <!doctype html>
 <html lang="cs">
@@ -34,9 +71,11 @@ const canonical = site + (path === "/" ? "/" : path);
     <meta name="referrer" content="strict-origin-when-cross-origin" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Přeskočit na obsah</a>
     <Header />
-    <main><slot /></main>
+    <main id="main"><slot /></main>
     <Footer />
     <script src="../scripts/reveal.ts"></script>
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </body>
 </html>
