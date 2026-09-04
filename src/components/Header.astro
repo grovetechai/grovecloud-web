@@ -8,9 +8,17 @@ const items = [
 ];
 // Aplikace zatím běží na grovetechai.com (fáze 1); app.grovecloud.cz je fáze 3.
 const APP = "https://grovetechai.com/grovecloud";
+const G = "https://grovetechai.com";
 ---
 <header class="hdr">
-  <a class="logo" href="/" aria-label="Grove Cloud — domů"><CloudMark size={24} />Grove Cloud <small>by Grove Tech AI</small></a>
+  {/* „by Grove Tech AI" bylo do 4. 9. 2026 jen text. Za hostingem stojí
+      existující firma s produkty a referencemi — je to důvěryhodnost, kterou
+      nemá smysl schovávat, tak z toho vede odkaz. Je to samostatný odkaz
+      vedle loga, ne vnořený do něj (vnořené odkazy jsou nevalidní HTML). */}
+  <span class="brand">
+    <a class="logo" href="/" aria-label="Grove Cloud — domů"><CloudMark size={24} />Grove Cloud</a>
+    <a class="by" href={G} rel="noopener">by Grove Tech AI</a>
+  </span>
   <nav aria-label="Hlavní">
     {items.map((i) => <a href={i.href} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
     <a href={APP} class="login" rel="noopener">Přihlásit</a>
@@ -18,10 +26,13 @@ const APP = "https://grovetechai.com/grovecloud";
 </header>
 <style>
   .hdr { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: rgba(255,255,255,.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: baseline; gap: 6px; }
   .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; }
-  .logo small { font-weight: 500; color: var(--muted); margin-left: 6px; font-size: 12px; }
+  /* min-height 24 px kvůli WCAG 2.5.8 (velikost cíle), stejně jako u nav. */
+  .by { display: inline-flex; align-items: center; min-height: 24px; font-weight: 500; color: var(--muted); font-size: 12px; text-decoration: none; white-space: nowrap; }
+  .by:hover { text-decoration: underline; }
   /* min-height 24 px + svislý padding = splněné WCAG 2.5.8 (velikost cíle). */
   nav a { display: inline-flex; align-items: center; min-height: 24px; padding: 4px 2px; margin-left: 20px; color: var(--muted); text-decoration: none; font-size: 14px; }
   nav a[aria-current="page"], nav a.login { color: var(--navy); font-weight: 700; }
-  @media (max-width: 700px) { .hdr { padding: 12px 18px; } nav a { margin-left: 14px; font-size: 13px; } .logo small { display: none; } }
+  @media (max-width: 700px) { .hdr { padding: 12px 18px; } nav a { margin-left: 14px; font-size: 13px; } .by { display: none; } }
 </style>

@@ -5,7 +5,10 @@ const G = "https://grovetechai.com";
   <div>
     Grove Cloud je produkt <a href={G} rel="noopener">Grove Tech AI s.r.o.</a> ·
     <a href={`${G}/scanner`} rel="noopener">Scanner</a> ·
-    <a href={`${G}/pentest`} rel="noopener">Pentest</a> ·
+    {/* POZOR na cestu: /pentest je interní panel za přihlášením, veřejná
+        stránka je /penetracni-test. Opraveno 4. 9. 2026 — odkaz mířil na
+        panel, takže návštěvník bez účtu skončil na přihlašovací obrazovce. */}
+    <a href={`${G}/penetracni-test`} rel="noopener">Pentest</a> ·
     <a href={`${G}/defender`} rel="noopener">Defender</a> ·
     <a href={`${G}/terms`} rel="noopener">Podmínky</a> ·
     <a href={`${G}/privacy`} rel="noopener">Soukromí</a>
