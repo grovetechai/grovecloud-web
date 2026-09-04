@@ -1,4 +1,5 @@
 ---
+import CloudMark from "./CloudMark.astro";
 const path = Astro.url.pathname;
 const items = [
   { href: "/jak-to-funguje", label: "Jak to funguje" },
@@ -9,7 +10,7 @@ const items = [
 const APP = "https://grovetechai.com/grovecloud";
 ---
 <header class="hdr">
-  <a class="logo" href="/" aria-label="Grove Cloud — domů"><i></i>Grove Cloud <small>by Grove Tech AI</small></a>
+  <a class="logo" href="/" aria-label="Grove Cloud — domů"><CloudMark size={24} />Grove Cloud <small>by Grove Tech AI</small></a>
   <nav aria-label="Hlavní">
     {items.map((i) => <a href={i.href} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
     <a href={APP} class="login" rel="noopener">Přihlásit</a>
@@ -18,7 +19,6 @@ const APP = "https://grovetechai.com/grovecloud";
 <style>
   .hdr { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: rgba(255,255,255,.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
   .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; }
-  .logo i { width: 22px; height: 22px; background: var(--navy); display: inline-block; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
   .logo small { font-weight: 500; color: var(--muted); margin-left: 6px; font-size: 12px; }
   /* min-height 24 px + svislý padding = splněné WCAG 2.5.8 (velikost cíle). */
   nav a { display: inline-flex; align-items: center; min-height: 24px; padding: 4px 2px; margin-left: 20px; color: var(--muted); text-decoration: none; font-size: 14px; }

@@ -1,0 +1,40 @@
+---
+// Značka Grove Cloud — dva mraky za sebou (vybráno 4. 9. 2026, návrh 18).
+//
+// Hloubka vzniká překryvem, ne stínem ani přechodem: zadní mrak je světlejší
+// a posunutý, přední je plný. Díky tomu značka funguje i jednobarevně (razítko,
+// výšivka, fax klienta) — stačí zadní mrak vypustit nebo dát na 40 % krytí.
+//
+// JEDEN ZDROJ PRAVDY: kdo potřebuje mrak, importuje tenhle soubor. Favicona
+// v public/favicon.svg je ručně udržovaná kopie téhle kresby (statický soubor
+// nemůže importovat komponentu) — když se mění tvar, mění se obojí.
+interface Props {
+  /** Velikost v px. Pod 20 px zadní mrak splývá, proto se od 18 px vypíná. */
+  size?: number;
+  /** Na tmavém pozadí se barvy obracejí. */
+  inverse?: boolean;
+  class?: string;
+}
+const { size = 26, inverse = false, class: trida } = Astro.props;
+const predni = inverse ? "#ffffff" : "#082054";
+const zadni = inverse ? "#48609a" : "#9fb0d4";
+const akcent = inverse ? "#ff5567" : "#c80b1f";
+const MRAK = "M14.5 45C8.7 45 4 40.3 4 34.5 4 29 8.2 24.5 13.5 24.05 15.1 16.3 22 10.5 30.2 10.5c7 0 13.1 4.3 15.7 10.4.9-.2 1.9-.35 2.9-.35C55.4 20.55 61 26.15 61 33.05 61 39.65 55.9 45 49.3 45Z";
+---
+<svg
+  class={trida}
+  width={Math.round(size * 64 / 56)}
+  height={size}
+  viewBox="0 0 64 56"
+  role="img"
+  aria-label="Grove Cloud"
+  style="flex:none"
+>
+  {size >= 18 && (
+    <g transform="translate(7,-6) scale(0.82) translate(4,4)">
+      <path d={MRAK} fill={zadni} />
+    </g>
+  )}
+  <path d={MRAK} fill={predni} />
+  <circle cx="49" cy="33" r="4.2" fill={akcent} />
+</svg>

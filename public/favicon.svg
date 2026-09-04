@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 2 30 16 16 30 2 16z" fill="#082054"/><path d="M16 9 23 16 16 23 9 16z" fill="#FD192F"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Grove Cloud">
+  <!--
+    Značka Grove Cloud — dva mraky za sebou (návrh 18, vybráno 4. 9. 2026).
+    Ručně udržovaná kopie src/components/CloudMark.astro; statický soubor
+    nemůže importovat komponentu. Když se mění tvar, mění se obojí.
+    Zaoblený podklad je jen pro faviconu — v hlavičce webu je mrak samotný.
+  -->
+  <rect width="64" height="64" rx="14" fill="#082054"/>
+  <g transform="translate(0,7)">
+    <g transform="translate(7,-6) scale(0.72) translate(6,6)">
+      <path d="M14.5 45C8.7 45 4 40.3 4 34.5 4 29 8.2 24.5 13.5 24.05 15.1 16.3 22 10.5 30.2 10.5c7 0 13.1 4.3 15.7 10.4.9-.2 1.9-.35 2.9-.35C55.4 20.55 61 26.15 61 33.05 61 39.65 55.9 45 49.3 45Z" fill="#48609a"/>
+    </g>
+    <g transform="scale(0.78) translate(9,6)">
+      <path d="M14.5 45C8.7 45 4 40.3 4 34.5 4 29 8.2 24.5 13.5 24.05 15.1 16.3 22 10.5 30.2 10.5c7 0 13.1 4.3 15.7 10.4.9-.2 1.9-.35 2.9-.35C55.4 20.55 61 26.15 61 33.05 61 39.65 55.9 45 49.3 45Z" fill="#ffffff"/>
+      <circle cx="49" cy="33" r="4.2" fill="#ff5567"/>
+    </g>
+  </g>
+</svg>

@@ -1,4 +1,6 @@
 ---
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
 // Bezpečnostní diagram: čím request projde, než se dostane k appce, a co běží
 // trvale. Vrstvy se rozsvěcují postupně, jak sekce najede do obrazu.
 //
@@ -13,7 +15,7 @@ const vrstvy = [
   { n: "Tvoje appka", d: "Běží v EU — Hetzner, Norimberk.", k: "05" },
 ];
 const trvale = [
-  { n: "Sken po každém nasazení", d: "185 kontrol proti veřejné adrese. Skóre uvidíš v účtu hned po deployi." },
+  { n: "Sken po každém nasazení", d: `${KONTROL} kontrol proti veřejné adrese. Skóre uvidíš v účtu hned po deployi.` },
   { n: "Denní zálohy a rollback", d: "Verzované image. Návrat na předchozí verzi je jedno kliknutí, nestaví se nic." },
   { n: "Defender za běhu", d: "Volitelná runtime ochrana appky — jeden řádek v kódu." },
 ];

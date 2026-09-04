@@ -5,8 +5,10 @@ import TryIt from "../components/TryIt.astro";
 import SecurityMap from "../components/SecurityMap.astro";
 import Pillars from "../components/Pillars.astro";
 import Pricing from "../components/Pricing.astro";
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
 ---
-<Base title="Grove Cloud — managed hosting pro appky psané AI, od 99 Kč" description="Nasaď appku z GitHubu na pár kliknutí. Grove Cloud ji hostuje v EU, po každém nasazení proskenuje 185+ kontrolami a Defender ji hlídá za běhu. Statický web od 99 Kč měsíčně." path="/">
+<Base title="Grove Cloud — managed hosting pro appky psané AI, od 99 Kč" description={`Nasaď appku z GitHubu na pár kliknutí. Grove Cloud ji hostuje v EU, po každém nasazení proskenuje ${KONTROL} kontrolami a Defender ji hlídá za běhu. Statický web od 99 Kč měsíčně.`} path="/">
   <VoxelHero />
   <TryIt />
   <SecurityMap />

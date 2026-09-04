@@ -1,8 +1,10 @@
 ---
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
 import Base from "../layouts/Base.astro";
 const G = "https://grovetechai.com";
 ---
-<Base title="Bezpečnost — Grove Cloud" description="Po každém nasazení 185+ bezpečnostních kontrol, Defender za běhu, denní zálohy, data v EU. Hosting od bezpečnostní firmy, ne bezpečnost jako doplněk hostingu." path="/bezpecnost">
+<Base title="Bezpečnost — Grove Cloud" description={`Po každém nasazení ${KONTROL} bezpečnostních kontrol, Defender za běhu, denní zálohy, data v EU. Hosting od bezpečnostní firmy, ne bezpečnost jako doplněk hostingu.`} path="/bezpecnost">
   <section style="padding-bottom:0">
     <div class="wrap">
       <div class="eyebrow">Bezpečnost</div>
@@ -13,7 +15,7 @@ const G = "https://grovetechai.com";
   <section>
     <div class="wrap">
       <div class="grid3">
-        <div class="card reveal"><div class="n">PO DEPLOYI</div><h3>185+ kontrol</h3><p>Bezpečnostní hlavičky, TLS, uniklé klíče v buildu, malware a phishing, expozice adminů a API, závislosti s CVE. Výsledek u appky během minut.</p></div>
+        <div class="card reveal"><div class="n">PO DEPLOYI</div><h3>{KONTROL} kontrol</h3><p>Bezpečnostní hlavičky, TLS, uniklé klíče v buildu, malware a phishing, expozice adminů a API, závislosti s CVE. Výsledek u appky během minut.</p></div>
         <div class="card reveal" data-i="1"><div class="n">ZA BĚHU</div><h3>Defender</h3><p>Runtime ochrana AI vrstvy: prompt injection, únik dat přes odpovědi modelu, podezřelé requesty. Stejné SDK jako <a href={`${G}/defender`} rel="noopener">@grovetech/defender</a>.</p></div>
         <div class="card reveal" data-i="2"><div class="n">IZOLACE</div><h3>Vlastní kontejner</h3><p>Dynamické appky běží každá ve svém kontejneru s limitem paměti. Statika se servíruje ze sdíleného serveru bez spouštění kódu.</p></div>
         <div class="card reveal"><div class="n">ZÁLOHY</div><h3>Denně, mimo node</h3><p>Denní zálohy dat i konfigurace, verzované image pro rollback.</p></div>

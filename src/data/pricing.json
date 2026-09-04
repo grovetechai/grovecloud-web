@@ -1,7 +1,11 @@
 {
-  "generatedAt": "2026-09-04T13:41:00.444Z",
+  "generatedAt": "2026-09-04T14:11:15.373Z",
   "source": "shared/grovecloud-pricing.ts + shared/grovecloud-plans.ts",
   "eurCzk": 25,
+  "checks": {
+    "universal": 205,
+    "total": 218
+  },
   "tiers": [
     {
       "key": "starter",

@@ -1,4 +1,6 @@
 ---
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
 // Hero: nápis GROVE CLOUD složený z voxelů, které se sletí z prostoru a reagují
 // na myš. Text je i v DOM (sr-only) kvůli SEO a čtečkám — canvas je jen vizuál.
 const APP = "https://grovetechai.com/grovecloud";
@@ -17,7 +19,7 @@ const APP = "https://grovetechai.com/grovecloud";
     <div class="kpis">
       <div><b>99 Kč</b>statický web / SPA</div>
       <div><b>&lt; 3 min</b>od repa k adrese</div>
-      <div><b>185+</b>kontrol po každém deployi</div>
+      <div><b>{KONTROL}</b>kontrol po každém deployi</div>
       <div><b>EU</b>data i podpora</div>
     </div>
   </div>

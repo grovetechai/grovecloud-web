@@ -1,4 +1,6 @@
 ---
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
 const kroky = [
   { n: "01", h: "Připoj GitHub", p: "Vyber repo. Detekce projde kořen i podsložky (client/, server/, apps/) a řekne, z čeho se appka skládá — a proč si to myslí." },
   { n: "02", h: "Klikni Nasadit", p: "Statika jde na sdílený server za 99 Kč, dynamické appky do vlastního kontejneru. Adresa tvoje-appka.grovecloud.cz s certifikátem hned." },
@@ -24,7 +26,7 @@ const bezpecnost = [
   <div class="wrap">
     <div class="step">02 · BEZPEČNOST</div>
     <h2 class="reveal">Hosting, který se po každém nasazení sám zkontroluje.</h2>
-    <p class="sub reveal" data-i="1">V roce 2026 unikla data z tisíců appek napsaných AI. Tady je po každém nasazení 185+ kontrol, Defender za běhu a denní zálohy — v ceně, ne jako doplněk.</p>
+    <p class="sub reveal" data-i="1">V roce 2026 unikla data z tisíců appek napsaných AI. Tady je po každém nasazení {KONTROL} kontrol, Defender za běhu a denní zálohy — v ceně, ne jako doplněk.</p>
     <div class="grid3">
       {bezpecnost.map((k, i) => <div class="card reveal" data-i={i}><div class="n">{k.n}</div><h3>{k.h}</h3><p>{k.p}</p></div>)}
     </div>
