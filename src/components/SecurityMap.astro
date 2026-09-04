@@ -1,0 +1,62 @@
+---
+// Bezpečnostní diagram: čím request projde, než se dostane k appce, a co běží
+// trvale. Vrstvy se rozsvěcují postupně, jak sekce najede do obrazu.
+//
+// Obsah musí sedět 1:1 s tím, co doopravdy zapisujeme do sdíleného Caddy
+// (shared/grovecloud-provision-plan.ts → GC_SECURITY_HEADERS). Žádná vrstva tu
+// není proto, že hezky vypadá.
+const vrstvy = [
+  { n: "Návštěvník", d: "Požadavek z internetu", k: "01" },
+  { n: "TLS certifikát", d: "Caddy ho vydá i obnovuje sám (Let's Encrypt). HTTP se přesměruje na HTTPS.", k: "02" },
+  { n: "Bezpečnostní hlavičky", d: "HSTS · CSP · nosniff · X-Frame-Options: DENY · Referrer-Policy · Permissions-Policy", k: "03" },
+  { n: "Izolace", d: "Statický web servírujeme jen jako soubory, dynamickou appku ve vlastním kontejneru.", k: "04" },
+  { n: "Tvoje appka", d: "Běží v EU — Hetzner, Norimberk.", k: "05" },
+];
+const trvale = [
+  { n: "Sken po každém nasazení", d: "185 kontrol proti veřejné adrese. Skóre uvidíš v účtu hned po deployi." },
+  { n: "Denní zálohy a rollback", d: "Verzované image. Návrat na předchozí verzi je jedno kliknutí, nestaví se nic." },
+  { n: "Defender za běhu", d: "Volitelná runtime ochrana appky — jeden řádek v kódu." },
+];
+---
+<section id="jak-chranime" class="secmap">
+  <div class="wrap">
+    <div class="step">BEZPEČNOST</div>
+    <h2>Co je mezi internetem a tvojí appkou</h2>
+    <p class="sub">Tohle nezapínáš, nekonfiguruješ ani nedoplácíš. Je to součást hostingu — u statického webu za 99 Kč stejně jako u čehokoli většího.</p>
+
+    <ol class="chain" id="chain">
+      {vrstvy.map((v) => (
+        <li class="layer">
+          <div class="k mono">{v.k}</div>
+          <div>
+            <h3>{v.n}</h3>
+            <p>{v.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="eyebrow trvale-nad">A co běží trvale</div>
+    <div class="grid3">
+      {trvale.map((t) => (
+        <div class="card">
+          <h3>{t.n}</h3>
+          <p>{t.d}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<script src="../scripts/secmap.ts"></script>
+<style>
+  .secmap { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .chain { list-style: none; margin: 36px 0 0; padding: 0; display: grid; gap: 10px; position: relative; }
+  .layer { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 12px; padding: 16px 18px; opacity: .34; transform: translateY(10px); transition: opacity .45s, transform .45s, border-left-color .45s, box-shadow .45s; }
+  .layer.lit { opacity: 1; transform: none; border-left-color: var(--red-ink); box-shadow: 0 8px 22px -16px rgba(8,32,84,.6); }
+  .layer .k { font-size: 12px; font-weight: 800; color: var(--muted); padding-top: 2px; min-width: 24px; }
+  .layer.lit .k { color: var(--red-ink); }
+  .layer h3 { font-size: 16px; }
+  .layer p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .trvale-nad { display: block; margin-top: 40px; }
+  @media (prefers-reduced-motion: reduce) { .layer { opacity: 1; transform: none; transition: none; } }
+</style>

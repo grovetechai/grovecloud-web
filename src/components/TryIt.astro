@@ -19,6 +19,26 @@ import pricing from "../data/pricing.json";
       </form>
       <div class="detect" id="detect" aria-live="polite"></div>
       <pre class="log mono" id="log">$ čekám…</pre>
+
+      <!-- Sken po nasazení. Skrytý, dokud nasazení nedojede — pak je to ta
+           hlavní věc, kterou má návštěvník vidět. -->
+      <div class="scan" id="scan" hidden>
+        <div class="scanhead">
+          <svg class="ring" viewBox="0 0 120 120" role="img" aria-label="Bezpečnostní skóre">
+            <circle cx="60" cy="60" r="46" fill="none" stroke-width="10" stroke="#e6e9f0" />
+            <circle id="ringarc" cx="60" cy="60" r="46" fill="none" stroke-width="10" stroke-linecap="round"
+              stroke="#16a34a" transform="rotate(-90 60 60)" stroke-dasharray="289.03" stroke-dashoffset="289.03" />
+            <text id="ringnum" x="60" y="58" text-anchor="middle" dominant-baseline="middle">0</text>
+            <text x="60" y="80" text-anchor="middle" dominant-baseline="middle" class="ringsub">/ 100</text>
+          </svg>
+          <div>
+            <div class="scantitle">Bezpečnostní sken po nasazení <span class="tag">ukázka</span></div>
+            <div class="scanmeta mono" id="scanmeta">0 / 185 kontrol</div>
+            <div class="scanverdict" id="scanverdict"></div>
+          </div>
+        </div>
+        <div class="chips" id="chips" aria-live="polite"></div>
+      </div>
     </div>
   </div>
   <script type="application/json" id="pricing-data" set:html={JSON.stringify(pricing)}></script>
@@ -41,6 +61,19 @@ import pricing from "../data/pricing.json";
   .detect :global(b) { color: var(--navy); }
   .log { margin-top: 14px; background: #0b1226; color: #c9d4ee; border-radius: 10px; padding: 14px; font-size: 12px; line-height: 1.7; min-height: 130px; white-space: pre-wrap; }
   .log :global(.ok) { color: #59d98f; } .log :global(.red) { color: var(--red); }
+
+  /* Sken — to, co se má na téhle sekci zapamatovat. */
+  .scan { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .scanhead { display: flex; align-items: center; gap: 16px; }
+  .ring { width: 104px; height: 104px; flex: none; }
+  .ring :global(#ringarc) { transition: stroke-dashoffset .09s linear; }
+  .ring text { font-family: var(--font-ui); font-weight: 800; font-size: 30px; fill: #16a34a; }
+  .ring text.ringsub { font-size: 11px; font-weight: 600; fill: var(--muted); }
+  .scantitle { font-size: 15px; font-weight: 800; letter-spacing: -.01em; }
+  .tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 7px; margin-left: 6px; vertical-align: 2px; }
+  .scanmeta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .scanverdict { font-size: 13px; margin-top: 6px; min-height: 19px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .iso { height: 360px; } }
 </style>
 <style is:global>
@@ -52,4 +85,13 @@ import pricing from "../data/pricing.json";
   .gc-box .s1 { top: 100%; left: 0; width: 90px; height: var(--h); transform-origin: top; transform: rotateX(90deg); background: color-mix(in srgb, var(--c) 62%, #000); }
   .gc-box .s2 { left: 100%; top: 0; width: var(--h); height: 90px; transform-origin: left; transform: rotateY(-90deg); background: color-mix(in srgb, var(--c) 80%, #000); }
   .gc-box.drop { transform: translateZ(600px); opacity: 0; }
+
+  /* Kategorie skenu — vkládá je tryit.ts. */
+  .gc-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; font-size: 12px; color: var(--muted); background: #fff; opacity: .45; transition: opacity .25s, border-color .25s, color .25s; }
+  .gc-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: #cbd5e1; transition: background .25s; }
+  .gc-chip.on { opacity: 1; color: var(--ink); border-color: #16a34a55; }
+  .gc-chip.on .dot { background: #16a34a; }
+  .gc-chip.warn { border-color: #b4530955; }
+  .gc-chip.warn .dot { background: #b45309; }
+  @media (prefers-reduced-motion: reduce) { .gc-chip { transition: none; } }
 </style>

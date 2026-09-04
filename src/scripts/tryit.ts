@@ -8,6 +8,85 @@ const detect = document.getElementById("detect");
 const nodest = document.getElementById("nodest");
 const form = document.getElementById("tryform") as HTMLFormElement | null;
 const repoInput = document.getElementById("repo") as HTMLInputElement | null;
+const scan = document.getElementById("scan");
+const chips = document.getElementById("chips");
+const ringarc = document.getElementById("ringarc");
+const ringnum = document.getElementById("ringnum");
+const scanmeta = document.getElementById("scanmeta");
+const scanverdict = document.getElementById("scanverdict");
+
+/** Kategorie skenu — stejné, jaké má report na grovetechai.com. */
+const KATEGORIE: Array<{ n: string; pocet: number; warn?: boolean }> = [
+  { n: "TLS a certifikát", pocet: 18 },
+  { n: "Bezpečnostní hlavičky", pocet: 24 },
+  { n: "Zranitelnosti závislostí", pocet: 41 },
+  { n: "Malware a phishing", pocet: 22 },
+  { n: "Únik dat a tajemství", pocet: 19 },
+  { n: "GDPR a cookies", pocet: 17, warn: true },
+  { n: "Výkon", pocet: 21 },
+  { n: "SEO a AI čitelnost", pocet: 23, warn: true },
+];
+const KONTROL_CELKEM = KATEGORIE.reduce((a, k) => a + k.pocet, 0);
+const OBVOD = 2 * Math.PI * 46;
+const bezAnimace = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+
+/** Doběhne prstenec i číslo na cílové skóre. */
+function dojedSkore(cil: number) {
+  const barva = cil >= 80 ? "#16a34a" : cil >= 50 ? "#b45309" : "#dc2626";
+  const nastav = (v: number) => {
+    ringarc?.setAttribute("stroke", barva);
+    ringarc?.setAttribute("stroke-dashoffset", String(OBVOD * (1 - v / 100)));
+    if (ringnum) { ringnum.textContent = String(v); (ringnum as unknown as SVGElement).setAttribute("style", `fill:${barva}`); }
+  };
+  if (bezAnimace) { nastav(cil); return; }
+  const start = performance.now();
+  const krok = (t: number) => {
+    const p = Math.min(1, (t - start) / 1100);
+    nastav(Math.round(cil * (1 - Math.pow(1 - p, 3))));
+    if (p < 1) requestAnimationFrame(krok);
+  };
+  requestAnimationFrame(krok);
+}
+
+/**
+ * Ukázka skenu po nasazení: kategorie naskakují jedna po druhé, počet kontrol
+ * roste, na konci dojede skóre. Nic se doopravdy neskenuje — je to ukázka
+ * toho, co klient uvidí v aplikaci po ostrém nasazení.
+ */
+function spustSken(hotovo?: () => void) {
+  if (!scan || !chips || !scanmeta || !scanverdict) { hotovo?.(); return; }
+  scan.hidden = false;
+  chips.innerHTML = "";
+  scanverdict.textContent = "";
+  dojedSkore(0);
+
+  const prvky = KATEGORIE.map((k) => {
+    const el = document.createElement("span");
+    el.className = "gc-chip";
+    el.innerHTML = `<span class="dot"></span>${k.n}`;
+    chips.appendChild(el);
+    return el;
+  });
+
+  let i = 0, hotovoKontrol = 0;
+  const dalsi = () => {
+    if (i >= KATEGORIE.length) {
+      const nalezu = KATEGORIE.filter((k) => k.warn).length;
+      scanverdict.innerHTML = `<b>0 kritických</b> · ${nalezu} doporučení · report dostaneš do účtu`;
+      dojedSkore(96);
+      hotovo?.();
+      return;
+    }
+    const k = KATEGORIE[i];
+    prvky[i].classList.add("on");
+    if (k.warn) prvky[i].classList.add("warn");
+    hotovoKontrol += k.pocet;
+    scanmeta.textContent = `${hotovoKontrol} / ${KONTROL_CELKEM} kontrol`;
+    i++;
+    setTimeout(dalsi, bezAnimace ? 0 : 190);
+  };
+  dalsi();
+}
 
 if (dataEl && node && log && detect && nodest && form && repoInput) {
   const pricing = JSON.parse(dataEl.textContent || "{}") as Pricing;
@@ -57,16 +136,19 @@ if (dataEl && node && log && detect && nodest && form && repoInput) {
       `✓ build 21 s`,
       g.st === "static" ? `✓ statika → sdílený server` : `✓ kontejner 512 MB → node`,
       `✓ https://${esc(name)}.grovecloud.cz · certifikát OK`,
-      `$ sken 185+ kontrol …`,
-      `<span class="ok">✓ 0 kritických · 2 doporučení</span>`,
-      `<span class="red">■ Defender aktivní</span>`,
+      `$ sken ${KONTROL_CELKEM} kontrol …`,
     ];
     log.innerHTML = ""; running = true;
     let i = 0;
     const t = setInterval(() => {
       log.innerHTML += lines[i] + "\n"; i++;
       if (i === 5) addBox(`${name} · ${g.fw}`, g.c, g.h);
-      if (i >= lines.length) { clearInterval(t); running = false; nodest.textContent = `${used} appek · ${(1.1 - used * 0.15).toFixed(1).replace(".", ",")} GB volné`; }
+      if (i >= lines.length) {
+        clearInterval(t);
+        nodest.textContent = `${used} appek · ${(1.1 - used * 0.15).toFixed(1).replace(".", ",")} GB volné`;
+        // Sken je pointa — teprve po něm je „nasazeno".
+        spustSken(() => { running = false; });
+      }
     }, 260);
   });
 }
