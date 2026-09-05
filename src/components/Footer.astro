@@ -11,7 +11,11 @@ const G = "https://grovetechai.com";
     <a href={`${G}/penetracni-test`} rel="noopener">Pentest</a> ·
     <a href={`${G}/defender`} rel="noopener">Defender</a> ·
     <a href={`${G}/terms`} rel="noopener">Podmínky</a> ·
-    <a href={`${G}/privacy`} rel="noopener">Soukromí</a>
+    <a href={`${G}/privacy`} rel="noopener">Soukromí</a> ·
+    {/* Stav služby je NA TOMHLE webu, ne na grovetechai.com — musí být
+        dostupný i ve chvíli, kdy je hlavní aplikace dole. Statická stránka
+        ze sdíleného Caddy tuhle podmínku splňuje, SSR by ji nesplnilo. */}
+    <a href="/stav">Stav služby</a>
   </div>
   <div class="mono">tento web běží na Grove Cloud · Starter 99 Kč</div>
 </footer>

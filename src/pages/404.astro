@@ -1,0 +1,55 @@
+---
+/**
+ * Stránka pro neexistující adresu.
+ *
+ * ══ PROČ EXISTUJE ══════════════════════════════════════════════════════════
+ * Není to jen ozdoba. Caddy podle přítomnosti `404.html` ve výstupu buildu
+ * pozná, že tenhle web JE vícestránkový, a začne na neexistující adresy
+ * odpovídat poctivým stavem 404 (viz shared/grovecloud-provision-plan.ts).
+ *
+ * Bez ní vracel Grove Cloud na každou neexistující URL homepage se stavem 200.
+ * Google takovou stránku indexuje jako plnohodnotnou a náš vlastní skener ji
+ * hlásí jako nález — hosting si tak srážel skóre konfigurací, kterou nastavil
+ * sám sobě i klientům.
+ */
+import Layout from "../layouts/Base.astro";
+---
+<Layout title="Stránka nenalezena — Grove Cloud" description="Tahle adresa na Grove Cloudu neexistuje.">
+  <section class="wrap">
+    <p class="kod">404</p>
+    <h1>Tuhle stránku tu nemáme</h1>
+    <p class="text">
+      Adresa, kterou jste zadali, na Grove Cloudu neexistuje. Mohla se přesunout,
+      nebo je v odkazu překlep.
+    </p>
+    <div class="odkazy">
+      <a class="hlavni" href="/">Zpět na úvod</a>
+      <a class="vedlejsi" href="/cena">Ceník</a>
+      <a class="vedlejsi" href="/jak-to-funguje">Jak to funguje</a>
+      <a class="vedlejsi" href="/stav">Stav služby</a>
+    </div>
+    <p class="pod">
+      Hledáte něco konkrétního? Napište na
+      <a href="mailto:podpora@grovetechai.com">podpora@grovetechai.com</a>.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .wrap { max-width: 720px; margin: 0 auto; padding: 96px 32px 110px; text-align: center; }
+  .kod { font-size: 13px; letter-spacing: .18em; color: var(--muted); margin: 0 0 14px; font-weight: 700; }
+  h1 { font-size: 36px; letter-spacing: -.02em; margin: 0 0 14px; }
+  .text { font-size: 16.5px; color: var(--muted); line-height: 1.6; margin: 0 auto 34px; max-width: 46ch; }
+  .odkazy { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .hlavni {
+    background: var(--navy); color: #fff; border-radius: 10px;
+    padding: 11px 20px; font-weight: 650; font-size: 14.5px; text-decoration: none;
+  }
+  .vedlejsi {
+    border: 1px solid var(--line); border-radius: 10px; color: var(--navy);
+    padding: 11px 18px; font-size: 14.5px; text-decoration: none;
+  }
+  .pod { margin-top: 34px; font-size: 13.5px; color: var(--muted); }
+  .pod a { color: var(--navy); }
+  @media (max-width: 700px) { .wrap { padding: 64px 18px 80px; } h1 { font-size: 28px; } }
+</style>
