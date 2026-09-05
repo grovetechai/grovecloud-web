@@ -34,11 +34,7 @@ const KONTROL = pricing.checks.universal;
 const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
 const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 ---
-<Base
-  title="Grove Cloud — cloud, který aplikaci nasadí, prověří, ochrání a hlídá"
-  description={`Připojte GitHub a spusťte aplikaci v evropském cloudu. Po každém nasazení ji prověří GroveCheck (${KONTROL} kontrol), za běhu ji chrání AI GroveDefender a dostupnost hlídáme každých 10 minut. Statický web od 99 Kč.`}
-  path="/"
->
+<Base title={t("meta.index.t")} description={t("meta.index.d", { n: KONTROL, cena: STARTER })} path="/">
   <VoxelHero />
   <GroveChain />
   <TryIt />
