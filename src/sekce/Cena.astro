@@ -8,6 +8,18 @@ const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static"
 const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 ---
 <Base title={t("meta.cena.t")} description={t("meta.cena.d", { cena: STARTER })} path="/cena">
+  {/*
+    H1 tu musí být. Velký nadpis „Stejná čísla jako v aplikaci" uvnitř ceníku
+    je <h2> — vizuálně to vypadalo jako titulek stránky, ale strojově byla
+    /cena stránka bez hlavního tématu. Náš vlastní sken to hlásil jako nález.
+  */}
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <div class="eyebrow">{t("nav.cenik")}</div>
+      <h1 class="reveal" style="font-size:clamp(34px,4.6vw,54px);margin-top:10px">{t("cena.h1")}</h1>
+      <p class="sub reveal" data-i="1">{t("cena.lead")}</p>
+    </div>
+  </section>
   <Pricing />
   <section style="padding-top:0">
     <div class="wrap">

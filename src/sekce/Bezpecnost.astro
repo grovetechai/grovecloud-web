@@ -16,6 +16,8 @@ const G = "https://grovetechai.com";
   </section>
   <section>
     <div class="wrap">
+      {/* Bez tohohle H2 neměla stránka mezi H1 a kartami (H3) žádný mezistupeň. */}
+      <h2 class="reveal" style="margin-bottom:22px">{t("bs.h2")}</h2>
       <div class="grid3">
         <div class="card reveal"><div class="n">{t("bs.1.n")}</div><h3>{t("bs.1.h", { n: KONTROL })}</h3><p>{t("bs.1.p")}</p></div>
         <div class="card reveal" data-i="1"><div class="n">{t("bs.2.n")}</div><h3>Defender</h3><p>{t("bs.2.p1")} <a href={`${G}/defender`} rel="noopener">@grovetech/defender</a>.</p></div>

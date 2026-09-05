@@ -21,12 +21,14 @@ const { t } = prekladacZUrl(Astro.url);
     <p class="kod">404</p>
     <h1>{t("e404.h1")}</h1>
     <p class="text">{t("e404.text")}</p>
+    <h2 class="kamdal">{t("e404.kamdal")}</h2>
     <div class="odkazy">
       <a class="hlavni" href="/">{t("e404.zpet")}</a>
       <a class="vedlejsi" href="/cena">{t("nav.cenik")}</a>
       <a class="vedlejsi" href="/jak-to-funguje">{t("nav.jak")}</a>
       <a class="vedlejsi" href="/stav">{t("nav.stav")}</a>
     </div>
+    <h3 class="sr-nadpis">{t("e404.hledate")}</h3>
     <p class="pod">
       {t("e404.hledate")}
       <a href="mailto:podpora@grovetechai.com">podpora@grovetechai.com</a>.
@@ -39,6 +41,8 @@ const { t } = prekladacZUrl(Astro.url);
   .kod { font-size: 13px; letter-spacing: .18em; color: var(--muted); margin: 0 0 14px; font-weight: 700; }
   h1 { font-size: 36px; letter-spacing: -.02em; margin: 0 0 14px; }
   .text { font-size: 16.5px; color: var(--muted); line-height: 1.6; margin: 0 auto 34px; max-width: 46ch; }
+  .kamdal { font-size: 15px; font-weight: 650; color: var(--muted); margin: 0 0 14px; letter-spacing: .01em; }
+  .sr-nadpis { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .odkazy { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
   .hlavni {
     background: var(--navy); color: #fff; border-radius: 10px;

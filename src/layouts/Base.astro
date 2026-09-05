@@ -83,6 +83,17 @@ const schema = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={LOCALE[jazyk].og} />
+    {/*
+      Bez og:image se odkaz na LinkedIn, Slacku i Facebooku sdílí jako holý
+      řádek textu. `summary_large_image` níž slibuje velký náhled — bez obrázku
+      by to byl slib, který sítě nemají čím naplnit.
+      Adresa musí být ABSOLUTNÍ; relativní cestu většina sítí neuvidí.
+    */}
+    <meta property="og:image" content="https://grovecloud.cz/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Grove Cloud — cloud, který aplikaci nejen nasadí, ale také prověří, ochrání a hlídá" />
+    <meta name="twitter:image" content="https://grovecloud.cz/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#082054" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />

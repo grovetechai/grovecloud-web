@@ -50,6 +50,8 @@ const prekladySkriptu = {
     <h1 id="nadpis">{t("stav.zjistuji")}</h1>
     <p class="zprava" id="zprava">{t("stav.nacitam")}</p>
 
+    {/* H2 + H3 doplněné 5. 9. 2026: stránka měla jediný H1 a dál samé divy. */}
+    <h2 class="sr-nadpis">{t("stav.h2")}</h2>
     <div class="karty">
       <div class="karta">
         <div class="popis">{t("stav.ridici")}</div>
@@ -68,6 +70,7 @@ const prekladySkriptu = {
       </div>
     </div>
 
+    <h3 class="sr-nadpis">{t("stav.h3")}</h3>
     <p class="poznamka">{t("stav.pozn1")}</p>
     <p class="poznamka">
       {t("stav.pozn2")}
@@ -137,6 +140,9 @@ const prekladySkriptu = {
   .eyebrow { font-size: 12px; letter-spacing: .12em; color: var(--muted); margin: 0 0 8px; }
   h1 { font-size: 34px; letter-spacing: -.02em; margin: 0 0 10px; }
   .zprava { font-size: 16px; color: var(--muted); margin: 0 0 32px; max-width: 62ch; line-height: 1.55; }
+  /* Nadpis, který nese strukturu pro čtečky a stroje, ale nekreslí se.
+     Není `display:none` — to by ho z přístupnostního stromu odstranilo úplně. */
+  .sr-nadpis { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .karty { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
   .karta { border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
   .popis { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }

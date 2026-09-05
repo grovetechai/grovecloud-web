@@ -56,7 +56,7 @@ for (const s of stacks as any[]) {
           <div class:list={["tier", { hl: tier.highlighted, off: !p }]} data-tier={tier.key}>
             {tier.comingSoon && <span class="soon">{t("cenik.pripravujeme")}</span>}
             {/* Název tarifu se nepřekládá — Starter, Secure Host… jsou značky. */}
-            <div class="name">{tier.name}</div>
+            <h3 class="name">{tier.name}</h3>
             <div class="price" data-price>
               {popis ? <>{popis}<small>{t("cenik.mesic")}</small></> : <span class="na">{t("cenik.jenStatika")}</span>}
             </div>

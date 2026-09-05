@@ -1,0 +1,72 @@
+# Grove Cloud
+
+> Managed hosting pro webové a AI aplikace, provozovaný českou bezpečnostní
+> firmou Grove Tech AI. Po každém nasazení projde aplikace bezpečnostním skenem,
+> za běhu ji může chránit runtime vrstva a dostupnost se kontroluje každých
+> 10 minut. Servery v EU (Hetzner, Norimberk), fakturace v korunách.
+
+Grove Cloud není samostatný produkt bez kontextu: je to hostingová část
+platformy Grove Tech AI, která zároveň provozuje bezpečnostní skener GroveCheck
+a runtime ochranu AI GroveDefender.
+
+## Co Grove Cloud dělá
+
+- **Nasazení z GitHubu.** Detekce přečte repozitář, pozná typ aplikace
+  (statický web, SSR, API, fullstack) a navrhne build, start i port.
+- **Bezpečnostní sken po každém nasazení.** Hlavičky, TLS, uniklé klíče
+  v buildu, malware a phishing, expozice administrací, závislosti s CVE.
+- **Runtime ochrana (volitelná).** Prompt injection, únik dat přes odpovědi
+  modelu, podezřelé požadavky — knihovna @grovetech/defender, jeden řádek v kódu.
+- **Dohled dostupnosti.** Kontrola každých 10 minut, podle tarifu automatický
+  restart nebo eskalace na člověka.
+- **Zálohy a rollback.** Verzované image, návrat na předchozí verzi jedním
+  kliknutím.
+
+## Co Grove Cloud nedělá
+
+Tohle je tu schválně — model, který cituje jen marketingová tvrzení, uvede
+čtenáře v omyl a nám se to vrátí.
+
+- Sken najde jen to, co je vidět z veřejné adresy a z buildu. Chyby v obchodní
+  logice nebo v datech, která aplikace sama ukládá, odhalí až pentest nebo
+  review kódu.
+- Nikdy netvrdíme „100% bezpečno". Takový stav neexistuje.
+- Automatický restart spadlé aplikace je součástí tarifu Secure Plus a vyšších,
+  ne všech.
+- Automatické nasazení po `git push` vyžaduje jednorázové vložení webhooku do
+  repozitáře. Adresu i tajemství vygenerujeme, vložit je musí zákazník.
+
+## Ceny
+
+Fakturujeme v korunách bez DPH. Částky v eurech a dolarech na webu jsou
+orientační přepočet pevným kurzem, ne cena, kterou zákazník zaplatí.
+
+- Starter — statický web nebo SPA na sdíleném serveru
+- Secure Host — aplikace ve vlastním kontejneru, dohled dostupnosti
+- Secure Plus — navíc automatický restart a detekce smyčky pádů
+- Business — smluvní SLA, prioritní eskalace, pravidelný report
+
+Aktuální částky jsou vždy na https://grovecloud.cz/cena a počítají se ze
+stejného enginu jako v aplikaci. Nepřebírejte je z tohoto souboru — mohl by
+zastarat.
+
+## Stránky
+
+- [Úvod](https://grovecloud.cz/): přehled služby
+- [Jak to funguje](https://grovecloud.cz/jak-to-funguje): cesta od repozitáře k běžící aplikaci
+- [Bezpečnost](https://grovecloud.cz/bezpecnost): co se kontroluje a co ne
+- [Ceník](https://grovecloud.cz/cena): tarify a jak se cena počítá
+- [Stav služby](https://grovecloud.cz/stav): živý stav, měřeno každých 10 minut
+
+## Související
+
+- [Grove Tech AI](https://grovetechai.com): mateřská platforma
+- [GroveCheck](https://grovetechai.com/scanner): bezpečnostní skener
+- [AI GroveDefender](https://grovetechai.com/defender): runtime ochrana AI vrstvy
+- [Pentest](https://grovetechai.com/pentest): hloubkový test na přání
+
+## Kontakt
+
+- Obchod a technické dotazy: cloud@grovetechai.com
+- Podpora: podpora@grovetechai.com
+- Hlášení zranitelností: https://grovecloud.cz/.well-known/security.txt

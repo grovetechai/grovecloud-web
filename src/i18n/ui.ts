@@ -841,6 +841,28 @@ export const ui = {
     en: "You have an app with us and something looks wrong? Write to",
     sk: "Máte u nás aplikáciu a niečo nesedí? Napíšte na",
   },
+  // ── Nadpisy stránek ──────────────────────────────────────────────────────
+  //
+  // ══ PROČ TYHLE KLÍČE VZNIKLY ═══════════════════════════════════════════════
+  // Stránka /cena neměla 5. 9. 2026 vůbec žádný <h1> a /bezpecnost ani /stav
+  // neměly <h2>. Vypadalo to dobře, protože ceník začíná velkým nadpisem —
+  // jenže ten je <h2> uvnitř komponenty. Pro čtečku, vyhledávač i jazykový
+  // model to znamená stránku bez hlavního tématu. Náš vlastní sken to hlásí
+  // jako nález (ai-semantic-html) a strhává za to body.
+  "cena.h1": { cs: "Ceník Grove Cloudu", en: "Grove Cloud pricing", sk: "Cenník Grove Cloudu" },
+  "cena.lead": {
+    cs: "Platíte za aplikaci, ne za lidi ve firmě. Ceny se počítají ze stejného enginu, jaký běží v aplikaci — co vidíte tady, uvidíte i na faktuře.",
+    en: "You pay per application, not per person in your company. Prices are computed by the same engine that runs inside the app — what you see here is what shows up on the invoice.",
+    sk: "Platíte za aplikáciu, nie za ľudí vo firme. Ceny sa počítajú z rovnakého enginu, aký beží v aplikácii — čo vidíte tu, uvidíte aj na faktúre.",
+  },
+  "bs.h2": {
+    cs: "Šest vrstev, které dostanete v ceně",
+    en: "Six layers included in the price",
+    sk: "Šesť vrstiev, ktoré dostanete v cene",
+  },
+  "stav.h2": { cs: "Aktuální stav", en: "Current status", sk: "Aktuálny stav" },
+  "stav.h3": { cs: "Co tady nezveřejňujeme", en: "What we don't publish here", sk: "Čo tu nezverejňujeme" },
+  "e404.kamdal": { cs: "Kam dál", en: "Where to next", sk: "Kam ďalej" },
 } as const;
 
 export type Klic = keyof typeof ui;
