@@ -1,30 +1,36 @@
 ---
 import pricing from "../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 // Bezpečnostní diagram: čím request projde, než se dostane k appce, a co běží
 // trvale. Vrstvy se rozsvěcují postupně, jak sekce najede do obrazu.
 //
 // Obsah musí sedět 1:1 s tím, co doopravdy zapisujeme do sdíleného Caddy
 // (shared/grovecloud-provision-plan.ts → GC_SECURITY_HEADERS). Žádná vrstva tu
 // není proto, že hezky vypadá.
-const vrstvy = [
-  { n: "Návštěvník", d: "Požadavek z internetu", k: "01" },
-  { n: "TLS certifikát", d: "Caddy ho vydá i obnovuje sám (Let's Encrypt). HTTP se přesměruje na HTTPS.", k: "02" },
-  { n: "Bezpečnostní hlavičky", d: "HSTS · CSP · nosniff · X-Frame-Options: DENY · Referrer-Policy · Permissions-Policy", k: "03" },
-  { n: "Izolace", d: "Statický web servírujeme jen jako soubory, dynamickou appku ve vlastním kontejneru.", k: "04" },
-  { n: "Tvoje appka", d: "Běží v EU — Hetzner, Norimberk.", k: "05" },
-];
-const trvale = [
-  { n: "Sken po každém nasazení", d: `${KONTROL} kontrol proti veřejné adrese. Skóre uvidíš v účtu hned po deployi.` },
-  { n: "Denní zálohy a rollback", d: "Verzované image. Návrat na předchozí verzi je jedno kliknutí, nestaví se nic." },
-  { n: "Defender za běhu", d: "Volitelná runtime ochrana appky — jeden řádek v kódu." },
-];
+//
+// Výčet hlaviček u vrstvy 03 je schválně BEZ překladu: jsou to doslovné názvy
+// HTTP hlaviček. Přeložit „X-Frame-Options: DENY" by znamenalo napsat něco,
+// co v odpovědi serveru nestojí.
+const HLAVICKY = "HSTS · CSP · nosniff · X-Frame-Options: DENY · Referrer-Policy · Permissions-Policy";
+const vrstvy = [1, 2, 3, 4, 5].map((i) => ({
+  n: t(`mapa.${i}.n` as any),
+  d: i === 3 ? HLAVICKY : t(`mapa.${i}.d` as any),
+  k: `0${i}`,
+}));
+const trvale = [1, 2, 3].map((i) => ({
+  n: t(`mapa.t${i}.n` as any),
+  d: t(`mapa.t${i}.d` as any, { n: KONTROL }),
+}));
 ---
 <section id="jak-chranime" class="secmap">
   <div class="wrap">
-    <div class="step">BEZPEČNOST</div>
-    <h2>Co je mezi internetem a tvojí appkou</h2>
-    <p class="sub">Tohle nezapínáš, nekonfiguruješ ani nedoplácíš. Je to součást hostingu — u statického webu za 99 Kč stejně jako u čehokoli většího.</p>
+    <div class="step">{t("mapa.step")}</div>
+    <h2>{t("mapa.h2")}</h2>
+    <p class="sub">{t("mapa.sub", { cena: STARTER })}</p>
 
     <ol class="chain" id="chain">
       {vrstvy.map((v) => (
@@ -38,7 +44,7 @@ const trvale = [
       ))}
     </ol>
 
-    <div class="eyebrow trvale-nad">A co běží trvale</div>
+    <div class="eyebrow trvale-nad">{t("mapa.trvale")}</div>
     <div class="grid3">
       {trvale.map((t) => (
         <div class="card">

@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+import pricing from "../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+import Pricing from "../components/Pricing.astro";
+const { jazyk, t } = prekladacZUrl(Astro.url);
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
+---
+<Base title={t("meta.cena.t")} description={t("meta.cena.d", { cena: STARTER })} path="/cena">
+  <Pricing />
+  <section style="padding-top:0">
+    <div class="wrap">
+      <h2 class="reveal">{t("cena.h2")}</h2>
+      <p class="sub reveal" data-i="1">{t("cena.sub", { cena: STARTER })}</p>
+      <ul class="list reveal" data-i="2">
+        <li>{t("cena.l1")}</li>
+        <li>{t("cena.l2a")} <span class="mono">appka.grovecloud.cz</span> {t("cena.l2b")}</li>
+        <li>{t("cena.l3")}</li>
+        <li>{t("cena.l4")}</li>
+      </ul>
+    </div>
+  </section>
+</Base>

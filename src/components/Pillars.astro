@@ -1,28 +1,42 @@
 ---
+/**
+ * Tři kroky nasazení + tři pilíře bezpečnosti.
+ *
+ * ══ CENA SE NEPÍŠE RUČNĚ ═══════════════════════════════════════════════════
+ * Dřív tu stálo „99 Kč" napevno v textu. Na anglické a slovenské verzi by to
+ * zůstalo v korunách, i když všude vedle svítí eura — a hlavně by se to
+ * rozešlo s ceníkem, jakmile by se cena hnula. Bereme ji z pricing.json přes
+ * stejný helper jako ceník, takže se změní na jednom místě.
+ */
 import pricing from "../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
+
 const kroky = [
-  { n: "01", h: "Připoj GitHub", p: "Vyber repo. Detekce projde kořen i podsložky (client/, server/, apps/) a řekne, z čeho se appka skládá — a proč si to myslí." },
-  { n: "02", h: "Klikni Nasadit", p: "Statika jde na sdílený server za 99 Kč, dynamické appky do vlastního kontejneru. Adresa tvoje-appka.grovecloud.cz s certifikátem hned." },
+  { n: "01", h: t("kroky.1.h"), p: t("kroky.1.p") },
+  { n: "02", h: t("kroky.2.h"), p: t("kroky.2.p", { cena: STARTER }) },
   // POZOR NA FORMULACI (upřesněno 5. 9. 2026):
   // Automatické nasazení po pushi funguje, ale vyžaduje JEDNORÁZOVÉ vložení
   // webhooku do repozitáře — adresu i tajemství vygenerujeme, klient je jen
   // vloží v GitHubu. Dřív tu stálo „Pushni a zapomeň" bez zmínky o tom kroku,
   // takže to znělo, jako by se nemuselo dělat nic. Zjistili jsme to na sobě:
   // u vlastního webu ten webhook nikdo nezapojil a nasazení se nespouštělo.
-  { n: "03", h: "Pushni a nasadí se to samo", p: "Webhook do repozitáře vložíš jednou (adresu i tajemství dostaneš od nás). Pak každý push nasadí novou verzi a spustí bezpečnostní sken. Když se něco pokazí, vrátíš se jedním klikem na předchozí build." },
+  { n: "03", h: t("kroky.3.h"), p: t("kroky.3.p") },
 ];
-const bezpecnost = [
-  { n: "SKEN", h: "Po každém nasazení", p: "Hlavičky, TLS, uniklé klíče, malware, phishing na naší doméně. Výsledek vidíš u appky dřív, než ho uvidí útočník." },
-  { n: "DEFENDER", h: "Ochrana za běhu", p: "Runtime ochrana AI vrstvy — prompt injection, únik dat, podezřelé requesty. Stejný Defender jako na grovetechai.com." },
-  { n: "EU", h: "Data v Evropě", p: "Servery v Německu, česká podpora, faktura v Kč. Žádný seat pricing v dolarech." },
-];
+const bezpecnost = [1, 2, 3].map((i) => ({
+  n: t(`bezp.${i}.n` as any),
+  h: t(`bezp.${i}.h` as any),
+  p: t(`bezp.${i}.p` as any),
+}));
 ---
 <section id="jak">
   <div class="wrap">
-    <div class="step">01 · NASAZENÍ</div>
-    <h2 class="reveal">Tři kroky. Žádný server, žádný Docker.</h2>
-    <p class="sub reveal" data-i="1">Grove Cloud si repo přečte sám: pozná Next.js, Vite, Astro, Express, FastAPI i vlastní Dockerfile a navrhne build, start i port.</p>
+    <div class="step">{t("kroky.step")}</div>
+    <h2 class="reveal">{t("kroky.h2")}</h2>
+    <p class="sub reveal" data-i="1">{t("kroky.sub")}</p>
     <div class="grid3">
       {kroky.map((k, i) => <div class="card reveal" data-i={i}><div class="n">{k.n}</div><h3>{k.h}</h3><p>{k.p}</p></div>)}
     </div>
@@ -30,9 +44,9 @@ const bezpecnost = [
 </section>
 <section id="bezpecnost-sekce" style="padding-top:0">
   <div class="wrap">
-    <div class="step">02 · BEZPEČNOST</div>
-    <h2 class="reveal">Hosting, který se po každém nasazení sám zkontroluje.</h2>
-    <p class="sub reveal" data-i="1">V roce 2026 unikla data z tisíců appek napsaných AI. Tady je po každém nasazení {KONTROL} kontrol, Defender za běhu a denní zálohy — v ceně, ne jako doplněk.</p>
+    <div class="step">{t("bezp.step")}</div>
+    <h2 class="reveal">{t("bezp.h2")}</h2>
+    <p class="sub reveal" data-i="1">{t("bezp.sub", { n: KONTROL })}</p>
     <div class="grid3">
       {bezpecnost.map((k, i) => <div class="card reveal" data-i={i}><div class="n">{k.n}</div><h3>{k.h}</h3><p>{k.p}</p></div>)}
     </div>

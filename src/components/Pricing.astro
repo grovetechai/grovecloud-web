@@ -1,45 +1,75 @@
 ---
 // Ceník 1:1 s aplikací. Čte src/data/pricing.json (generováno z enginu, needitovat).
 // Server-side vykreslí výchozí (statika) → funguje i bez JS; přepínač typu appky řeší pricing.ts.
+//
+// ══ CENY SE FORMÁTUJÍ JEN TADY ═════════════════════════════════════════════
+// Přepínač typu appky přepisuje ceny v prohlížeči. Kdyby si je formátoval sám,
+// existovaly by dvě implementace téhož — a ta v JavaScriptu by se dřív nebo
+// později rozešla s tou v Astru (jiná měna, jiný oddělovač tisíců, chybějící
+// „od "). Proto tu předpočítáme HOTOVÉ řetězce pro každou kombinaci typu
+// appky a tarifu a skript už jen přepíná text.
 import pricing from "../data/pricing.json";
+import { prekladacZUrl, cena as formatCena, MENA } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
 interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
 const stacks = pricing.stacks;
 const tiers = pricing.tiers;
-const def = stacks[0];
-type Cena = { czk: number } | null;
-const defPrices = def.prices as Record<string, Cena>;
-const fmt = (n: number) => n.toLocaleString("cs-CZ");
+const def: any = stacks[0];
+type Cena = { czk: number; eur: number; usd: number } | null;
+const mena = MENA[jazyk];
 const APP = "https://grovetechai.com/grovecloud";
+
+/** Hotový popisek ceny pro jeden tarif, nebo null když tarif pro daný typ neexistuje. */
+function popisCeny(p: Cena, tierKey: string): string | null {
+  if (!p) return null;
+  const castka = mena === "czk" ? p.czk : p.eur;
+  // Starter má pevnou cenu, ostatní tarify se od základu odvíjejí nahoru.
+  const predpona = tierKey === "starter" ? "" : t("cenik.od");
+  return `${predpona}${formatCena(castka, mena, jazyk)}`;
+}
+
+const defPrices = def.prices as Record<string, Cena>;
+// Mapa {typ appky → {tarif → hotový text}}. Do stránky jde jako JSON, ne jako
+// skript — CSP `script-src 'self'` by inline skript zablokovala.
+const cenyProSkript: Record<string, Record<string, string | null>> = {};
+for (const s of stacks as any[]) {
+  cenyProSkript[s.key] = {};
+  for (const tier of tiers) {
+    cenyProSkript[s.key][tier.key] = popisCeny(s.prices?.[tier.key] ?? null, tier.key);
+  }
+}
 ---
 <section id="cena" class="pricing">
   <div class="wrap">
-    <div class="step">CENA</div>
-    <h2 class="reveal">Stejná čísla jako v aplikaci.</h2>
-    <p class="sub reveal" data-i="1">Ceník se počítá z jednoho enginu podle toho, co appka skutečně potřebuje. Vyber typ appky:</p>
-    <div class="stackpick" role="tablist" aria-label="Typ aplikace">
-      {stacks.map((s, i) => <button type="button" role="tab" aria-selected={i === 0 ? "true" : "false"} data-stack={s.key}>{s.label}</button>)}
+    <div class="step">{t("cenik.step")}</div>
+    <h2 class="reveal">{t("cenik.h2")}</h2>
+    <p class="sub reveal" data-i="1">{t("cenik.sub")}</p>
+    <div class="stackpick" role="tablist" aria-label={t("cenik.typ")}>
+      {stacks.map((s, i) => <button type="button" role="tab" aria-selected={i === 0 ? "true" : "false"} data-stack={s.key}>{t(`stack.${s.key}` as any)}</button>)}
     </div>
     <div class="tiers" id="tiers">
-      {tiers.map((t) => {
-        const p = defPrices[t.key];
+      {tiers.map((tier) => {
+        const p = defPrices[tier.key];
+        const popis = popisCeny(p, tier.key);
         return (
-          <div class:list={["tier", { hl: t.highlighted, off: !p }]} data-tier={t.key}>
-            {t.comingSoon && <span class="soon">PŘIPRAVUJEME</span>}
-            <div class="name">{t.name}</div>
+          <div class:list={["tier", { hl: tier.highlighted, off: !p }]} data-tier={tier.key}>
+            {tier.comingSoon && <span class="soon">{t("cenik.pripravujeme")}</span>}
+            {/* Název tarifu se nepřekládá — Starter, Secure Host… jsou značky. */}
+            <div class="name">{tier.name}</div>
             <div class="price" data-price>
-              {p ? <>{t.key === "starter" ? "" : "od "}{fmt(p.czk)} Kč<small>/ měsíc</small></> : <span class="na">jen pro statiku</span>}
+              {popis ? <>{popis}<small>{t("cenik.mesic")}</small></> : <span class="na">{t("cenik.jenStatika")}</span>}
             </div>
-            <div class="from">{t.sla} · {t.response}</div>
-            {!compact && <ul>{t.includes.map((x) => <li>{x}</li>)}</ul>}
-            {!compact && <a class="btn small" href={t.onRequest ? "mailto:cloud@grovetechai.com?subject=Grove%20Cloud%20Business" : APP} rel="noopener">{t.onRequest ? "Domluvit" : t.comingSoon ? "Předběžný zájem" : "Nasadit"}</a>}
+            <div class="from">{t(`tarif.${tier.key}.sla` as any)} · {t(`tarif.${tier.key}.resp` as any)}</div>
+            {!compact && <ul>{[1, 2, 3, 4].map((i) => <li>{t(`tarif.${tier.key}.${i}` as any)}</li>)}</ul>}
+            {!compact && <a class="btn small" href={tier.onRequest ? "mailto:cloud@grovetechai.com?subject=Grove%20Cloud%20Business" : APP} rel="noopener">{tier.onRequest ? t("cenik.domluvit") : tier.comingSoon ? t("cenik.zajem") : t("cenik.nasadit")}</a>}
           </div>
         );
       })}
     </div>
-    <p class="note">Ceny bez DPH, kurz {pricing.eurCzk} Kč/€. Tarify označené „připravujeme" zatím sjednáváme ručně — napiš nám a domluvíme start. Ceník generován z aplikace {pricing.generatedAt.slice(0, 10)}.</p>
+    <p class="note">{t("cenik.pozn", { kurz: pricing.eurCzk, datum: pricing.generatedAt.slice(0, 10) })}</p>
   </div>
-  <script type="application/json" id="pricing-json" set:html={JSON.stringify({ stacks: pricing.stacks, tiers: pricing.tiers.map((t) => t.key) })}></script>
+  <script type="application/json" id="pricing-json" set:html={JSON.stringify({ ceny: cenyProSkript, mesic: t("cenik.mesic"), jenStatika: t("cenik.jenStatika") })}></script>
 </section>
 <script src="../scripts/pricing.ts"></script>
 <style>

@@ -1,0 +1,30 @@
+---
+import pricing from "../data/pricing.json";
+import Base from "../layouts/Base.astro";
+import { prekladacZUrl } from "../i18n/utils";
+const { t } = prekladacZUrl(Astro.url);
+const KONTROL = pricing.checks.universal;
+const G = "https://grovetechai.com";
+---
+<Base title={t("meta.bezp.t")} description={t("meta.bezp.d", { n: KONTROL })} path="/bezpecnost">
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <div class="eyebrow">{t("bs.eyebrow")}</div>
+      <h1 class="reveal" style="font-size:clamp(34px,4.6vw,54px);margin-top:10px">{t("bs.h1")}</h1>
+      <p class="sub reveal" data-i="1">{t("bs.lead")}</p>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="grid3">
+        <div class="card reveal"><div class="n">{t("bs.1.n")}</div><h3>{t("bs.1.h", { n: KONTROL })}</h3><p>{t("bs.1.p")}</p></div>
+        <div class="card reveal" data-i="1"><div class="n">{t("bs.2.n")}</div><h3>Defender</h3><p>{t("bs.2.p1")} <a href={`${G}/defender`} rel="noopener">@grovetech/defender</a>.</p></div>
+        <div class="card reveal" data-i="2"><div class="n">{t("bs.3.n")}</div><h3>{t("bs.3.h")}</h3><p>{t("bs.3.p")}</p></div>
+        <div class="card reveal"><div class="n">{t("bs.4.n")}</div><h3>{t("bs.4.h")}</h3><p>{t("bs.4.p")}</p></div>
+        <div class="card reveal" data-i="1"><div class="n">{t("bezp.3.n")}</div><h3>{t("bs.5.h")}</h3><p>{t("bs.5.p")}</p></div>
+        <div class="card reveal" data-i="2"><div class="n">{t("bs.6.n")}</div><h3>{t("bs.6.h")}</h3><p>{t("bs.6.p1")} <a href={`${G}/pentest`} rel="noopener">pentest</a> {t("bs.6.p2")}</p></div>
+      </div>
+      <p class="note reveal" style="margin-top:28px;font-size:13px;color:var(--muted)">{t("bs.pozn")}</p>
+    </div>
+  </section>
+</Base>

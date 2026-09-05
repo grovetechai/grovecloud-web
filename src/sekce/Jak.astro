@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+import { prekladacZUrl } from "../i18n/utils";
+import Pillars from "../components/Pillars.astro";
+import TryIt from "../components/TryIt.astro";
+const { t } = prekladacZUrl(Astro.url);
+const APP = "https://grovetechai.com/grovecloud";
+const karty = [1, 2, 3, 4, 5, 6].map((i) => ({
+  n: t(`jak.${i}.n` as any),
+  h: t(`jak.${i}.h` as any),
+  p: t(`jak.${i}.p` as any),
+}));
+---
+<Base title={t("meta.jak.t")} description={t("meta.jak.d")} path="/jak-to-funguje">
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <div class="eyebrow">{t("jak.eyebrow")}</div>
+      <h1 class="reveal" style="font-size:clamp(34px,4.6vw,54px);margin-top:10px">{t("jak.h1")}</h1>
+      <p class="sub reveal" data-i="1">{t("jak.lead")}</p>
+      <p style="margin-top:22px"><a class="btn red" href={APP} rel="noopener">{t("jak.cta")}</a></p>
+    </div>
+  </section>
+  <Pillars />
+  <TryIt />
+  <section>
+    <div class="wrap">
+      <h2 class="reveal">{t("jak.h2")}</h2>
+      <div class="grid3">
+        {karty.map((k, i) => (
+          <div class="card reveal" data-i={i % 3}>
+            <div class="n">{k.n}</div><h3>{k.h}</h3><p>{k.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

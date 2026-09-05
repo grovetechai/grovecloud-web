@@ -9,8 +9,68 @@
 //
 // Ukazujeme ZÁMĚRNĚ jen bezpečnost. Sken měří i SEO, výkon a GDPR, ale tady
 // prodáváme hosting se zabezpečením; zbytek je v plném reportu.
+//
+// ══ PŘEKLADY PRO PROHLÍŽEČOVÝ SKRIPT ═══════════════════════════════════════
+// tryit.ts běží u návštěvníka a píše vlastní texty (fáze skenu, závažnosti,
+// verdikt). Astro mu je předá JSON blokem — ne přes `define:vars`, protože ten
+// by vyrobil INLINE skript a CSP `script-src 'self'` ho zablokuje. Sken by pak
+// mlčky nic nenapsal.
 import pricing from "../data/pricing.json";
-const starter = pricing.stacks.find((s: any) => s.key === "static")?.prices?.starter?.czk ?? 99;
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
+
+const prekladySkriptu = {
+  faze: {
+    fetch: t("zkus.f.fetch"),
+    security: t("zkus.f.security"),
+    surface: t("zkus.f.surface"),
+    cve: t("zkus.f.cve"),
+    malware: t("zkus.f.malware"),
+    nis2: t("zkus.f.nis2"),
+    scoring: t("zkus.f.scoring"),
+  },
+  zavaznost: {
+    critical: t("zkus.z.critical"),
+    high: t("zkus.z.high"),
+    medium: t("zkus.z.medium"),
+    low: t("zkus.z.low"),
+    info: t("zkus.z.info"),
+    ok: t("zkus.z.ok"),
+  },
+  verdikt: {
+    vazne: t("zkus.v.vazne"),
+    opravit: t("zkus.v.opravit"),
+    doladit: t("zkus.v.doladit"),
+    ok: t("zkus.v.ok"),
+  },
+  chyba: {
+    odkaz: t("zkus.e.odkaz"),
+    anonLimit: t("zkus.e.anonLimit"),
+    freeLimit: t("zkus.e.freeLimit"),
+    rateLimit: t("zkus.e.rateLimit"),
+    probiha: t("zkus.e.probiha"),
+    vpn: t("zkus.e.vpn"),
+    blocked: t("zkus.e.blocked"),
+    invalid: t("zkus.e.invalid"),
+    selhal: t("zkus.e.selhal"),
+    spojeni: t("zkus.e.spojeni"),
+    obecna: t("zkus.e.obecna"),
+  },
+  jazyk,
+  btn: t("zkus.btn"),
+  skenujiUrl: t("zkus.s.skenujiUrl"),
+  spojeni: t("zkus.s.spojeni"),
+  prubeh: t("zkus.s.prubeh"),
+  hotovo: t("zkus.s.hotovo"),
+  titulek: t("zkus.s.titulek"),
+  nalezy: t("zkus.s.nalezy"),
+  zadne: t("zkus.s.zadne"),
+  report: t("zkus.s.report"),
+  reportKratky: t("zkus.s.reportKratky"),
+  napisAdresu: t("zkus.s.napisAdresu"),
+};
 ---
 <section id="zkus" class="tryit">
   <div class="wrap grid">
@@ -20,22 +80,18 @@ const starter = pricing.stacks.find((s: any) => s.key === "static")?.prices?.sta
     </div>
 
     <div class="form reveal" data-i="1">
-      <div class="step">ZKUS SI TO</div>
-      <h2>Bez účtu, bez karty.</h2>
-      <p class="sub" style="font-size:15px">
-        Zadej adresu svého webu. Pustíme na něj náš skutečný bezpečnostní sken —
-        ten samý, který u nás běží po každém nasazení. Trvá to do minuty.
-      </p>
+      <div class="step">{t("zkus.step")}</div>
+      <h2>{t("zkus.h2")}</h2>
+      <p class="sub" style="font-size:15px">{t("zkus.sub")}</p>
 
       <form class="row" id="tryform">
-        <label class="sr" for="repo">Adresa webu</label>
-        <input id="repo" name="url" type="text" inputmode="url" placeholder="mujweb.cz"
+        <label class="sr" for="repo">{t("zkus.label")}</label>
+        <input id="repo" name="url" type="text" inputmode="url" placeholder={jazyk === "cs" ? "mujweb.cz" : jazyk === "sk" ? "mojweb.sk" : "mysite.com"}
           autocomplete="off" spellcheck="false" />
-        <button class="btn" type="submit" id="trybtn">Zkontrolovat</button>
+        <button class="btn" type="submit" id="trybtn">{t("zkus.btn")}</button>
       </form>
       <p class="fineprint">
-        Skenujeme jen to, co web sám vydá z veřejné adresy. Výsledek si ukládáme,
-        ať ti ho můžeme ukázat celý — <a href="https://grovetechai.com/privacy" rel="noopener">jak nakládáme s daty</a>.
+        {t("zkus.fineprint")} <a href="https://grovetechai.com/privacy" rel="noopener">{t("zkus.privacy")}</a>.
       </p>
 
       <div class="detect" id="detect" aria-live="polite"></div>
@@ -43,7 +99,7 @@ const starter = pricing.stacks.find((s: any) => s.key === "static")?.prices?.sta
       <!-- Průběh + výsledek. Skryté, dokud sken neběží. -->
       <div class="scan" id="scan" hidden>
         <div class="scanhead">
-          <svg class="ring" viewBox="0 0 120 120" role="img" aria-label="Bezpečnostní skóre">
+          <svg class="ring" viewBox="0 0 120 120" role="img" aria-label={t("zkus.skore")}>
             <circle cx="60" cy="60" r="46" fill="none" stroke-width="10" stroke="#e6e9f0" />
             <circle id="ringarc" cx="60" cy="60" r="46" fill="none" stroke-width="10" stroke-linecap="round"
               stroke="#5b6478" transform="rotate(-90 60 60)" stroke-dasharray="289.03" stroke-dashoffset="289.03" />
@@ -51,23 +107,21 @@ const starter = pricing.stacks.find((s: any) => s.key === "static")?.prices?.sta
             <text x="60" y="80" text-anchor="middle" dominant-baseline="middle" class="ringsub">/ 100</text>
           </svg>
           <div>
-            <div class="scantitle" id="scantitle">Skenuji…</div>
-            <div class="scanmeta mono" id="scanmeta">navazuji spojení</div>
+            <div class="scantitle" id="scantitle">{t("zkus.s.skenuji")}</div>
+            <div class="scanmeta mono" id="scanmeta">{t("zkus.s.spojeni")}</div>
             <div class="scanverdict" id="scanverdict"></div>
           </div>
         </div>
         <div class="chips" id="chips" aria-live="polite"></div>
         <ul class="nalezy" id="nalezy"></ul>
-        <a class="btn red report" id="reportlink" href="#" rel="noopener" hidden>Otevřít celý report ↗</a>
+        <a class="btn red report" id="reportlink" href="#" rel="noopener" hidden>{t("zkus.s.report")}</a>
       </div>
 
-      <p class="fineprint" id="hosting">
-        Hostovat u nás statický web stojí <b>{starter} Kč</b> měsíčně — sken po každém
-        nasazení je v ceně.
-      </p>
+      <p class="fineprint" id="hosting" set:html={t("zkus.hosting", { cena: `<b>${STARTER}</b>` })}></p>
     </div>
   </div>
 </section>
+<script type="application/json" id="tryit-i18n" set:html={JSON.stringify(prekladySkriptu)}></script>
 <script src="../scripts/tryit.ts"></script>
 <style>
   .tryit { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }

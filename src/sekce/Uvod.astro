@@ -1,0 +1,47 @@
+---
+/**
+ * Homepage Grove Cloud.
+ *
+ * ══ POŘADÍ SEKCÍ NENÍ NÁHODNÉ ══════════════════════════════════════════════
+ * Návštěvník musí v prvních dvou obrazovkách pochopit rozdíl oproti běžnému
+ * hostingu — proto jde Grove řetězec hned za hero, dřív než cokoli jiného.
+ * Teprve pak má smysl ukazovat, jak se to používá, čím se to liší a co to stojí.
+ *
+ *   1. hero (headline + CTA)
+ *   2. Grove řetězec — Cloud → Check → Defender → dohled
+ *   3. zkus si to (skutečný sken, ne atrapa)
+ *   4. bezpečnostní diagram (čím request projde)
+ *   5. tři kroky nasazení + bezpečnost
+ *   6. srovnání s běžným hostingem
+ *   7. živý důkaz (tento web běží na Grove Cloud)
+ *   8. ceník
+ *   9. FAQ + finální CTA
+ */
+import Base from "../layouts/Base.astro";
+import VoxelHero from "../components/VoxelHero.astro";
+import GroveChain from "../components/GroveChain.astro";
+import TryIt from "../components/TryIt.astro";
+import SecurityMap from "../components/SecurityMap.astro";
+import Pillars from "../components/Pillars.astro";
+import Compare from "../components/Compare.astro";
+import LiveProof from "../components/LiveProof.astro";
+import Pricing from "../components/Pricing.astro";
+import Faq from "../components/Faq.astro";
+import pricing from "../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
+const KONTROL = pricing.checks.universal;
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
+---
+<Base title={t("meta.index.t")} description={t("meta.index.d", { n: KONTROL, cena: STARTER })} path="/">
+  <VoxelHero />
+  <GroveChain />
+  <TryIt />
+  <SecurityMap />
+  <Pillars />
+  <Compare />
+  <LiveProof />
+  <Pricing />
+  <Faq />
+</Base>

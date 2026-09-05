@@ -1,0 +1,148 @@
+---
+/**
+ * Veřejná status page Grove Cloudu.
+ *
+ * ══ PROČ JE STRÁNKA STATICKÁ A DATA SE TAHAJÍ AŽ V PROHLÍŽEČI ══════════════
+ * Kdyby se stav vykresloval při buildu, ukazovala by stránka stav z okamžiku
+ * posledního nasazení — tedy přesně to, co status page nesmí. A kdyby se
+ * generovala na serveru, byla by nedostupná ve chvíli, kdy je náš server dole.
+ *
+ * Takhle stránku servíruje Caddy ze statiky (běží, i když je aplikace dole)
+ * a čísla si dotáhne prohlížeč. Když se dotaz nepovede, řekne to.
+ */
+import Layout from "../layouts/Base.astro";
+import { prekladacZUrl } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
+
+// Adresa jde do DATA ATRIBUTU, ne do `define:vars`.
+//
+// `define:vars` nutí Astro vyrobit INLINE skript — a CSP téhle stránky má
+// `script-src 'self'` bez `unsafe-inline` (viz shared/grovecloud-provision-plan.ts).
+// Prohlížeč by ho zablokoval a status page by nikdy nic nenačetla. Přesně
+// ten typ chyby, který se projeví až v produkci: build projde, stránka se
+// zobrazí, jen zůstanou pomlčky.
+const API = "https://grovetechai.com/api/grovecloud/status";
+
+// Stejný důvod jako u adresy: skript píše vlastní texty (stav, časy, hlášky),
+// a ty musí být v jazyce stránky. Předáme mu je JSON blokem.
+const prekladySkriptu = {
+  jazyk,
+  bezi: t("stav.bezi"),
+  problem: t("stav.problem"),
+  nevime: t("stav.nevime"),
+  odpovida: t("stav.odpovida"),
+  neodpovida: t("stav.neodpovida"),
+  nezverejnujeme: t("stav.nezverejnujeme"),
+  staraData: t("stav.staraData"),
+  maloAppek: t("stav.maloAppek"),
+  selhalo: t("stav.selhalo"),
+  selhaloText: t("stav.selhaloText"),
+  intervalMin: t("stav.intervalMin"),
+  casTed: t("stav.cas.ted"),
+  casMin: t("stav.cas.min"),
+  casHod: t("stav.cas.hod"),
+  casNevime: t("stav.cas.nevime"),
+};
+---
+<Layout title={t("meta.stav.t")} description={t("meta.stav.d")}>
+  <section class="wrap" data-api={API}>
+    <p class="eyebrow">{t("stav.eyebrow")}</p>
+    <h1 id="nadpis">{t("stav.zjistuji")}</h1>
+    <p class="zprava" id="zprava">{t("stav.nacitam")}</p>
+
+    <div class="karty">
+      <div class="karta">
+        <div class="popis">{t("stav.ridici")}</div>
+        <div class="hodnota" id="ridici">—</div>
+        <div class="pod">{t("stav.ridiciPod")}</div>
+      </div>
+      <div class="karta">
+        <div class="popis">{t("stav.flotila")}</div>
+        <div class="hodnota" id="flotila">—</div>
+        <div class="pod" id="flotilaPod">{t("stav.flotilaPod")}</div>
+      </div>
+      <div class="karta">
+        <div class="popis">{t("stav.kontrola")}</div>
+        <div class="hodnota" id="kontrola">—</div>
+        <div class="pod" id="interval">{t("stav.interval")}</div>
+      </div>
+    </div>
+
+    <p class="poznamka">{t("stav.pozn1")}</p>
+    <p class="poznamka">
+      {t("stav.pozn2")}
+      <a href="mailto:podpora@grovetechai.com">podpora@grovetechai.com</a>.
+    </p>
+  </section>
+</Layout>
+
+<script type="application/json" id="stav-i18n" set:html={JSON.stringify(prekladySkriptu)}></script>
+
+<script>
+  const el = (id) => document.getElementById(id);
+  const API = document.querySelector(".wrap")?.getAttribute("data-api") ?? "";
+  // Překlady z JSON bloku — stránka existuje i na /en/stav a /sk/stav.
+  const T = JSON.parse(document.getElementById("stav-i18n")?.textContent || "{}");
+  const tx = (s, vars) => Object.entries(vars || {}).reduce((a, [k, v]) => a.replaceAll(`{${k}}`, String(v)), s || "");
+  const cas = (iso) => {
+    if (!iso) return T.casNevime;
+    const min = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (min < 1) return T.casTed;
+    if (min < 60) return tx(T.casMin, { n: min });
+    return tx(T.casHod, { n: Math.round(min / 60) });
+  };
+
+  fetch(API, { cache: "no-store" })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((d) => {
+      const barvy = { ok: "#15803D", problem: "#B91C1C", nevime: "#64748B" };
+      const nadpisy = { ok: T.bezi, problem: T.problem, nevime: T.nevime };
+      el("nadpis").textContent = nadpisy[d.uroven] ?? T.nevime;
+      el("nadpis").style.color = barvy[d.uroven] ?? "";
+      // `zprava` chodí ze serveru. Anglickou verzi bereme, když ji API pošle;
+      // jinak necháme českou — mlčet je horší než mluvit špatným jazykem.
+      el("zprava").textContent = (T.jazyk === "cs" ? d.zprava : d.zpravaEn || d.zprava) ?? "";
+      el("ridici").textContent = d.ridiciAplikaceOk ? T.odpovida : T.neodpovida;
+      el("ridici").style.color = d.ridiciAplikaceOk ? barvy.ok : barvy.problem;
+      el("kontrola").textContent = cas(d.posledniKontrola);
+
+      // Interval bereme z API, ne z natvrdo napsaného textu. Jinak by tady
+      // stálo „každých 10 minut" ještě dlouho poté, co bychom cron zpomalili.
+      if (typeof d.intervalKontrolyMin === "number") {
+        el("interval").textContent = tx(T.intervalMin, { n: d.intervalKontrolyMin });
+      }
+
+      if (d.flotilaPct === null) {
+        el("flotila").textContent = T.nezverejnujeme;
+        el("flotilaPod").textContent =
+          d.proNeuvedeno === "stara_data"
+            ? T.staraData
+            : T.maloAppek;
+      } else {
+        el("flotila").textContent = `${d.flotilaPct} %`;
+        el("flotila").style.color = d.flotilaPct === 100 ? barvy.ok : barvy.problem;
+      }
+    })
+    .catch(() => {
+      // Nedostupné API je samo o sobě informace — a je to ta nejdůležitější,
+      // kterou tahle stránka může dát. Rozhodně se nesmí tvářit, že je vše OK.
+      el("nadpis").textContent = T.selhalo;
+      el("nadpis").style.color = "#B91C1C";
+      el("zprava").textContent = T.selhaloText;
+    });
+</script>
+
+<style>
+  .wrap { max-width: 860px; margin: 0 auto; padding: 64px 32px 80px; }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; color: var(--muted); margin: 0 0 8px; }
+  h1 { font-size: 34px; letter-spacing: -.02em; margin: 0 0 10px; }
+  .zprava { font-size: 16px; color: var(--muted); margin: 0 0 32px; max-width: 62ch; line-height: 1.55; }
+  .karty { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+  .karta { border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .popis { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .hodnota { font-size: 26px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 4px; }
+  .pod { font-size: 12.5px; color: var(--muted); }
+  .poznamka { margin-top: 28px; font-size: 13.5px; color: var(--muted); max-width: 68ch; line-height: 1.6; }
+  .poznamka a { color: var(--navy); }
+  @media (max-width: 700px) { .wrap { padding: 44px 18px 60px; } h1 { font-size: 27px; } }
+</style>

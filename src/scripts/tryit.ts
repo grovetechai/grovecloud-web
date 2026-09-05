@@ -51,15 +51,44 @@ addBox("shop.demo · Next.js", "#123C9A", 60);
 // Klíče jsou stabilní kontrakt serveru (server/scan-progress-bus.ts → ScanPhase).
 // Ukazujeme jen bezpečnostní část — sken měří i SEO, výkon a GDPR, ale tady
 // prodáváme zabezpečený hosting a míchat do toho SEO by jen rozostřilo pointu.
+// ══ TEXTY JDOU Z ASTRA, NEPÍŠOU SE TADY ════════════════════════════════════
+// Sken běží i na /en a /sk. Kdyby si skript držel vlastní české řetězce,
+// anglická stránka by po odeslání formuláře začala mluvit česky — a to až
+// u návštěvníka, takže by si toho build ani test nevšiml. Překlady tedy
+// přebíráme z JSON bloku, který vykreslí TryIt.astro.
+type Preklady = {
+  faze: Record<string, string>;
+  zavaznost: Record<string, string>;
+  verdikt: { vazne: string; opravit: string; doladit: string; ok: string };
+  chyba: Record<string, string>;
+  jazyk: string;
+  btn: string;
+  skenujiUrl: string;
+  spojeni: string;
+  prubeh: string;
+  hotovo: string;
+  titulek: string;
+  nalezy: string;
+  zadne: string;
+  report: string;
+  reportKratky: string;
+  napisAdresu: string;
+};
+
+const T: Preklady = JSON.parse(document.getElementById("tryit-i18n")?.textContent || "{}");
+/** Dosadí {promenne} do přeloženého řetězce. */
+const tx = (sablona: string, vars: Record<string, string | number> = {}) =>
+  Object.entries(vars).reduce((s, [k, v]) => s.replaceAll(`{${k}}`, String(v)), sablona || "");
+
 const FAZE: Array<{ key: string; label: string }> = [
-  { key: "fetch", label: "Stažení stránky" },
-  { key: "security", label: "Hlavičky a TLS" },
-  { key: "surface", label: "Aktivní sondy" },
-  { key: "cve", label: "Známé zranitelnosti" },
-  { key: "malware", label: "Malware a phishing" },
-  { key: "nis2", label: "DNS a NIS2" },
-  { key: "scoring", label: "Vyhodnocení" },
-];
+  "fetch",
+  "security",
+  "surface",
+  "cve",
+  "malware",
+  "nis2",
+  "scoring",
+].map((key) => ({ key, label: T.faze?.[key] ?? key }));
 
 const chipEls = new Map<string, HTMLElement>();
 function postavChipy() {
@@ -102,34 +131,38 @@ function dojedSkore(cil: number) {
 // Server vrací strojové kódy; člověk potřebuje větu a cestu ven.
 function chybaText(stav: number, data: any): string {
   const kod = String(data?.error || data?.code || "");
-  const odkaz = `<a href="${API}/scanner" rel="noopener">Otevřít scanner na grovetechai.com</a>`;
-  if (kod === "anon_limit") return `Denní limit skenu bez účtu je vyčerpaný. S účtem zdarma máš dva denně. ${odkaz}`;
-  if (kod === "free_limit") return `Vyčerpaný denní limit tvého účtu. ${odkaz}`;
-  if (kod === "rate_limit") return `Moc pokusů z jedné adresy. Zkus to za chvíli znovu.`;
-  if (kod === "scan_in_progress") return `Tenhle web se právě skenuje. Chvíli počkej a zkus to znovu.`;
+  const odkaz = `<a href="${API}/scanner" rel="noopener">${T.chyba.odkaz}</a>`;
+  // Server posílá hlášku v češtině (`messageCs`) i angličtině (`messageEn`).
+  // Na anglické a slovenské verzi bereme anglickou; kdyby chyběla, radši
+  // vlastní obecnou větu než české souvětí uprostřed anglické stránky.
+  const zeServeru = T.jazyk === "cs" ? data?.messageCs : data?.messageEn;
+  if (kod === "anon_limit") return `${T.chyba.anonLimit} ${odkaz}`;
+  if (kod === "free_limit") return `${T.chyba.freeLimit} ${odkaz}`;
+  if (kod === "rate_limit") return T.chyba.rateLimit;
+  if (kod === "scan_in_progress") return T.chyba.probiha;
   if (kod === "captcha_required" || kod === "datacenter_blocked" || kod === "captcha_failed")
-    return `Skenuješ přes VPN nebo firemní síť, tam potřebujeme ověření. ${odkaz}`;
-  if (kod === "blocked_url") return `Tuhle adresu skenovat nejde — musí být veřejně dostupná.`;
-  if (kod === "invalid_url") return `Tohle nevypadá jako adresa webu. Zkus třeba <b>mujweb.cz</b>.`;
-  if (kod === "scan_failed") return data?.messageCs || `Sken se nepodařilo dokončit. Je web dostupný z internetu?`;
-  if (stav === 0) return `Nepodařilo se spojit se skenerem. Zkus to prosím znovu.`;
-  return data?.messageCs || `Sken se nepodařilo dokončit (${stav}). Zkus to prosím znovu.`;
+    return `${T.chyba.vpn} ${odkaz}`;
+  if (kod === "blocked_url") return T.chyba.blocked;
+  if (kod === "invalid_url") return T.chyba.invalid;
+  if (kod === "scan_failed") return zeServeru || T.chyba.selhal;
+  if (stav === 0) return T.chyba.spojeni;
+  return zeServeru || tx(T.chyba.obecna, { stav });
 }
 
 const SEV: Record<string, { label: string; barva: string }> = {
-  critical: { label: "kritické", barva: "#dc2626" },
-  high: { label: "vysoké", barva: "#ea580c" },
-  medium: { label: "střední", barva: "#b45309" },
-  low: { label: "nízké", barva: "#5b6478" },
-  info: { label: "info", barva: "#5b6478" },
-  ok: { label: "ok", barva: "#16a34a" },
+  critical: { label: T.zavaznost?.critical ?? "critical", barva: "#dc2626" },
+  high: { label: T.zavaznost?.high ?? "high", barva: "#ea580c" },
+  medium: { label: T.zavaznost?.medium ?? "medium", barva: "#b45309" },
+  low: { label: T.zavaznost?.low ?? "low", barva: "#5b6478" },
+  info: { label: T.zavaznost?.info ?? "info", barva: "#5b6478" },
+  ok: { label: T.zavaznost?.ok ?? "ok", barva: "#16a34a" },
 };
 
 function verdikt(risk: string | null, score: number): string {
-  if (risk === "critical" || score < 50) return "Vážné nálezy";
-  if (risk === "high" || score < 70) return "Je co opravit";
-  if (risk === "medium" || score < 85) return "Drobnosti k doladění";
-  return "V pořádku";
+  if (risk === "critical" || score < 50) return T.verdikt.vazne;
+  if (risk === "high" || score < 70) return T.verdikt.opravit;
+  if (risk === "medium" || score < 85) return T.verdikt.doladit;
+  return T.verdikt.ok;
 }
 
 /* ── Běh ─────────────────────────────────────────────────────────────────── */
@@ -146,8 +179,8 @@ async function spustSken(url: string) {
   reportlink.hidden = true;
   nalezy.innerHTML = "";
   scanverdict.textContent = "";
-  scantitle.textContent = "Skenuji " + url;
-  scanmeta.textContent = "navazuji spojení";
+  scantitle.textContent = tx(T.skenujiUrl, { url });
+  scanmeta.textContent = T.spojeni;
   postavChipy();
   nastavRing(null);
 
@@ -162,7 +195,7 @@ async function spustSken(url: string) {
       const d = await r.json();
       for (const f of (Array.isArray(d.done) ? d.done : [])) chipEls.get(String(f))?.classList.add("on");
       const hotovo = chips?.querySelectorAll(".gc-chip.on").length ?? 0;
-      scanmeta.textContent = `${hotovo} / ${FAZE.length} fází · ${Math.round((Date.now() - zacatek) / 1000)} s`;
+      scanmeta.textContent = tx(T.prubeh, { hotovo, celkem: FAZE.length, s: Math.round((Date.now() - zacatek) / 1000) });
     } catch { /* průběh je ozdoba, sken běží dál */ }
   }, 1200);
 
@@ -188,8 +221,8 @@ async function spustSken(url: string) {
     const risk: string | null = data?.securityRisk ?? data?.riskLevel ?? null;
 
     for (const el of chipEls.values()) el.classList.add("on");
-    scantitle.innerHTML = `Bezpečnost webu <b>${esc(url)}</b>: ${esc(verdikt(risk, skore))}`;
-    scanmeta.textContent = `hotovo za ${Math.round((Date.now() - zacatek) / 1000)} s`;
+    scantitle.innerHTML = `${esc(T.titulek)} <b>${esc(url)}</b>: ${esc(verdikt(risk, skore))}`;
+    scanmeta.textContent = tx(T.hotovo, { s: Math.round((Date.now() - zacatek) / 1000) });
     dojedSkore(skore);
 
     // Počty bereme jen z bezpečnostní kategorie — `lockedSeverityCounts` je to,
@@ -202,7 +235,7 @@ async function spustSken(url: string) {
 
     const poradi = ["critical", "high", "medium", "low"];
     const popis = poradi.filter((s) => soucty[s]).map((s) => `${soucty[s]} ${SEV[s].label}`).join(" · ");
-    scanverdict.textContent = popis ? `Bezpečnostní nálezy: ${popis}` : "Žádné bezpečnostní nálezy.";
+    scanverdict.textContent = popis ? tx(T.nalezy, { popis }) : T.zadne;
 
     for (const f of videt.slice(0, 2)) {
       const s = SEV[f.severity] ?? SEV.low;
@@ -216,7 +249,7 @@ async function spustSken(url: string) {
       reportlink.href = `${API}/report/${encodeURIComponent(String(data.shareToken))}`;
       reportlink.target = "_blank";
       reportlink.hidden = false;
-      reportlink.textContent = popis ? "Otevřít celý report ↗" : "Otevřít report ↗";
+      reportlink.textContent = popis ? T.report : T.reportKratky;
     }
   } catch {
     window.clearInterval(tick);
@@ -225,7 +258,7 @@ async function spustSken(url: string) {
     detect.innerHTML = chybaText(0, {});
   } finally {
     bezi = false;
-    if (btn) { btn.disabled = false; btn.textContent = "Zkontrolovat"; }
+    if (btn) { btn.disabled = false; btn.textContent = T.btn; }
   }
 }
 
@@ -235,7 +268,7 @@ form?.addEventListener("submit", (e) => {
   const raw = vstup.value.trim();
   if (!raw) {
     detect.className = "detect err";
-    detect.textContent = "Napiš adresu webu, třeba mujweb.cz.";
+    detect.textContent = T.napisAdresu;
     vstup.focus();
     return;
   }

@@ -13,23 +13,22 @@
  * sám sobě i klientům.
  */
 import Layout from "../layouts/Base.astro";
+import { prekladacZUrl } from "../i18n/utils";
+const { t } = prekladacZUrl(Astro.url);
 ---
-<Layout title="Stránka nenalezena — Grove Cloud" description="Tahle adresa na Grove Cloudu neexistuje.">
+<Layout title={t("meta.404.t")} description={t("meta.404.d")}>
   <section class="wrap">
     <p class="kod">404</p>
-    <h1>Tuhle stránku tu nemáme</h1>
-    <p class="text">
-      Adresa, kterou jste zadali, na Grove Cloudu neexistuje. Mohla se přesunout,
-      nebo je v odkazu překlep.
-    </p>
+    <h1>{t("e404.h1")}</h1>
+    <p class="text">{t("e404.text")}</p>
     <div class="odkazy">
-      <a class="hlavni" href="/">Zpět na úvod</a>
-      <a class="vedlejsi" href="/cena">Ceník</a>
-      <a class="vedlejsi" href="/jak-to-funguje">Jak to funguje</a>
-      <a class="vedlejsi" href="/stav">Stav služby</a>
+      <a class="hlavni" href="/">{t("e404.zpet")}</a>
+      <a class="vedlejsi" href="/cena">{t("nav.cenik")}</a>
+      <a class="vedlejsi" href="/jak-to-funguje">{t("nav.jak")}</a>
+      <a class="vedlejsi" href="/stav">{t("nav.stav")}</a>
     </div>
     <p class="pod">
-      Hledáte něco konkrétního? Napište na
+      {t("e404.hledate")}
       <a href="mailto:podpora@grovetechai.com">podpora@grovetechai.com</a>.
     </p>
   </section>
