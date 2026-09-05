@@ -7,32 +7,53 @@ const APP = "https://grovetechai.com/grovecloud";
 ---
 <div class="hero">
   <div class="wrap">
-    <div class="eyebrow">Managed hosting pro appky psané AI · sken po každém nasazení · EU</div>
-    <h1 class="sr">Grove Cloud — nasaď appku z GitHubu, my ji hostujeme, skenujeme a hlídáme</h1>
+    <div class="eyebrow">SECURE MANAGED CLOUD PRO AI A VIBE-CODED APLIKACE</div>
+
+    {/* Nadpis je vidět, ne schovaný ve čtečce.
+        Do 5. 9. 2026 tu byl jen `sr-only` nadpis a canvas s nápisem GROVE CLOUD.
+        Návštěvník tedy neviděl JEDINOU větu o tom, co produkt dělá — animace
+        je hezká, ale neprodá. Canvas zůstává jako vizuál nad titulkem. */}
     <canvas id="vox" width="1100" height="300" aria-hidden="true"></canvas>
-    <p class="lead">Nasaď z GitHubu na pár kliknutí. My appku hostujeme, skenujeme a hlídáme — od 99 Kč měsíčně.</p>
+
+    <h1 class="titulek">
+      Cloud, který aplikaci nejen nasadí.<br />
+      <span class="zvyraz">Ale také prověří, ochrání a hlídá.</span>
+    </h1>
+
+    <p class="lead">
+      Připojte GitHub a během několika minut spusťte aplikaci v evropském cloudu.
+      Po každém nasazení ji prověří GroveCheck ({KONTROL} kontrol), za běhu ji může
+      chránit AI GroveDefender a při problému zasáhne automatika nebo člověk.
+    </p>
+
     <div class="cta">
-      <a class="btn red" id="cta-deploy" href={APP} rel="noopener">Nasadit z GitHubu →</a>
-      <a class="btn ghost" href="#zkus">Zkus si to bez účtu</a>
+      <a class="btn red" id="cta-deploy" href={APP} rel="noopener">Nasadit aplikaci →</a>
+      <a class="btn ghost" href="#zkus">Zkontrolovat web zdarma</a>
     </div>
-    <p class="hint">Pohni myší nad titulkem — kostky se rozestoupí a zase složí.</p>
-    <div class="kpis">
-      <div><b>99 Kč</b>statický web / SPA</div>
-      <div><b>&lt; 3 min</b>od repa k adrese</div>
-      <div><b>{KONTROL}</b>kontrol po každém deployi</div>
-      <div><b>EU</b>data i podpora</div>
-    </div>
+
+    {/* Každý údaj musí být pravdivý: kartu při nasazení statiky opravdu
+        nechceme, servery jsou v Německu a podpora je česká. */}
+    <p class="pod-cta">Bez platební karty · EU infrastruktura · Česká podpora · Statický web od 99 Kč</p>
+
+    <p class="hint">Pohni myší nad kostkami — rozestoupí se a zase složí.</p>
   </div>
 </div>
 <script src="../scripts/voxel.ts"></script>
 <style>
   .hero { padding: 56px 0 30px; text-align: center; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   canvas { width: 100%; max-width: 1100px; height: auto; display: block; margin: 6px auto 0; }
-  .lead { margin: 6px auto 0; font-size: 19px; color: var(--muted); max-width: 640px; }
-  .cta { margin-top: 26px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .hint { margin-top: 12px; font-size: 12px; color: var(--muted); }
-  .kpis { margin-top: 34px; display: flex; gap: 40px; justify-content: center; color: var(--muted); font-size: 13px; flex-wrap: wrap; }
-  .kpis b { display: block; color: var(--navy); font-size: 22px; }
-  @media (max-width: 700px) { .hint { display: none; } .kpis { gap: 22px; } }
+  .titulek {
+    margin: 10px auto 0; max-width: 900px;
+    font-size: clamp(30px, 4.4vw, 50px); line-height: 1.12; letter-spacing: -.028em; font-weight: 800;
+  }
+  .zvyraz { color: var(--navy); }
+  .lead { margin: 18px auto 0; font-size: 18px; color: var(--muted); max-width: 700px; line-height: 1.6; }
+  .cta { margin-top: 28px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .pod-cta { margin-top: 16px; font-size: 13.5px; color: var(--muted); }
+  .hint { margin-top: 26px; font-size: 12px; color: var(--muted); }
+  @media (max-width: 700px) {
+    .hint { display: none; }
+    .lead { font-size: 16px; }
+    .pod-cta { font-size: 12.5px; line-height: 1.7; }
+  }
 </style>

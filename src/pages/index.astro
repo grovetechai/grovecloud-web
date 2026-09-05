@@ -1,17 +1,47 @@
 ---
+/**
+ * Homepage Grove Cloud.
+ *
+ * ══ POŘADÍ SEKCÍ NENÍ NÁHODNÉ ══════════════════════════════════════════════
+ * Návštěvník musí v prvních dvou obrazovkách pochopit rozdíl oproti běžnému
+ * hostingu — proto jde Grove řetězec hned za hero, dřív než cokoli jiného.
+ * Teprve pak má smysl ukazovat, jak se to používá, čím se to liší a co to stojí.
+ *
+ *   1. hero (headline + CTA)
+ *   2. Grove řetězec — Cloud → Check → Defender → dohled
+ *   3. zkus si to (skutečný sken, ne atrapa)
+ *   4. bezpečnostní diagram (čím request projde)
+ *   5. tři kroky nasazení + bezpečnost
+ *   6. srovnání s běžným hostingem
+ *   7. živý důkaz (tento web běží na Grove Cloud)
+ *   8. ceník
+ *   9. FAQ + finální CTA
+ */
 import Base from "../layouts/Base.astro";
 import VoxelHero from "../components/VoxelHero.astro";
+import GroveChain from "../components/GroveChain.astro";
 import TryIt from "../components/TryIt.astro";
 import SecurityMap from "../components/SecurityMap.astro";
 import Pillars from "../components/Pillars.astro";
+import Compare from "../components/Compare.astro";
+import LiveProof from "../components/LiveProof.astro";
 import Pricing from "../components/Pricing.astro";
+import Faq from "../components/Faq.astro";
 import pricing from "../data/pricing.json";
 const KONTROL = pricing.checks.universal;
 ---
-<Base title="Grove Cloud — managed hosting pro appky psané AI, od 99 Kč" description={`Nasaď appku z GitHubu na pár kliknutí. Grove Cloud ji hostuje v EU, po každém nasazení proskenuje ${KONTROL} kontrolami a Defender ji hlídá za běhu. Statický web od 99 Kč měsíčně.`} path="/">
+<Base
+  title="Grove Cloud — cloud, který aplikaci nasadí, prověří, ochrání a hlídá"
+  description={`Připojte GitHub a spusťte aplikaci v evropském cloudu. Po každém nasazení ji prověří GroveCheck (${KONTROL} kontrol), za běhu ji chrání AI GroveDefender a dostupnost hlídáme každých 10 minut. Statický web od 99 Kč.`}
+  path="/"
+>
   <VoxelHero />
+  <GroveChain />
   <TryIt />
   <SecurityMap />
   <Pillars />
+  <Compare />
+  <LiveProof />
   <Pricing />
+  <Faq />
 </Base>

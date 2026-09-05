@@ -1,0 +1,92 @@
+---
+/**
+ * Srovnání s běžným hostingem.
+ *
+ * ══ ŽÁDNÁ JMÉNA KONKURENCE ═════════════════════════════════════════════════
+ * Vercel ani Cloudflare tu nejsou schválně. Tvrdit „tohle neumí" o konkrétní
+ * službě znamená ručit za každý řádek — a jejich funkce se mění každý měsíc.
+ * Srovnáváme s KATEGORIÍ („běžný hosting"), což je obhajitelné a nezastará.
+ *
+ * ══ KAŽDÝ ŘÁDEK MUSÍ MÍT KRYTÍ V PRODUKTU ══════════════════════════════════
+ * Sloupec Grove Cloud smí obsahovat jen to, co existuje a je nasazené. Kde je
+ * věc vázaná na tarif, píšeme to rovnou do buňky — „✓" u něčeho, co má jen
+ * Business, by bylo zavádějící.
+ */
+const radky = [
+  { f: "Automatické nasazení z GitHubu", bezny: "ano", grove: "ano", pozn: null },
+  { f: "Rozpoznání AI/vibe-coded stacku", bezny: "někdy", grove: "ano", pozn: "Next.js, Vite, Astro, Express, FastAPI i vlastní Dockerfile" },
+  { f: "Bezpečnostní kontrola po nasazení", bezny: "většinou ne", grove: "ano", pozn: "v ceně každého tarifu, nespotřebuje kvótu GroveChecku" },
+  { f: "Kontrola uniklých klíčů a konfigurace", bezny: "externí nástroj", grove: "ano", pozn: null },
+  { f: "Bezpečnostní hlavičky a TLS bez konfigurace", bezny: "částečně", grove: "ano", pozn: "HSTS, CSP, nosniff, X-Frame-Options, Referrer-Policy" },
+  { f: "AI runtime ochrana", bezny: "ne", grove: "GroveDefender", pozn: "volitelně, jedním řádkem v kódu" },
+  { f: "Kontrola dostupnosti", bezny: "podle služby", grove: "každých 10 min", pozn: null },
+  { f: "Automatický restart při výpadku", bezny: "podle služby", grove: "podle tarifu", pozn: null },
+  { f: "Lidská bezpečnostní eskalace", bezny: "ne", grove: "podle tarifu", pozn: null },
+  { f: "Česká podpora", bezny: "ne", grove: "ano", pozn: null },
+  { f: "Fakturace v Kč", bezny: "ne", grove: "ano", pozn: "bez seat pricingu v dolarech" },
+];
+
+// „ano" vykreslíme jako fajfku, zbytek jako text — aby tabulka nelhala
+// jednoduchostí tam, kde je odpověď podmíněná.
+const jeAno = (v: string) => v === "ano";
+---
+<section class="srovnani" id="srovnani">
+  <div class="wrap">
+    <div class="step">SROVNÁNÍ</div>
+    <h2>Hosting je jen začátek. Bezpečný provoz je celý produkt.</h2>
+    <p class="sub">
+      Srovnáváme se s kategorií, ne s konkrétní službou — funkce se u všech mění
+      každý měsíc a nechceme tvrdit něco, co za půl roku nebude platit.
+    </p>
+
+    <div class="obal">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Funkce</th>
+            <th scope="col">Běžný hosting</th>
+            <th scope="col" class="nas">Grove Cloud</th>
+          </tr>
+        </thead>
+        <tbody>
+          {radky.map((r) => (
+            <tr>
+              <th scope="row">
+                {r.f}
+                {r.pozn && <span class="pozn">{r.pozn}</span>}
+              </th>
+              <td class="bezny">{r.bezny === "ne" ? "—" : r.bezny}</td>
+              <td class="nas">
+                {jeAno(r.grove)
+                  ? <span class="fajfka" aria-label="ano">✓</span>
+                  : <span class="hodnota">{r.grove}</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .srovnani { padding: 64px 0 20px; }
+  h2 { font-size: clamp(24px, 3vw, 32px); letter-spacing: -.02em; margin: 6px 0 10px; }
+  .sub { color: var(--muted); max-width: 66ch; line-height: 1.6; margin: 0 0 26px; }
+
+  /* Vodorovný posun na úzkých displejích — tabulka se nesmí rozsypat. */
+  .obal { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; min-width: 560px; background: #fff; }
+  th, td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  thead th { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  tbody th { font-weight: 600; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  .pozn { display: block; margin-top: 3px; font-size: 12px; font-weight: 400; color: var(--muted); }
+  td { text-align: center; white-space: nowrap; }
+  thead th:not(:first-child) { text-align: center; }
+  .bezny { color: var(--muted); }
+  .nas { background: rgba(37,99,235,.035); }
+  thead .nas { color: var(--navy); }
+  .fajfka { color: #15803D; font-weight: 800; font-size: 16px; }
+  .hodnota { color: var(--navy); font-weight: 650; font-size: 13px; }
+</style>

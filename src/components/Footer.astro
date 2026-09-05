@@ -1,27 +1,98 @@
 ---
+/**
+ * Patička s celým produktovým ekosystémem.
+ *
+ * ══ PROČ NE JEN ŘÁDEK ODKAZŮ ═══════════════════════════════════════════════
+ * Grove Cloud je samostatný prodejní web, ale nesmí působit jako cizí firma.
+ * Patička je místo, kde návštěvník uvidí, že za hostingem stojí scanner,
+ * Defender, pentest a vývoj na míru — tedy důvod věřit, že hosting nezmizí.
+ *
+ * ══ CESTY, KTERÉ SE UŽ JEDNOU SPLETLY ══════════════════════════════════════
+ * /pentest je INTERNÍ panel za přihlášením; veřejná stránka je
+ * /penetracni-test. Opraveno 4. 9. 2026 — odkaz mířil na panel, takže
+ * návštěvník bez účtu skončil na přihlašovací obrazovce.
+ */
 const G = "https://grovetechai.com";
+
+const produkty = [
+  { h: `${G}/scanner`, l: "GroveCheck — bezpečnostní sken" },
+  { h: `${G}/defender`, l: "AI GroveDefender" },
+  { h: `${G}/penetracni-test`, l: "Automatizovaný pentest" },
+  // „Vývoj na míru" tu byl v návrhu patičky, ale na grovetechai.com pro něj
+  // není stránka (ověřeno proti routám v App.tsx). Odkaz do prázdna by na
+  // patičce, která má budit důvěru, působil hůř než jeho absence.
+  // Místo něj metodika — doložitelná a pro hosting relevantní.
+  { h: `${G}/metodika`, l: "Metodika kontrol" },
+];
+
+const firma = [
+  { h: `${G}/o-nas`, l: "O Grove Tech AI" },
+  { h: `${G}/kontakt`, l: "Kontakt" },
+  { h: `${G}/case-studies`, l: "Reference" },
+];
+
+// Stav služby je NA TOMHLE webu, ne na grovetechai.com — musí být dostupný
+// i ve chvíli, kdy je hlavní aplikace dole. Statická stránka ze sdíleného
+// Caddy tuhle podmínku splňuje, SSR by ji nesplnilo.
+const pravni = [
+  { h: `${G}/terms`, l: "Obchodní podmínky", ext: true },
+  { h: `${G}/privacy`, l: "Zpracování údajů", ext: true },
+  { h: "/stav", l: "Stav služby", ext: false },
+];
 ---
 <footer class="ftr">
-  <div>
-    Grove Cloud je produkt <a href={G} rel="noopener">Grove Tech AI s.r.o.</a> ·
-    <a href={`${G}/scanner`} rel="noopener">Scanner</a> ·
-    {/* POZOR na cestu: /pentest je interní panel za přihlášením, veřejná
-        stránka je /penetracni-test. Opraveno 4. 9. 2026 — odkaz mířil na
-        panel, takže návštěvník bez účtu skončil na přihlašovací obrazovce. */}
-    <a href={`${G}/penetracni-test`} rel="noopener">Pentest</a> ·
-    <a href={`${G}/defender`} rel="noopener">Defender</a> ·
-    <a href={`${G}/terms`} rel="noopener">Podmínky</a> ·
-    <a href={`${G}/privacy`} rel="noopener">Soukromí</a> ·
-    {/* Stav služby je NA TOMHLE webu, ne na grovetechai.com — musí být
-        dostupný i ve chvíli, kdy je hlavní aplikace dole. Statická stránka
-        ze sdíleného Caddy tuhle podmínku splňuje, SSR by ji nesplnilo. */}
-    <a href="/stav">Stav služby</a>
+  <div class="wrap mrizka">
+    <div class="sloupec znacka">
+      <div class="nazev">Grove Cloud</div>
+      <p class="claim">Nasadíme. Prověříme. Ochráníme. Hlídáme.</p>
+      <p class="popis">
+        Produkt <a href={G} rel="noopener">Grove Tech AI s.r.o.</a> — managed hosting
+        propojený s bezpečnostním skenerem a runtime ochranou.
+      </p>
+      <p class="bezi">Tento web běží na Grove Cloud · tarif Starter, 99 Kč</p>
+    </div>
+
+    <div class="sloupec">
+      <div class="hlavicka">Produkty</div>
+      <ul>{produkty.map((o) => <li><a href={o.h} rel="noopener">{o.l}</a></li>)}</ul>
+    </div>
+
+    <div class="sloupec">
+      <div class="hlavicka">Firma</div>
+      <ul>{firma.map((o) => <li><a href={o.h} rel="noopener">{o.l}</a></li>)}</ul>
+    </div>
+
+    <div class="sloupec">
+      <div class="hlavicka">Provoz a právo</div>
+      <ul>
+        {pravni.map((o) => (
+          <li><a href={o.h} rel={o.ext ? "noopener" : undefined}>{o.l}</a></li>
+        ))}
+        <li><a href="mailto:security@grovetechai.com">Bezpečnostní kontakt</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="mono">tento web běží na Grove Cloud · Starter 99 Kč</div>
+
+  <div class="wrap spodek">
+    <span>© {new Date().getFullYear()} Grove Tech AI s.r.o.</span>
+    <span class="mono">servery v EU · Hetzner, Norimberk · fakturace v Kč</span>
+  </div>
 </footer>
+
 <style>
-  .ftr { padding: 40px 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .ftr { margin-top: 72px; padding: 48px 0 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
+  .mrizka { display: grid; gap: 30px; grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+  .nazev { font-weight: 800; letter-spacing: -.02em; color: var(--navy); font-size: 16px; }
+  .claim { margin: 8px 0 10px; font-weight: 650; color: var(--navy); font-size: 13.5px; }
+  .popis { margin: 0 0 10px; line-height: 1.55; max-width: 40ch; }
+  .bezi { margin: 0; font-size: 12.5px; }
+  .hlavicka { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
   /* Odkazy v patičce jsou samostatné ovládací prvky → min. 24 px klikací výška. */
-  .ftr a { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 0; color: var(--navy); text-decoration: none; }
+  .ftr a { display: inline-flex; align-items: center; min-height: 24px; color: var(--navy); text-decoration: none; }
   .ftr a:hover { text-decoration: underline; }
+  .popis a { display: inline; min-height: 0; }
+  .spodek { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12.5px; }
+  @media (max-width: 860px) { .mrizka { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .mrizka { grid-template-columns: 1fr; gap: 24px; } }
 </style>

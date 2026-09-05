@@ -1,0 +1,137 @@
+---
+/**
+ * Grove řetězec: GitHub → Cloud → GroveCheck → Defender → Monitoring.
+ *
+ * ══ PROČ HNED POD HERO ═════════════════════════════════════════════════════
+ * Tohle je celý rozdíl oproti běžnému hostingu a musí být vidět dřív, než
+ * návštěvník odscrolluje. Jiné cloudy končí u kroku „nasazení"; my na něj
+ * navazujeme kontrolou, ochranou a dohledem.
+ *
+ * ══ ODKAZY VEDOU NA PRODUKTY, NE DO PRÁZDNA ════════════════════════════════
+ * Každý článek řetězce je skutečný produkt s vlastní stránkou na
+ * grovetechai.com. Bez prokliku by to byla jen grafika; s ním je to důkaz,
+ * že za každým slovem stojí něco hotového.
+ *
+ * ══ CO TU ZÁMĚRNĚ NENÍ ═════════════════════════════════════════════════════
+ * „Automatické nasazení po každém pushi" tu nestojí jako hotová věc, protože
+ * u nás zatím nemá ověřené krytí (webhook není zapojený ani na tomhle webu).
+ * Dokud to neprojde end-to-end, píšeme jen to, co doopravdy běží.
+ */
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
+const G = "https://grovetechai.com";
+
+const clanky = [
+  {
+    k: "01",
+    n: "GitHub",
+    d: "Vyberete repozitář. Detekce projde kořen i podsložky a řekne, z čeho se aplikace skládá.",
+    odkaz: null,
+    stitek: null,
+  },
+  {
+    k: "02",
+    n: "Grove Cloud",
+    d: "Nasazení do evropského cloudu. Statika na sdílený server, dynamická aplikace do vlastního kontejneru.",
+    odkaz: null,
+    stitek: "hosting",
+  },
+  {
+    k: "03",
+    n: "GroveCheck",
+    d: `${KONTROL} kontrol proti veřejné adrese hned po nasazení. Hlavičky, TLS, uniklé klíče, malware.`,
+    odkaz: `${G}/scanner`,
+    stitek: "kontrola",
+  },
+  {
+    k: "04",
+    n: "AI GroveDefender",
+    d: "Ochrana za běhu: prompt injection, únik dat, podezřelé požadavky. Volitelně jedním řádkem v kódu.",
+    odkaz: `${G}/defender`,
+    stitek: "ochrana",
+  },
+  {
+    k: "05",
+    n: "Dohled",
+    d: "Kontrola dostupnosti každých 10 minut. Podle tarifu automatický restart nebo eskalace na člověka.",
+    odkaz: "/stav",
+    stitek: "provoz",
+  },
+];
+---
+<section class="retezec" id="retezec">
+  <div class="wrap">
+    <div class="step">JAK TO DRŽÍ POHROMADĚ</div>
+    <h2>Jedna platforma místo čtyř nespojených nástrojů.</h2>
+    <p class="sub">
+      Hosting, bezpečnostní kontrola, runtime ochrana a provozní dohled spolu mluví.
+      Nález ze skenu se propíše do ochrany, výpadek do vašeho e-mailu.
+    </p>
+
+    <ol class="clanky">
+      {clanky.map((c, i) => (
+        <li class="clanek reveal" data-i={i}>
+          <div class="hlava">
+            <span class="cislo">{c.k}</span>
+            {c.stitek && <span class="stitek">{c.stitek}</span>}
+          </div>
+          <h3>{c.n}</h3>
+          <p>{c.d}</p>
+          {c.odkaz && (
+            <a class="vic" href={c.odkaz} rel={c.odkaz.startsWith("http") ? "noopener" : undefined}>
+              Detail →
+            </a>
+          )}
+        </li>
+      ))}
+    </ol>
+
+    <p class="claim"><b>Nasadíme. Prověříme. Ochráníme. Hlídáme.</b></p>
+  </div>
+</section>
+
+<style>
+  .retezec { padding: 64px 0 20px; }
+  h2 { font-size: clamp(24px, 3vw, 32px); letter-spacing: -.02em; margin: 6px 0 10px; }
+  .sub { color: var(--muted); max-width: 66ch; line-height: 1.6; margin: 0 0 30px; }
+
+  .clanky {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .clanek {
+    position: relative;
+    border: 1px solid var(--line); border-radius: 14px; padding: 18px 16px 16px;
+    background: #fff;
+  }
+  /* Šipka mezi články — jen na širokých obrazovkách, kde jsou vedle sebe.
+     Na mobilu se karty skládají pod sebe a vodorovná šipka by mátla. */
+  @media (min-width: 1000px) {
+    .clanek:not(:last-child)::after {
+      content: "→"; position: absolute; right: -13px; top: 50%;
+      transform: translateY(-50%); color: var(--muted); font-size: 15px;
+    }
+  }
+  .hlava { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cislo { font-size: 11px; letter-spacing: .1em; color: var(--muted); font-weight: 700; }
+  .stitek {
+    font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--navy); background: rgba(37,99,235,.08);
+    border-radius: 999px; padding: 3px 8px; font-weight: 700;
+  }
+  h3 { font-size: 16px; margin: 10px 0 6px; letter-spacing: -.01em; }
+  .clanek p { font-size: 13.5px; color: var(--muted); line-height: 1.55; margin: 0; }
+  .vic {
+    display: inline-flex; align-items: center; min-height: 24px;
+    margin-top: 10px; font-size: 13px; font-weight: 650;
+    color: var(--navy); text-decoration: none;
+  }
+  .vic:hover { text-decoration: underline; }
+
+  .claim {
+    margin: 32px 0 0; text-align: center;
+    font-size: clamp(17px, 2.2vw, 22px); letter-spacing: -.01em;
+  }
+  .claim b { color: var(--navy); }
+</style>

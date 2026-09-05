@@ -1,0 +1,100 @@
+---
+/**
+ * FAQ + finální CTA.
+ *
+ * ══ OTÁZKY JSOU TY, KTERÉ BRZDÍ NÁKUP ══════════════════════════════════════
+ * Ne „co je to cloud". Odpovídáme na věci, kvůli kterým zákazník váhá: co když
+ * to nezvládnu, co se stane s daty, jak se dostanu pryč, co když appka spadne.
+ *
+ * ══ ODPOVĚDI MUSÍ BÝT PRAVDIVÉ I KDYŽ SE TÍM NEPOCHLUBÍME ══════════════════
+ * U dvou otázek přiznáváme hranici produktu: sken hlásí, ale neopravuje kód,
+ * a automatický zásah závisí na tarifu. Zákazník to zjistí tak jako tak —
+ * lepší je, když to ví předem od nás.
+ */
+import pricing from "../data/pricing.json";
+const KONTROL = pricing.checks.universal;
+const APP = "https://grovetechai.com/grovecloud";
+const G = "https://grovetechai.com";
+
+const otazky = [
+  {
+    q: "Musím umět Docker nebo spravovat server?",
+    a: "Ne. Vyberete repozitář na GitHubu, my z něj poznáme, o jaký projekt jde, a navrhneme build, start i port. Statický web běží ze sdíleného serveru, dynamická aplikace ve vlastním kontejneru — obojí bez zásahu z vaší strany.",
+  },
+  {
+    q: "Co přesně dělá bezpečnostní kontrola po nasazení?",
+    a: `Spustí ${KONTROL} kontrol proti veřejné adrese aplikace: hlavičky, TLS, uniklé klíče v odpovědích, malware, phishing na naší doméně. Výsledek uvidíte u aplikace hned po nasazení a nespotřebuje vám kvótu GroveChecku.`,
+  },
+  {
+    q: "Opravíte nálezy za mě?",
+    a: "Bezpečnostní konfiguraci infrastruktury nastavíme automaticky — hlavičky, TLS, izolace. Chyby přímo ve vašem kódu vám ukážeme s postupem opravy, ale nepřepisujeme vám aplikaci. Slibovat automatickou opravu všeho by nebyla pravda.",
+  },
+  {
+    q: "Co se stane, když aplikace spadne?",
+    a: "Dostupnost kontrolujeme každých 10 minut. Podle tarifu buď zasáhne automatika (restart), nebo se výpadek eskaluje na člověka. O výpadku vám přijde e-mail — nemusíte se dívat do panelu.",
+  },
+  {
+    q: "Kde jsou data a v čem platím?",
+    a: "Servery jsou v Německu (Hetzner, Norimberk), podpora je česká a fakturujeme v korunách. Žádný seat pricing v dolarech.",
+  },
+  {
+    q: "Můžu kdykoli odejít?",
+    a: "Ano. Váš kód je celou dobu ve vašem repozitáři na GitHubu, my z něj jen stavíme. Nedržíme vás žádným proprietárním formátem ani exportem.",
+  },
+  {
+    q: "Potřebuju k tomu účet na Grove Tech AI?",
+    a: "Ano, je to jeden účet pro GroveCheck, Defender i Cloud. Bezpečnostní sken si ale můžete vyzkoušet hned tady na stránce, bez registrace i bez karty.",
+  },
+];
+---
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="step">ČASTÉ OTÁZKY</div>
+    <h2>Než se rozhodnete</h2>
+
+    <div class="seznam">
+      {otazky.map((o) => (
+        <details>
+          <summary>{o.q}</summary>
+          <p>{o.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="finale">
+      <h2 class="fin-h">Vaše aplikace už běží. Teď ji nechte běžet bezpečně.</h2>
+      <p class="fin-p">
+        Grove Cloud propojuje managed hosting, GroveCheck a AI GroveDefender
+        do jedné bezpečnostní platformy.
+      </p>
+      <div class="cta">
+        <a class="btn red" href={APP} rel="noopener">Nasadit aplikaci →</a>
+        <a class="btn ghost" href={`${G}/kontakt`} rel="noopener">Domluvit migraci</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { padding: 64px 0 20px; }
+  h2 { font-size: clamp(24px, 3vw, 32px); letter-spacing: -.02em; margin: 6px 0 22px; }
+  .seznam { display: grid; gap: 8px; max-width: 860px; }
+  details { border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  /* min-height kvůli WCAG 2.5.8 (velikost cíle) — summary je ovládací prvek. */
+  summary {
+    display: flex; align-items: center; min-height: 24px;
+    padding: 15px 18px; cursor: pointer;
+    font-weight: 650; font-size: 15px; letter-spacing: -.01em;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; margin-left: auto; color: var(--muted); font-weight: 400; font-size: 18px; }
+  details[open] summary::after { content: "−"; }
+  details p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+
+  .finale { margin-top: 56px; padding: 44px 32px; border: 1px solid var(--line); border-radius: 18px; text-align: center; background: #fff; }
+  .fin-h { font-size: clamp(21px, 2.8vw, 30px); margin: 0 0 10px; }
+  .fin-p { color: var(--muted); max-width: 60ch; margin: 0 auto 24px; line-height: 1.6; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  @media (max-width: 700px) { .finale { padding: 32px 18px; } }
+</style>
