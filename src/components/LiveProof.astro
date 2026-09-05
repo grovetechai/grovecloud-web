@@ -19,45 +19,44 @@
  * viset na pomlčkách.
  */
 import pricing from "../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+const { jazyk, t, l } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 const API = "https://grovetechai.com/api/grovecloud/status";
 ---
 <section class="dukaz" id="dukaz" data-api={API}>
   <div class="wrap">
-    <div class="step">DŮKAZ</div>
-    <h2>Tento web běží na Grove Cloud.</h2>
-    <p class="sub">
-      Každé nasazení téhle stránky projde stejným procesem jako aplikace zákazníků:
-      build z GitHubu, bezpečnostní hlavičky ze sdíleného Caddy, {KONTROL} kontrol
-      po nasazení a kontrola dostupnosti každých 10 minut. Tarif Starter, 99 Kč.
-    </p>
+    <div class="step">{t("dukaz.step")}</div>
+    <h2>{t("dukaz.h2")}</h2>
+    <p class="sub">{t("dukaz.sub", { n: KONTROL, cena: STARTER })}</p>
 
     <div class="karty">
       <div class="karta">
-        <div class="popis">Stav služby</div>
-        <div class="hodnota" id="dp-stav">zjišťuji…</div>
-        <div class="pod" id="dp-stav-pod">načítám z našeho rozhraní</div>
+        <div class="popis">{t("dukaz.stav")}</div>
+        <div class="hodnota" id="dp-stav">{t("dukaz.zjistuji")}</div>
+        <div class="pod" id="dp-stav-pod">{t("dukaz.nacitam")}</div>
       </div>
       <div class="karta">
-        <div class="popis">Poslední kontrola</div>
+        <div class="popis">{t("dukaz.posledni")}</div>
         <div class="hodnota" id="dp-kontrola">—</div>
-        <div class="pod" id="dp-interval">měříme pravidelně</div>
+        <div class="pod" id="dp-interval">{t("dukaz.merime")}</div>
       </div>
       <div class="karta">
-        <div class="popis">Lokalita</div>
+        <div class="popis">{t("dukaz.lokalita")}</div>
         <div class="hodnota">EU</div>
-        <div class="pod">Hetzner, Norimberk · Německo</div>
+        <div class="pod">{t("dukaz.lokalitaPod")}</div>
       </div>
       <div class="karta">
-        <div class="popis">Tarif tohoto webu</div>
+        <div class="popis">{t("dukaz.tarif")}</div>
         <div class="hodnota">Starter</div>
-        <div class="pod">statika ze sdíleného serveru, 99 Kč</div>
+        <div class="pod">{t("dukaz.tarifPod", { cena: STARTER })}</div>
       </div>
     </div>
 
     <p class="odkaz">
-      Podrobný stav včetně toho, co nezveřejňujeme a proč, je na
-      <a href="/stav">stránce Stav služby</a>.
+      {t("dukaz.odkaz")} <a href={l("/stav")}>{t("dukaz.odkazText")}</a>.
     </p>
   </div>
 </section>

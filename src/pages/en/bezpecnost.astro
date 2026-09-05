@@ -1,8 +1,8 @@
 ---
-import pricing from "../data/pricing.json";
+import pricing from "../../data/pricing.json";
 const KONTROL = pricing.checks.universal;
-import Base from "../layouts/Base.astro";
-import { prekladacZUrl } from "../i18n/utils";
+import Base from "../../layouts/Base.astro";
+import { prekladacZUrl } from "../../i18n/utils";
 const { t } = prekladacZUrl(Astro.url);
 const G = "https://grovetechai.com";
 ---

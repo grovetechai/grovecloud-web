@@ -10,8 +10,8 @@
  * Takhle stránku servíruje Caddy ze statiky (běží, i když je aplikace dole)
  * a čísla si dotáhne prohlížeč. Když se dotaz nepovede, řekne to.
  */
-import Layout from "../layouts/Base.astro";
-import { prekladacZUrl } from "../i18n/utils";
+import Layout from "../../layouts/Base.astro";
+import { prekladacZUrl } from "../../i18n/utils";
 const { t } = prekladacZUrl(Astro.url);
 
 // Adresa jde do DATA ATRIBUTU, ne do `define:vars`.

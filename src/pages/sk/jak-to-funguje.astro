@@ -1,9 +1,9 @@
 ---
-import Base from "../layouts/Base.astro";
-import { prekladacZUrl } from "../i18n/utils";
+import Base from "../../layouts/Base.astro";
+import { prekladacZUrl } from "../../i18n/utils";
 const { t } = prekladacZUrl(Astro.url);
-import Pillars from "../components/Pillars.astro";
-import TryIt from "../components/TryIt.astro";
+import Pillars from "../../components/Pillars.astro";
+import TryIt from "../../components/TryIt.astro";
 const APP = "https://grovetechai.com/grovecloud";
 ---
 <Base title={t("meta.jak.t")} description="Připoj GitHub, klikni Nasadit. Grove Cloud pozná stack, postaví appku, dá jí adresu a certifikát, po každém pushi nasadí novou verzi a proskenuje ji." path="/jak-to-funguje">

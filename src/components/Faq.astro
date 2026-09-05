@@ -12,45 +12,21 @@
  * lepší je, když to ví předem od nás.
  */
 import pricing from "../data/pricing.json";
+import { prekladacZUrl } from "../i18n/utils";
+const { t } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
 const APP = "https://grovetechai.com/grovecloud";
 const G = "https://grovetechai.com";
 
-const otazky = [
-  {
-    q: "Musím umět Docker nebo spravovat server?",
-    a: "Ne. Vyberete repozitář na GitHubu, my z něj poznáme, o jaký projekt jde, a navrhneme build, start i port. Statický web běží ze sdíleného serveru, dynamická aplikace ve vlastním kontejneru — obojí bez zásahu z vaší strany.",
-  },
-  {
-    q: "Co přesně dělá bezpečnostní kontrola po nasazení?",
-    a: `Spustí ${KONTROL} kontrol proti veřejné adrese aplikace: hlavičky, TLS, uniklé klíče v odpovědích, malware, phishing na naší doméně. Výsledek uvidíte u aplikace hned po nasazení a nespotřebuje vám kvótu GroveChecku.`,
-  },
-  {
-    q: "Opravíte nálezy za mě?",
-    a: "Bezpečnostní konfiguraci infrastruktury nastavíme automaticky — hlavičky, TLS, izolace. Chyby přímo ve vašem kódu vám ukážeme s postupem opravy, ale nepřepisujeme vám aplikaci. Slibovat automatickou opravu všeho by nebyla pravda.",
-  },
-  {
-    q: "Co se stane, když aplikace spadne?",
-    a: "Dostupnost kontrolujeme každých 10 minut. Podle tarifu buď zasáhne automatika (restart), nebo se výpadek eskaluje na člověka. O výpadku vám přijde e-mail — nemusíte se dívat do panelu.",
-  },
-  {
-    q: "Kde jsou data a v čem platím?",
-    a: "Servery jsou v Německu (Hetzner, Norimberk), podpora je česká a fakturujeme v korunách. Žádný seat pricing v dolarech.",
-  },
-  {
-    q: "Můžu kdykoli odejít?",
-    a: "Ano. Váš kód je celou dobu ve vašem repozitáři na GitHubu, my z něj jen stavíme. Nedržíme vás žádným proprietárním formátem ani exportem.",
-  },
-  {
-    q: "Potřebuju k tomu účet na Grove Tech AI?",
-    a: "Ano, je to jeden účet pro GroveCheck, Defender i Cloud. Bezpečnostní sken si ale můžete vyzkoušet hned tady na stránce, bez registrace i bez karty.",
-  },
-];
+const otazky = [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+  q: t(`faq.q${i}` as any),
+  a: t(`faq.a${i}` as any, { n: KONTROL }),
+}));
 ---
 <section class="faq" id="faq">
   <div class="wrap">
-    <div class="step">ČASTÉ OTÁZKY</div>
-    <h2>Než se rozhodnete</h2>
+    <div class="step">{t("faq.step")}</div>
+    <h2>{t("faq.h2")}</h2>
 
     <div class="seznam">
       {otazky.map((o) => (
@@ -62,14 +38,11 @@ const otazky = [
     </div>
 
     <div class="finale">
-      <h2 class="fin-h">Vaše aplikace už běží. Teď ji nechte běžet bezpečně.</h2>
-      <p class="fin-p">
-        Grove Cloud propojuje managed hosting, GroveCheck a AI GroveDefender
-        do jedné bezpečnostní platformy.
-      </p>
+      <h2 class="fin-h">{t("fin.h2")}</h2>
+      <p class="fin-p">{t("fin.p")}</p>
       <div class="cta">
-        <a class="btn red" href={APP} rel="noopener">Nasadit aplikaci →</a>
-        <a class="btn ghost" href={`${G}/kontakt`} rel="noopener">Domluvit migraci</a>
+        <a class="btn red" href={APP} rel="noopener">{t("hero.cta1")}</a>
+        <a class="btn ghost" href={`${G}/kontakt`} rel="noopener">{t("fin.cta2")}</a>
       </div>
     </div>
   </div>

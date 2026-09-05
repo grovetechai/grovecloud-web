@@ -1,12 +1,21 @@
 ---
 import CloudMark from "./CloudMark.astro";
-const path = Astro.url.pathname;
+import { prekladacZUrl, cestaBezJazyka, odkaz, JAZYKY } from "../i18n/utils";
+import type { Jazyk } from "../i18n/ui";
+const { jazyk, t, l } = prekladacZUrl(Astro.url);
+const cista = cestaBezJazyka(Astro.url);
+const path = cista;
 const items = [
-  { href: "/jak-to-funguje", label: "Jak funguje" },
-  { href: "/bezpecnost", label: "Bezpečnost" },
-  { href: "/cena", label: "Ceník" },
-  { href: "/stav", label: "Stav" },
+  { href: "/jak-to-funguje", label: t("nav.jak") },
+  { href: "/bezpecnost", label: t("nav.bezpecnost") },
+  { href: "/cena", label: t("nav.cenik") },
+  { href: "/stav", label: t("nav.stav") },
 ];
+// Přepínač jazyků drží uživatele NA STEJNÉ STRÁNCE, jen v jiném jazyce.
+// Přehodit ho na úvodní stránku by ho vyhodilo z toho, co zrovna četl.
+const jazyky = (Object.keys(JAZYKY) as Jazyk[]).map((j) => ({
+  kod: j, nazev: JAZYKY[j], href: odkaz(j, cista), aktivni: j === jazyk,
+}));
 // Aplikace zatím běží na grovetechai.com (fáze 1); app.grovecloud.cz je fáze 3.
 const APP = "https://grovetechai.com/grovecloud";
 const G = "https://grovetechai.com";
@@ -17,16 +26,22 @@ const G = "https://grovetechai.com";
       nemá smysl schovávat, tak z toho vede odkaz. Je to samostatný odkaz
       vedle loga, ne vnořený do něj (vnořené odkazy jsou nevalidní HTML). */}
   <span class="brand">
-    <a class="logo" href="/" aria-label="Grove Cloud — domů"><CloudMark size={24} />Grove Cloud</a>
+    <a class="logo" href={l("/")} aria-label={t("nav.domu")}><CloudMark size={24} />Grove Cloud</a>
     <a class="by" href={G} rel="noopener">by Grove Tech AI</a>
   </span>
-  <nav aria-label="Hlavní">
-    {items.map((i) => <a href={i.href} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
+  <nav aria-label={t("a11y.hlavni")}>
+    {items.map((i) => <a href={l(i.href)} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
     {/* Odkaz na mateřský web patří do NAVIGACE, ne jen do drobného „by" u loga.
         Grove Cloud nemá působit jako cizí firma — za hostingem stojí produkty
         a reference, které prodávají i jeho. */}
     <a href={G} class="matka" rel="noopener">Grove Tech AI</a>
-    <a href={APP} class="login" rel="noopener">Přihlásit</a>
+    <span class="jazyky" role="group" aria-label={t("a11y.jazyk")}>
+      {jazyky.map((j) => (
+        <a href={j.href} class:list={["jaz", { akt: j.aktivni }]} hreflang={j.kod}
+           aria-current={j.aktivni ? "true" : undefined}>{j.kod.toUpperCase()}</a>
+      ))}
+    </span>
+    <a href={APP} class="login" rel="noopener">{t("nav.prihlasit")}</a>
   </nav>
 </header>
 <style>
@@ -42,6 +57,10 @@ const G = "https://grovetechai.com";
   /* Oddělovač před odkazem na mateřský web — vizuálně nepatří mezi stránky
      tohohle webu, ale vede jinam. */
   nav a.matka { border-left: 1px solid var(--line); margin-left: 18px; padding-left: 18px; }
+  .jazyky { display: inline-flex; gap: 2px; margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--line); }
+  /* Kódy jazyků jsou malé cíle — min. 24 px kvůli WCAG 2.5.8. */
+  nav .jaz { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; min-height: 24px; margin: 0; padding: 2px 4px; font-size: 12px; font-weight: 650; border-radius: 6px; }
+  nav .jaz.akt { color: var(--navy); background: rgba(37,99,235,.09); }
   @media (max-width: 980px) { nav a.matka { display: none; } }
   /* Na mobilu necháme jen to nejdůležitější: Ceník, Stav a Přihlásit.
      Celý ekosystém je v patičce, kam se čtenář dostane doscrollováním. */

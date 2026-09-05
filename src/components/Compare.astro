@@ -12,39 +12,39 @@
  * věc vázaná na tarif, píšeme to rovnou do buňky — „✓" u něčeho, co má jen
  * Business, by bylo zavádějící.
  */
+import { prekladacZUrl } from "../i18n/utils";
+const { t } = prekladacZUrl(Astro.url);
+const ANO = t("srov.ano");
 const radky = [
-  { f: "Automatické nasazení z GitHubu", bezny: "ano", grove: "ano", pozn: null },
-  { f: "Rozpoznání AI/vibe-coded stacku", bezny: "někdy", grove: "ano", pozn: "Next.js, Vite, Astro, Express, FastAPI i vlastní Dockerfile" },
-  { f: "Bezpečnostní kontrola po nasazení", bezny: "většinou ne", grove: "ano", pozn: "v ceně každého tarifu, nespotřebuje kvótu GroveChecku" },
-  { f: "Kontrola uniklých klíčů a konfigurace", bezny: "externí nástroj", grove: "ano", pozn: null },
-  { f: "Bezpečnostní hlavičky a TLS bez konfigurace", bezny: "částečně", grove: "ano", pozn: "HSTS, CSP, nosniff, X-Frame-Options, Referrer-Policy" },
-  { f: "AI runtime ochrana", bezny: "ne", grove: "GroveDefender", pozn: "volitelně, jedním řádkem v kódu" },
-  { f: "Kontrola dostupnosti", bezny: "podle služby", grove: "každých 10 min", pozn: null },
-  { f: "Automatický restart při výpadku", bezny: "podle služby", grove: "podle tarifu", pozn: null },
-  { f: "Lidská bezpečnostní eskalace", bezny: "ne", grove: "podle tarifu", pozn: null },
-  { f: "Česká podpora", bezny: "ne", grove: "ano", pozn: null },
-  { f: "Fakturace v Kč", bezny: "ne", grove: "ano", pozn: "bez seat pricingu v dolarech" },
+  { f: t("srov.r1"),  bezny: t("srov.ano"), grove: ANO, pozn: null },
+  { f: t("srov.r2"),  bezny: t("srov.nekdy"), grove: ANO, pozn: t("srov.r2p") },
+  { f: t("srov.r3"),  bezny: t("srov.vetsinou-ne"), grove: ANO, pozn: t("srov.r3p") },
+  { f: t("srov.r4"),  bezny: t("srov.externi"), grove: ANO, pozn: null },
+  { f: t("srov.r5"),  bezny: t("srov.castecne"), grove: ANO, pozn: t("srov.r5p") },
+  { f: t("srov.r6"),  bezny: "—", grove: "GroveDefender", pozn: t("srov.r6p") },
+  { f: t("srov.r7"),  bezny: t("srov.podle-sluzby"), grove: t("srov.kazdych10"), pozn: null },
+  { f: t("srov.r8"),  bezny: t("srov.podle-sluzby"), grove: t("srov.podle-tarifu"), pozn: null },
+  { f: t("srov.r9"),  bezny: "—", grove: t("srov.podle-tarifu"), pozn: null },
+  { f: t("srov.r10"), bezny: "—", grove: ANO, pozn: null },
+  { f: t("srov.r11"), bezny: "—", grove: ANO, pozn: t("srov.r11p") },
 ];
 
 // „ano" vykreslíme jako fajfku, zbytek jako text — aby tabulka nelhala
 // jednoduchostí tam, kde je odpověď podmíněná.
-const jeAno = (v: string) => v === "ano";
+const jeAno = (v: string) => v === ANO;
 ---
 <section class="srovnani" id="srovnani">
   <div class="wrap">
-    <div class="step">SROVNÁNÍ</div>
-    <h2>Hosting je jen začátek. Bezpečný provoz je celý produkt.</h2>
-    <p class="sub">
-      Srovnáváme se s kategorií, ne s konkrétní službou — funkce se u všech mění
-      každý měsíc a nechceme tvrdit něco, co za půl roku nebude platit.
-    </p>
+    <div class="step">{t("srov.step")}</div>
+    <h2>{t("srov.h2")}</h2>
+    <p class="sub">{t("srov.sub")}</p>
 
     <div class="obal">
       <table>
         <thead>
           <tr>
-            <th scope="col">Funkce</th>
-            <th scope="col">Běžný hosting</th>
+            <th scope="col">{t("srov.funkce")}</th>
+            <th scope="col">{t("srov.bezny")}</th>
             <th scope="col" class="nas">Grove Cloud</th>
           </tr>
         </thead>
@@ -55,10 +55,10 @@ const jeAno = (v: string) => v === "ano";
                 {r.f}
                 {r.pozn && <span class="pozn">{r.pozn}</span>}
               </th>
-              <td class="bezny">{r.bezny === "ne" ? "—" : r.bezny}</td>
+              <td class="bezny">{r.bezny}</td>
               <td class="nas">
                 {jeAno(r.grove)
-                  ? <span class="fajfka" aria-label="ano">✓</span>
+                  ? <span class="fajfka" aria-label={ANO}>✓</span>
                   : <span class="hodnota">{r.grove}</span>}
               </td>
             </tr>

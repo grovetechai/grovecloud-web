@@ -1,8 +1,8 @@
 ---
-import Base from "../layouts/Base.astro";
-import { prekladacZUrl } from "../i18n/utils";
+import Base from "../../layouts/Base.astro";
+import { prekladacZUrl } from "../../i18n/utils";
 const { t } = prekladacZUrl(Astro.url);
-import Pricing from "../components/Pricing.astro";
+import Pricing from "../../components/Pricing.astro";
 ---
 <Base title={t("meta.cena.t")} description="Ceník Grove Cloud: Starter 99 Kč pro statický web, Secure Host, Secure Plus a Business podle toho, co appka potřebuje. Stejná čísla jako v aplikaci." path="/cena">
   <Pricing />

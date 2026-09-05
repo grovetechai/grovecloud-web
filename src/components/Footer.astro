@@ -12,70 +12,74 @@
  * /penetracni-test. Opraveno 4. 9. 2026 — odkaz mířil na panel, takže
  * návštěvník bez účtu skončil na přihlašovací obrazovce.
  */
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+import pricing from "../data/pricing.json";
+const { t, l } = prekladacZUrl(Astro.url);
 const G = "https://grovetechai.com";
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const starter = cenaTarifu(statika?.prices?.starter, prekladacZUrl(Astro.url).jazyk) ?? "";
 
 const produkty = [
-  { h: `${G}/scanner`, l: "GroveCheck — bezpečnostní sken" },
-  { h: `${G}/defender`, l: "AI GroveDefender" },
-  { h: `${G}/penetracni-test`, l: "Automatizovaný pentest" },
+  { h: `${G}/scanner`, l: t("pat.scanner") },
+  { h: `${G}/defender`, l: t("pat.defender") },
+  { h: `${G}/penetracni-test`, l: t("pat.pentest") },
   // „Vývoj na míru" tu byl v návrhu patičky, ale na grovetechai.com pro něj
   // není stránka (ověřeno proti routám v App.tsx). Odkaz do prázdna by na
   // patičce, která má budit důvěru, působil hůř než jeho absence.
   // Místo něj metodika — doložitelná a pro hosting relevantní.
-  { h: `${G}/metodika`, l: "Metodika kontrol" },
+  { h: `${G}/metodika`, l: t("pat.metodika") },
 ];
 
 const firma = [
-  { h: `${G}/o-nas`, l: "O Grove Tech AI" },
-  { h: `${G}/kontakt`, l: "Kontakt" },
-  { h: `${G}/case-studies`, l: "Reference" },
+  { h: `${G}/o-nas`, l: t("pat.onas") },
+  { h: `${G}/kontakt`, l: t("pat.kontakt") },
+  { h: `${G}/case-studies`, l: t("pat.reference") },
 ];
 
 // Stav služby je NA TOMHLE webu, ne na grovetechai.com — musí být dostupný
 // i ve chvíli, kdy je hlavní aplikace dole. Statická stránka ze sdíleného
 // Caddy tuhle podmínku splňuje, SSR by ji nesplnilo.
 const pravni = [
-  { h: `${G}/terms`, l: "Obchodní podmínky", ext: true },
-  { h: `${G}/privacy`, l: "Zpracování údajů", ext: true },
-  { h: "/stav", l: "Stav služby", ext: false },
+  { h: `${G}/terms`, l: t("pat.podminky"), ext: true },
+  { h: `${G}/privacy`, l: t("pat.soukromi"), ext: true },
+  { h: l("/stav"), l: t("pat.stav"), ext: false },
 ];
 ---
 <footer class="ftr">
   <div class="wrap mrizka">
     <div class="sloupec znacka">
       <div class="nazev">Grove Cloud</div>
-      <p class="claim">Nasadíme. Prověříme. Ochráníme. Hlídáme.</p>
-      <p class="popis">
-        Produkt <a href={G} rel="noopener">Grove Tech AI s.r.o.</a> — managed hosting
-        propojený s bezpečnostním skenerem a runtime ochranou.
-      </p>
-      <p class="bezi">Tento web běží na Grove Cloud · tarif Starter, 99 Kč</p>
+      <p class="claim">{t("claim")}</p>
+      <p class="popis" set:html={t("pat.popis", {
+        firma: `<a href="${G}" rel="noopener">Grove Tech AI s.r.o.</a>`,
+      })} />
+      <p class="bezi">{t("pat.bezi", { cena: starter })}</p>
     </div>
 
     <div class="sloupec">
-      <div class="hlavicka">Produkty</div>
+      <div class="hlavicka">{t("pat.produkty")}</div>
       <ul>{produkty.map((o) => <li><a href={o.h} rel="noopener">{o.l}</a></li>)}</ul>
     </div>
 
     <div class="sloupec">
-      <div class="hlavicka">Firma</div>
+      <div class="hlavicka">{t("pat.firma")}</div>
       <ul>{firma.map((o) => <li><a href={o.h} rel="noopener">{o.l}</a></li>)}</ul>
     </div>
 
     <div class="sloupec">
-      <div class="hlavicka">Provoz a právo</div>
+      <div class="hlavicka">{t("pat.pravo")}</div>
       <ul>
         {pravni.map((o) => (
           <li><a href={o.h} rel={o.ext ? "noopener" : undefined}>{o.l}</a></li>
         ))}
-        <li><a href="mailto:security@grovetechai.com">Bezpečnostní kontakt</a></li>
+        <li><a href="mailto:security@grovetechai.com">{t("pat.security")}</a></li>
       </ul>
     </div>
   </div>
 
   <div class="wrap spodek">
     <span>© {new Date().getFullYear()} Grove Tech AI s.r.o.</span>
-    <span class="mono">servery v EU · Hetzner, Norimberk · fakturace v Kč</span>
+    <span class="mono">{t("pat.spodek")}</span>
   </div>
 </footer>
 

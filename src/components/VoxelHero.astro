@@ -1,13 +1,17 @@
 ---
 import pricing from "../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
+const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
+const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 // Hero: nápis GROVE CLOUD složený z voxelů, které se sletí z prostoru a reagují
 // na myš. Text je i v DOM (sr-only) kvůli SEO a čtečkám — canvas je jen vizuál.
 const APP = "https://grovetechai.com/grovecloud";
 ---
 <div class="hero">
   <div class="wrap">
-    <div class="eyebrow">SECURE MANAGED CLOUD PRO AI A VIBE-CODED APLIKACE</div>
+    <div class="eyebrow">{t("hero.eyebrow")}</div>
 
     {/* Nadpis je vidět, ne schovaný ve čtečce.
         Do 5. 9. 2026 tu byl jen `sr-only` nadpis a canvas s nápisem GROVE CLOUD.
@@ -16,26 +20,22 @@ const APP = "https://grovetechai.com/grovecloud";
     <canvas id="vox" width="1100" height="300" aria-hidden="true"></canvas>
 
     <h1 class="titulek">
-      Cloud, který aplikaci nejen nasadí.<br />
-      <span class="zvyraz">Ale také prověří, ochrání a hlídá.</span>
+      {t("hero.h1a")}<br />
+      <span class="zvyraz">{t("hero.h1b")}</span>
     </h1>
 
-    <p class="lead">
-      Připojte GitHub a během několika minut spusťte aplikaci v evropském cloudu.
-      Po každém nasazení ji prověří GroveCheck ({KONTROL} kontrol), za běhu ji může
-      chránit AI GroveDefender a při problému zasáhne automatika nebo člověk.
-    </p>
+    <p class="lead">{t("hero.lead", { n: KONTROL })}</p>
 
     <div class="cta">
-      <a class="btn red" id="cta-deploy" href={APP} rel="noopener">Nasadit aplikaci →</a>
-      <a class="btn ghost" href="#zkus">Zkontrolovat web zdarma</a>
+      <a class="btn red" id="cta-deploy" href={APP} rel="noopener">{t("hero.cta1")}</a>
+      <a class="btn ghost" href="#zkus">{t("hero.cta2")}</a>
     </div>
 
     {/* Každý údaj musí být pravdivý: kartu při nasazení statiky opravdu
         nechceme, servery jsou v Německu a podpora je česká. */}
-    <p class="pod-cta">Bez platební karty · EU infrastruktura · Česká podpora · Statický web od 99 Kč</p>
+    <p class="pod-cta">{t("hero.podCta", { cena: STARTER })}</p>
 
-    <p class="hint">Pohni myší nad kostkami — rozestoupí se a zase složí.</p>
+    <p class="hint">{t("hero.hint")}</p>
   </div>
 </div>
 <script src="../scripts/voxel.ts"></script>

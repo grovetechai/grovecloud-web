@@ -18,55 +18,24 @@
  * Dokud to neprojde end-to-end, píšeme jen to, co doopravdy běží.
  */
 import pricing from "../data/pricing.json";
+import { prekladacZUrl } from "../i18n/utils";
+const { t, l } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
 const G = "https://grovetechai.com";
 
 const clanky = [
-  {
-    k: "01",
-    n: "GitHub",
-    d: "Vyberete repozitář. Detekce projde kořen i podsložky a řekne, z čeho se aplikace skládá.",
-    odkaz: null,
-    stitek: null,
-  },
-  {
-    k: "02",
-    n: "Grove Cloud",
-    d: "Nasazení do evropského cloudu. Statika na sdílený server, dynamická aplikace do vlastního kontejneru.",
-    odkaz: null,
-    stitek: "hosting",
-  },
-  {
-    k: "03",
-    n: "GroveCheck",
-    d: `${KONTROL} kontrol proti veřejné adrese hned po nasazení. Hlavičky, TLS, uniklé klíče, malware.`,
-    odkaz: `${G}/scanner`,
-    stitek: "kontrola",
-  },
-  {
-    k: "04",
-    n: "AI GroveDefender",
-    d: "Ochrana za běhu: prompt injection, únik dat, podezřelé požadavky. Volitelně jedním řádkem v kódu.",
-    odkaz: `${G}/defender`,
-    stitek: "ochrana",
-  },
-  {
-    k: "05",
-    n: "Dohled",
-    d: "Kontrola dostupnosti každých 10 minut. Podle tarifu automatický restart nebo eskalace na člověka.",
-    odkaz: "/stav",
-    stitek: "provoz",
-  },
+  { k: "01", n: "GitHub", d: t("retez.1.d"), odkaz: null, stitek: null },
+  { k: "02", n: t("retez.2.n"), d: t("retez.2.d"), odkaz: null, stitek: t("retez.stitek.hosting") },
+  { k: "03", n: "GroveCheck", d: t("retez.3.d", { n: KONTROL }), odkaz: `${G}/scanner`, stitek: t("retez.stitek.kontrola") },
+  { k: "04", n: "AI GroveDefender", d: t("retez.4.d"), odkaz: `${G}/defender`, stitek: t("retez.stitek.ochrana") },
+  { k: "05", n: t("retez.5.n"), d: t("retez.5.d"), odkaz: l("/stav"), stitek: t("retez.stitek.provoz") },
 ];
 ---
 <section class="retezec" id="retezec">
   <div class="wrap">
-    <div class="step">JAK TO DRŽÍ POHROMADĚ</div>
-    <h2>Jedna platforma místo čtyř nespojených nástrojů.</h2>
-    <p class="sub">
-      Hosting, bezpečnostní kontrola, runtime ochrana a provozní dohled spolu mluví.
-      Nález ze skenu se propíše do ochrany, výpadek do vašeho e-mailu.
-    </p>
+    <div class="step">{t("retez.step")}</div>
+    <h2>{t("retez.h2")}</h2>
+    <p class="sub">{t("retez.sub")}</p>
 
     <ol class="clanky">
       {clanky.map((c, i) => (
@@ -79,14 +48,14 @@ const clanky = [
           <p>{c.d}</p>
           {c.odkaz && (
             <a class="vic" href={c.odkaz} rel={c.odkaz.startsWith("http") ? "noopener" : undefined}>
-              Detail →
+              {t("retez.detail")}
             </a>
           )}
         </li>
       ))}
     </ol>
 
-    <p class="claim"><b>Nasadíme. Prověříme. Ochráníme. Hlídáme.</b></p>
+    <p class="claim"><b>{t("claim")}</b></p>
   </div>
 </section>
 

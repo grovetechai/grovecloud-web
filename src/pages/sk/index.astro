@@ -17,18 +17,18 @@
  *   8. ceník
  *   9. FAQ + finální CTA
  */
-import Base from "../layouts/Base.astro";
-import VoxelHero from "../components/VoxelHero.astro";
-import GroveChain from "../components/GroveChain.astro";
-import TryIt from "../components/TryIt.astro";
-import SecurityMap from "../components/SecurityMap.astro";
-import Pillars from "../components/Pillars.astro";
-import Compare from "../components/Compare.astro";
-import LiveProof from "../components/LiveProof.astro";
-import Pricing from "../components/Pricing.astro";
-import Faq from "../components/Faq.astro";
-import pricing from "../data/pricing.json";
-import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
+import Base from "../../layouts/Base.astro";
+import VoxelHero from "../../components/VoxelHero.astro";
+import GroveChain from "../../components/GroveChain.astro";
+import TryIt from "../../components/TryIt.astro";
+import SecurityMap from "../../components/SecurityMap.astro";
+import Pillars from "../../components/Pillars.astro";
+import Compare from "../../components/Compare.astro";
+import LiveProof from "../../components/LiveProof.astro";
+import Pricing from "../../components/Pricing.astro";
+import Faq from "../../components/Faq.astro";
+import pricing from "../../data/pricing.json";
+import { prekladacZUrl, cenaTarifu } from "../../i18n/utils";
 const { jazyk, t } = prekladacZUrl(Astro.url);
 const KONTROL = pricing.checks.universal;
 const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");

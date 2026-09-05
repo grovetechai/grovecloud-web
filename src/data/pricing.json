@@ -1,7 +1,8 @@
 {
-  "generatedAt": "2026-09-04T14:11:15.373Z",
+  "generatedAt": "2026-09-05T17:16:49.215Z",
   "source": "shared/grovecloud-pricing.ts + shared/grovecloud-plans.ts",
   "eurCzk": 25,
+  "usdCzk": 23,
   "checks": {
     "universal": 205,
     "total": 218
@@ -33,10 +34,10 @@
       "includes": [
         "Hosting a provoz aplikace ve vlastním kontejneru",
         "Sken po každém nasazení + verzované image a rollback",
-        "Hlídání běhu a odezvy, upozornění při výpadku",
+        "Hlídání běhu a odezvy, e-mail při výpadku (nejvýš jednou za 6 hodin)",
         "Bezpečnostní hlavičky a TLS v ceně"
       ],
-      "operator": "Hlídání každých 10 minut — problém nahlásíme a navrhneme řešení",
+      "operator": "Hlídání každých 10 minut — problém nahlásíme e-mailem a navrhneme řešení",
       "highlighted": false,
       "comingSoon": false,
       "onRequest": false
@@ -51,7 +52,7 @@
         "Vše ze Secure Host",
         "Automatický restart spadlé appky bez čekání na člověka",
         "Detekce smyčky pádů — místo dalšího restartu voláme člověka",
-        "Upozornění, když appka přerůstá tarif"
+        "Přerůstání tarifu je vidět v přehledu, než přijde na fakturu"
       ],
       "operator": "Automatický restart, eskalace na člověka u všeho ostatního",
       "highlighted": true,
@@ -86,21 +87,25 @@
         "starter": {
           "czk": 99,
           "eur": 3.96,
+          "usd": 4.3,
           "overageEur": 0
         },
         "host": {
           "czk": 980,
           "eur": 39,
+          "usd": 42.61,
           "overageEur": 0
         },
         "pro": {
           "czk": 1730,
           "eur": 69,
+          "usd": 75.22,
           "overageEur": 0
         },
         "business": {
           "czk": 3230,
           "eur": 129,
+          "usd": 140.43,
           "overageEur": 0
         }
       }
@@ -115,16 +120,19 @@
         "host": {
           "czk": 1730,
           "eur": 69,
+          "usd": 75.22,
           "overageEur": 0
         },
         "pro": {
           "czk": 2480,
           "eur": 99,
+          "usd": 107.83,
           "overageEur": 0
         },
         "business": {
           "czk": 3980,
           "eur": 159,
+          "usd": 173.04,
           "overageEur": 0
         }
       }
@@ -139,16 +147,19 @@
         "host": {
           "czk": 1730,
           "eur": 69,
+          "usd": 75.22,
           "overageEur": 0
         },
         "pro": {
           "czk": 2480,
           "eur": 99,
+          "usd": 107.83,
           "overageEur": 0
         },
         "business": {
           "czk": 3980,
           "eur": 159,
+          "usd": 173.04,
           "overageEur": 0
         }
       }
@@ -163,16 +174,19 @@
         "host": {
           "czk": 2730,
           "eur": 109,
+          "usd": 118.7,
           "overageEur": 49
         },
         "pro": {
           "czk": 2980,
           "eur": 119,
+          "usd": 129.57,
           "overageEur": 0
         },
         "business": {
           "czk": 4480,
           "eur": 179,
+          "usd": 194.78,
           "overageEur": 0
         }
       }
@@ -187,16 +201,19 @@
         "host": {
           "czk": 3730,
           "eur": 149,
+          "usd": 162.17,
           "overageEur": 89
         },
         "pro": {
           "czk": 5480,
           "eur": 219,
+          "usd": 238.26,
           "overageEur": 49
         },
         "business": {
           "czk": 5980,
           "eur": 239,
+          "usd": 260,
           "overageEur": 0
         }
       }

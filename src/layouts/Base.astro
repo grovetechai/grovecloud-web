@@ -3,6 +3,8 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { jazykZUrl, cestaBezJazyka, odkaz } from "../i18n/utils";
+import { LOCALE, JAZYKY, prekladac, type Jazyk } from "../i18n/ui";
 
 interface Props {
   title: string;
@@ -12,7 +14,20 @@ interface Props {
 }
 const { title, description, path = "/" } = Astro.props;
 const site = "https://grovecloud.cz";
-const canonical = site + (path === "/" ? "/" : path);
+const jazyk = jazykZUrl(Astro.url);
+const t = prekladac(jazyk);
+const cistaCesta = path;
+const canonical = site + odkaz(jazyk, cistaCesta);
+
+// hreflang pro všechny jazyky + x-default.
+//
+// Bez toho by Google bral české a anglické znění jako duplicitní obsah a jednu
+// z verzí by z výsledků vyhodil. x-default míří na češtinu — je to naše domácí
+// verze a zároveň jediná bez prefixu.
+const alternativy = (Object.keys(JAZYKY) as Jazyk[]).map((j) => ({
+  lang: LOCALE[j].lang,
+  href: site + odkaz(j, cistaCesta),
+}));
 
 // Strukturovaná data (JSON-LD). Bez nich vyhledávače i AI jen hádají, co
 // stránka znamená — a náš vlastní skener to hlásí jako nález.
@@ -32,7 +47,7 @@ const schema = {
       "@id": `${site}/#web`,
       url: site,
       name: "Grove Cloud",
-      inLanguage: "cs-CZ",
+      inLanguage: LOCALE[jazyk].lang,
       publisher: { "@id": `${site}/#org` },
     },
     {
@@ -52,26 +67,28 @@ const schema = {
 };
 ---
 <!doctype html>
-<html lang="cs">
+<html lang={LOCALE[jazyk].lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternativy.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={site + odkaz("cs", cistaCesta)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Grove Cloud" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:locale" content={LOCALE[jazyk].og} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#082054" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Přeskočit na obsah</a>
+    <a class="skip-link" href="#main">{t("a11y.preskocit")}</a>
     <Header />
     <main id="main"><slot /></main>
     <Footer />
