@@ -1,0 +1,57 @@
+---
+/**
+ * Pečeť kvality „Grove Certified" pro grovecloud.cz.
+ *
+ * ══ ČÍSLO KRESLÍ SERVER, NE MY ═════════════════════════════════════════════
+ * Odznak je SVG z `/api/scan/badge/:token.svg` na grovetechai.com. Vystavuje
+ * ho server podle SKUTEČNÉHO stavu posledního skenu a jen při skóre 90+.
+ * Kdybychom si číslo vykreslili sami do statického obrázku, byla by pečeť
+ * platná přesně do prvního zhoršení — a pak by na webu bezpečnostní firmy
+ * viselo tvrzení, které neplatí. To je horší než žádná pečeť.
+ *
+ * Praktický důsledek: když skóre spadne pod 90, odznak zmizí sám. Není to
+ * chyba, je to pojistka.
+ *
+ * ══ PROČ JE TO ODKAZ, A NE JEN OBRÁZEK ═════════════════════════════════════
+ * Pečeť, kterou si nejde ověřit, je jen grafika. Klik vede na plný report
+ * s konkrétními nálezy — včetně těch, které jsme ještě neopravili.
+ */
+import pecet from "../data/pecet.json";
+import { prekladacZUrl } from "../i18n/utils";
+const { t } = prekladacZUrl(Astro.url);
+
+const API = "https://grovetechai.com";
+const odznak = `${API}/api/scan/badge/${pecet.token}.svg`;
+const report = `${API}/report/${pecet.token}`;
+---
+<a class="pecet" href={report} rel="noopener" target="_blank" title={t("pecet.title")}>
+  {/*
+    `loading="lazy"` schválně NENÍ: odznak je v patičce, ale je to důkaz
+    tvrzení z celého webu — má se načíst i tomu, kdo jen rychle sroluje dolů.
+    Rozměry jsou napevno, aby se stránka při načtení neposkakovala.
+  */}
+  <img src={odznak} width="116" height="116" alt={t("pecet.alt")} />
+  <span class="text">
+    <strong>{t("pecet.nadpis")}</strong>
+    <span class="popis">{t("pecet.popis")}</span>
+    <span class="odkaz">{t("pecet.overit")}</span>
+  </span>
+</a>
+
+<style>
+  .pecet {
+    display: flex; align-items: center; gap: 16px;
+    text-decoration: none; color: inherit;
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 20px 16px 16px; background: #fff;
+    max-width: 460px; transition: box-shadow .25s, border-color .25s;
+  }
+  .pecet:hover { border-color: var(--navy); box-shadow: 0 10px 30px -18px rgba(8,32,84,.55); }
+  .pecet:focus-visible { outline: 3px solid var(--blue2); outline-offset: 2px; }
+  .pecet img { flex: 0 0 auto; display: block; }
+  .text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .text strong { font-size: 14.5px; letter-spacing: -.01em; }
+  .popis { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .odkaz { font-size: 12.5px; color: var(--navy); font-weight: 650; margin-top: 2px; }
+  @media (max-width: 520px) { .pecet { padding: 14px; gap: 12px; } .text strong { font-size: 13.5px; } }
+</style>

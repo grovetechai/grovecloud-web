@@ -1,0 +1,7 @@
+{
+  "_comment": "Pečeť kvality Grove Certified pro grovecloud.cz. `token` je share token skenu, ze kterého se odznak vystavuje. Po novém skenu sem patří nový token — číslo v odznaku si server dopočítá sám, tady se nic přepisovat nemusí.",
+  "token": "f456cbb7-9d13-497c-816d-4fb90486c5e6",
+  "skenovano": "2026-09-05",
+  "skoreVCasePridani": 98,
+  "poznamka": "skoreVCasePridani je jen záznam pro nás, na webu se NEZOBRAZUJE — číslo vždy vykresluje server podle aktuálního stavu skenu, aby pečeť nemohla tvrdit něco jiného než report."
+}

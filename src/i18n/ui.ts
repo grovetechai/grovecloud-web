@@ -863,6 +863,35 @@ export const ui = {
   "stav.h2": { cs: "Aktuální stav", en: "Current status", sk: "Aktuálny stav" },
   "stav.h3": { cs: "Co tady nezveřejňujeme", en: "What we don't publish here", sk: "Čo tu nezverejňujeme" },
   "e404.kamdal": { cs: "Kam dál", en: "Where to next", sk: "Kam ďalej" },
+  // ── Pečeť kvality ────────────────────────────────────────────────────────
+  //
+  // Text pečeti nesmí slibovat víc, než odznak ukazuje. Číslo vykresluje
+  // server; my k němu píšeme jen kontext a odkaz na ověření.
+  "pecet.nadpis": {
+    cs: "Prověřeno vlastním skenerem",
+    en: "Scanned by our own scanner",
+    sk: "Preverené vlastným skenerom",
+  },
+  "pecet.popis": {
+    cs: "Tenhle web běží na Grove Cloudu a prochází stejným skenem jako aplikace zákazníků. Skóre v odznaku je aktuální, ne obrázek z minulého roku.",
+    en: "This site runs on Grove Cloud and goes through the same scan as our customers' applications. The score on the badge is live, not a picture from last year.",
+    sk: "Tento web beží na Grove Cloude a prechádza rovnakou kontrolou ako aplikácie zákazníkov. Skóre v odznaku je aktuálne, nie obrázok z minulého roka.",
+  },
+  "pecet.overit": {
+    cs: "Otevřít celý report včetně neopravených nálezů →",
+    en: "Open the full report, unfixed findings included →",
+    sk: "Otvoriť celý report vrátane neopravených nálezov →",
+  },
+  "pecet.title": {
+    cs: "Otevřít bezpečnostní report grovecloud.cz",
+    en: "Open the security report for grovecloud.cz",
+    sk: "Otvoriť bezpečnostný report grovecloud.cz",
+  },
+  "pecet.alt": {
+    cs: "Odznak Grove Certified s aktuálním bezpečnostním skóre webu",
+    en: "Grove Certified badge with the site's current security score",
+    sk: "Odznak Grove Certified s aktuálnym bezpečnostným skóre webu",
+  },
 } as const;
 
 export type Klic = keyof typeof ui;
