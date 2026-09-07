@@ -26,7 +26,11 @@ function popisCeny(p: Cena, tierKey: string): string | null {
   const castka = mena === "czk" ? p.czk : p.eur;
   // Starter má pevnou cenu, ostatní tarify se od základu odvíjejí nahoru.
   const predpona = tierKey === "starter" ? "" : t("cenik.od");
-  return `${predpona}${formatCena(castka, mena, jazyk)}`;
+  // Cizí měna je orientační přepočet zaokrouhlený na ceníkové číslo (viz
+  // export). „≈" říká, že fakturovaná částka je ta korunová — bez toho by
+  // 41 € vypadalo jako smluvní cena, kterou nikdo nefakturuje.
+  const priblizne = mena === "czk" ? "" : "≈ ";
+  return `${predpona}${priblizne}${formatCena(castka, mena, jazyk)}`;
 }
 
 const defPrices = def.prices as Record<string, Cena>;

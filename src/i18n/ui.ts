@@ -77,7 +77,7 @@ export const ui = {
   "hero.cta2": { cs: "Zkontrolovat web zdarma", en: "Scan your site for free", sk: "Skontrolovať web zadarmo" },
   "hero.podCta": {
     cs: "Bez platební karty · EU infrastruktura · Česká podpora · Statický web od {cena}",
-    en: "No credit card · EU infrastructure · Support in Czech and English · Static site from {cena}",
+    en: "No credit card · EU infrastructure · Human support · Static site from {cena}",
     sk: "Bez platobnej karty · EU infraštruktúra · Podpora v slovenčine a češtine · Statický web od {cena}",
   },
   "hero.hint": {
@@ -171,9 +171,9 @@ export const ui = {
   "srov.r7": { cs: "Kontrola dostupnosti", en: "Availability monitoring", sk: "Kontrola dostupnosti" },
   "srov.r8": { cs: "Automatický restart při výpadku", en: "Automatic restart on failure", sk: "Automatický reštart pri výpadku" },
   "srov.r9": { cs: "Lidská bezpečnostní eskalace", en: "Human security escalation", sk: "Ľudská bezpečnostná eskalácia" },
-  "srov.r10": { cs: "Česká podpora", en: "Support in Czech and English", sk: "Podpora v slovenčine a češtine" },
-  "srov.r11": { cs: "Fakturace v Kč", en: "Invoicing in CZK", sk: "Fakturácia v Kč" },
-  "srov.r11p": { cs: "bez seat pricingu v dolarech", en: "no per-seat pricing in dollars", sk: "bez seat pricingu v dolároch" },
+  "srov.r10": { cs: "Česká podpora", en: "Support from a real team, not a ticket bot", sk: "Podpora od ľudí, nie ticket bot" },
+  "srov.r11": { cs: "Fakturace v Kč", en: "Flat monthly price", sk: "Pevná mesačná cena" },
+  "srov.r11p": { cs: "bez seat pricingu v dolarech", en: "no per-seat pricing; invoiced in CZK, € shown for orientation", sk: "bez seat pricingu; fakturujeme v Kč, € je orientačný prepočet" },
 
   // ── Živý důkaz ───────────────────────────────────────────────────────────
   "dukaz.step": { cs: "DŮKAZ", en: "PROOF", sk: "DÔKAZ" },
@@ -599,7 +599,7 @@ export const ui = {
   "cenik.nasadit": { cs: "Nasadit", en: "Deploy", sk: "Nasadiť" },
   "cenik.pozn": {
     cs: "Ceny bez DPH, kurz {kurz} Kč/€. Tarify označené „připravujeme\" zatím sjednáváme ručně — napiš nám a domluvíme start. Ceník generován z aplikace {datum}.",
-    en: "Prices exclude VAT; conversion rate {kurz} CZK/€. We bill in CZK — amounts in € and $ are a guide. Plans marked \"coming soon\" are still arranged manually — write to us and we'll set it up. Pricing generated from the app on {datum}.",
+    en: "Prices exclude VAT. We invoice in CZK (rate {kurz} CZK/€); € and $ amounts are rounded for orientation. Plans marked \"coming soon\" are still arranged manually — write to us and we'll set it up. Pricing generated from the app on {datum}.",
     sk: "Ceny bez DPH, kurz {kurz} Kč/€. Fakturujeme v Kč — sumy v € a $ sú orientačné. Tarify označené „pripravujeme\" zatiaľ dojednávame ručne — napíš nám a dohodneme štart. Cenník generovaný z aplikácie {datum}.",
   },
   // Typy aplikací — klíč = `key` ze stacks v pricing.json.
