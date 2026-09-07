@@ -104,6 +104,9 @@ const schema = {
     <main id="main"><slot /></main>
     <Footer />
     <script src="../scripts/reveal.ts"></script>
+    {/* Bezcookie pageview beacon — víme tím, kolik lidí na web přijde. Bez
+        cookies, bez ID, IP se neukládá; externí soubor kvůli CSP 'self'. */}
+    <script src="../scripts/pv.ts"></script>
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </body>
 </html>
