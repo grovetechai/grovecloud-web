@@ -29,4 +29,33 @@ const G = "https://grovetechai.com";
       <p class="note reveal" style="margin-top:28px;font-size:13px;color:var(--muted)">{t("bs.pozn")}</p>
     </div>
   </section>
+  {/* AI agenti — přidáno 11. 9. 2026 po reálném testu (viz i18n bsa.*). */}
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">{t("bsa.eyebrow")}</div>
+      <h2 class="reveal" style="margin-top:10px">{t("bsa.h2")}</h2>
+      <p class="sub reveal" data-i="1">{t("bsa.lead")}</p>
+      <div class="grid3" style="margin-top:22px">
+        <div class="card reveal" style="grid-column:span 2">
+          <div class="n">{t("bsa.test.h")}</div>
+          <p>{t("bsa.test.p")}</p>
+          <p style="margin-top:10px;font-size:13px;color:var(--muted)">{t("bsa.repo")} <a href="https://github.com/grovetechai/grovecloud-test-agents" rel="noopener">github.com/grovetechai/grovecloud-test-agents</a></p>
+        </div>
+        <div class="card reveal" data-i="1">
+          <pre style="margin:0;font-size:12px;line-height:1.5;white-space:pre-wrap"><code>{`// OpenAI SDK
+new OpenAI({
+  defaultHeaders: {
+    "x-grove-agent": "support-bot"
+  }
+});
+
+// fetch
+fetch(url, { headers: {
+  "x-grove-agent": "billing-agent"
+}});`}</code></pre>
+        </div>
+      </div>
+      <p class="note reveal" style="margin-top:22px;font-size:13px;color:var(--muted)">{t("bsa.limit")}</p>
+    </div>
+  </section>
 </Base>

@@ -732,6 +732,37 @@ export const ui = {
     sk: "Poctivo: kontrola nájde to, čo sa dá zistiť zvonku a z buildu. Chyby v obchodnej logike alebo v dátach, ktoré aplikácia sama ukladá, odhalí až pentest alebo review kódu. Nikdy nesľubujeme „100% bezpečno\".",
   },
 
+  // ── /bezpecnost: blok AI agenti (11. 9. 2026, po testu test-ai-agenti) ──
+  // Čísla jsou z reálného testu: 3 agenti, 15 volání, 5× prompt injection
+  // u záměrně otráveného agenta. Nic z toho není odhad ani ukázka.
+  "bsa.eyebrow": { cs: "AI AGENTI", en: "AI AGENTS", sk: "AI AGENTI" },
+  "bsa.h2": {
+    cs: "Máte v appce víc AI agentů? Vidíte každého zvlášť.",
+    en: "Multiple AI agents in one app? You see each one separately.",
+    sk: "Máte v aplikácii viac AI agentov? Vidíte každého zvlášť.",
+  },
+  "bsa.lead": {
+    cs: "Automatická ochrana v Grove Cloudu chrání všechna volání modelu bez zásahu do kódu. Od Defenderu 0.29.0 stačí na volání přidat hlavičku x-grove-agent — a dashboard rozdělí volání, útratu i zásahy podle agenta. Hlavička se před odesláním k poskytovateli odstraní.",
+    en: "Automatic protection in Grove Cloud covers every model call without touching your code. Since Defender 0.29.0, add an x-grove-agent header to the call and the dashboard splits calls, spend and interventions per agent. The header is stripped before the request reaches the provider.",
+    sk: "Automatická ochrana v Grove Cloude chráni všetky volania modelu bez zásahu do kódu. Od Defenderu 0.29.0 stačí na volanie pridať hlavičku x-grove-agent — a dashboard rozdelí volania, útratu aj zásahy podľa agenta. Hlavička sa pred odoslaním k poskytovateľovi odstráni.",
+  },
+  "bsa.test.h": {
+    cs: "Ověřeno na testovací appce, 11. 9. 2026",
+    en: "Verified on a test app, 11 Sep 2026",
+    sk: "Overené na testovacej aplikácii, 11. 9. 2026",
+  },
+  "bsa.test.p": {
+    cs: "Tři agenti (support-bot, billing-agent, research-crawler), nasazeno přes Grove Cloud z veřejného repa, klíč k OpenAI vložený jako proměnná. Po 15 voláních: dva agenti 100 % čistí, research-crawler — záměrně krmený otráveným vstupem — 5× označen za prompt injection. Útrata čtená z usage každé odpovědi.",
+    en: "Three agents (support-bot, billing-agent, research-crawler), deployed via Grove Cloud from a public repo, OpenAI key added as an environment variable. After 15 calls: two agents 100% clean, research-crawler — deliberately fed poisoned input — flagged 5× for prompt injection. Spend read from the usage of every response.",
+    sk: "Traja agenti (support-bot, billing-agent, research-crawler), nasadené cez Grove Cloud z verejného repa, kľúč k OpenAI vložený ako premenná. Po 15 volaniach: dvaja agenti 100 % čistí, research-crawler — zámerne kŕmený otráveným vstupom — 5× označený za prompt injection. Útrata čítaná z usage každej odpovede.",
+  },
+  "bsa.repo": { cs: "Testovací appka je veřejná:", en: "The test app is public:", sk: "Testovacia aplikácia je verejná:" },
+  "bsa.limit": {
+    cs: "Co nevidíme a nikomu neprodáváme: Python appky (automatická vrstva je zatím jen pro Node), streamované odpovědi, HTTP klienty mimo fetch a lokální modely. Pro ty je plné SDK v kódu.",
+    en: "What we do not see and do not sell: Python apps (the automatic layer is Node-only for now), streamed responses, HTTP clients other than fetch, and local models. For those, use the full SDK in code.",
+    sk: "Čo nevidíme a nikomu nepredávame: Python aplikácie (automatická vrstva je zatiaľ len pre Node), streamované odpovede, HTTP klientov mimo fetch a lokálne modely. Pre tie je plné SDK v kóde.",
+  },
+
   // ── Stránka /jak-to-funguje ──────────────────────────────────────────────
   "meta.jak.d": {
     cs: "Připoj GitHub, klikni Nasadit. Grove Cloud pozná stack, postaví appku, dá jí adresu a certifikát, po každém pushi nasadí novou verzi a proskenuje ji.",
