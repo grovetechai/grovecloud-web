@@ -17,7 +17,7 @@ const jazyky = (Object.keys(JAZYKY) as Jazyk[]).map((j) => ({
   kod: j, nazev: JAZYKY[j], href: odkaz(j, cista), aktivni: j === jazyk,
 }));
 // Aplikace zatím běží na grovetechai.com (fáze 1); app.grovecloud.cz je fáze 3.
-const APP = "https://grovetechai.com/grovecloud";
+import { appUrl } from "../lib/app-url";
 const G = "https://grovetechai.com";
 ---
 <header class="hdr">
@@ -41,7 +41,7 @@ const G = "https://grovetechai.com";
            aria-current={j.aktivni ? "true" : undefined}>{j.kod.toUpperCase()}</a>
       ))}
     </span>
-    <a href={APP} class="login" rel="noopener">{t("nav.prihlasit")}</a>
+    <a href={appUrl("nav-login")} class="login" rel="noopener">{t("nav.prihlasit")}</a>
   </nav>
 </header>
 <style>

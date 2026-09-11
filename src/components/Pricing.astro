@@ -18,7 +18,7 @@ const tiers = pricing.tiers;
 const def: any = stacks[0];
 type Cena = { czk: number; eur: number; usd: number } | null;
 const mena = MENA[jazyk];
-const APP = "https://grovetechai.com/grovecloud";
+import { appUrl } from "../lib/app-url";
 
 /** Hotový popisek ceny pro jeden tarif, nebo null když tarif pro daný typ neexistuje. */
 function popisCeny(p: Cena, tierKey: string): string | null {
@@ -66,7 +66,7 @@ for (const s of stacks as any[]) {
             </div>
             <div class="from">{t(`tarif.${tier.key}.sla` as any)} · {t(`tarif.${tier.key}.resp` as any)}</div>
             {!compact && <ul>{[1, 2, 3, 4].map((i) => <li>{t(`tarif.${tier.key}.${i}` as any)}</li>)}</ul>}
-            {!compact && <a class="btn small" href={tier.onRequest ? "mailto:cloud@grovetechai.com?subject=Grove%20Cloud%20Business" : APP} rel="noopener">{tier.onRequest ? t("cenik.domluvit") : tier.comingSoon ? t("cenik.zajem") : t("cenik.nasadit")}</a>}
+            {!compact && <a class="btn small" href={tier.onRequest ? "mailto:cloud@grovetechai.com?subject=Grove%20Cloud%20Business" : appUrl(`cenik-${tier.key}`)} rel="noopener">{tier.onRequest ? t("cenik.domluvit") : tier.comingSoon ? t("cenik.zajem") : t("cenik.nasadit")}</a>}
           </div>
         );
       })}

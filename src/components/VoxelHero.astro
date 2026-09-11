@@ -7,7 +7,7 @@ const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static"
 const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 // Hero: nápis GROVE CLOUD složený z voxelů, které se sletí z prostoru a reagují
 // na myš. Text je i v DOM (sr-only) kvůli SEO a čtečkám — canvas je jen vizuál.
-const APP = "https://grovetechai.com/grovecloud";
+import { appUrl } from "../lib/app-url";
 ---
 <div class="hero">
   <div class="wrap">
@@ -27,7 +27,7 @@ const APP = "https://grovetechai.com/grovecloud";
     <p class="lead">{t("hero.lead", { n: KONTROL })}</p>
 
     <div class="cta">
-      <a class="btn red" id="cta-deploy" href={APP} rel="noopener">{t("hero.cta1")}</a>
+      <a class="btn red" id="cta-deploy" href={appUrl("hero")} rel="noopener">{t("hero.cta1")}</a>
       <a class="btn ghost" href="#zkus">{t("hero.cta2")}</a>
     </div>
 
