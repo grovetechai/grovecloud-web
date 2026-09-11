@@ -758,9 +758,9 @@ export const ui = {
   },
   "bsa.repo": { cs: "Testovací appka je veřejná:", en: "The test app is public:", sk: "Testovacia aplikácia je verejná:" },
   "bsa.limit": {
-    cs: "Co nevidíme a nikomu neprodáváme: Python appky (automatická vrstva je zatím jen pro Node), streamované odpovědi, HTTP klienty mimo fetch a lokální modely. Pro ty je plné SDK v kódu.",
-    en: "What we do not see and do not sell: Python apps (the automatic layer is Node-only for now), streamed responses, HTTP clients other than fetch, and local models. For those, use the full SDK in code.",
-    sk: "Čo nevidíme a nikomu nepredávame: Python aplikácie (automatická vrstva je zatiaľ len pre Node), streamované odpovede, HTTP klientov mimo fetch a lokálne modely. Pre tie je plné SDK v kóde.",
+    cs: "Automatická vrstva pokrývá Node (fetch) i Python (httpx a requests — tedy OpenAI, Anthropic i Mistral SDK a LangChain). Co nevidíme a nikomu neprodáváme: streamované odpovědi, HTTP klienty mimo fetch/httpx/requests a lokální modely. Pro ty je plné SDK v kódu.",
+    en: "The automatic layer covers Node (fetch) and Python (httpx and requests — i.e. the OpenAI, Anthropic and Mistral SDKs and LangChain). What we do not see and do not sell: streamed responses, HTTP clients other than fetch/httpx/requests, and local models. For those, use the full SDK in code.",
+    sk: "Automatická vrstva pokrýva Node (fetch) aj Python (httpx a requests — teda OpenAI, Anthropic aj Mistral SDK a LangChain). Čo nevidíme a nikomu nepredávame: streamované odpovede, HTTP klientov mimo fetch/httpx/requests a lokálne modely. Pre tie je plné SDK v kóde.",
   },
 
   // ── Stránka /jak-to-funguje ──────────────────────────────────────────────
