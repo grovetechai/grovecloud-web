@@ -763,6 +763,32 @@ export const ui = {
     sk: "Automatická vrstva pokrýva Node (fetch) aj Python (httpx a requests — teda OpenAI, Anthropic aj Mistral SDK a LangChain). Čo nevidíme a nikomu nepredávame: streamované odpovede, HTTP klientov mimo fetch/httpx/requests a lokálne modely. Pre tie je plné SDK v kóde.",
   },
 
+  "nav.blog": { cs: "Blog", en: "Blog", sk: "Blog" },
+  "meta.blog.t": { cs: "Blog — Grove Cloud", en: "Blog — Grove Cloud", sk: "Blog — Grove Cloud" },
+  "meta.blog.d": {
+    cs: "Co jsme nasadili, změřili a co z toho vyšlo. Články o bezpečném hostingu appek a AI agentů — s čísly, daty a odkazy na repa.",
+    en: "What we deployed, measured and what came out of it. Articles on secure hosting for apps and AI agents — with numbers, dates and links to repos.",
+    sk: "Čo sme nasadili, zmerali a čo z toho vyšlo. Články o bezpečnom hostingu aplikácií a AI agentov — s číslami, dátumami a odkazmi na repá.",
+  },
+  "blog.eyebrow": { cs: "BLOG", en: "BLOG", sk: "BLOG" },
+  "blog.h1": { cs: "Co jsme nasadili a změřili.", en: "What we deployed and measured.", sk: "Čo sme nasadili a zmerali." },
+  "blog.lead": {
+    cs: "Žádné „experti se shodují“. Každý článek vychází z něčeho, co jsme udělali sami — s datem, čísly a odkazem, ať si to můžete zopakovat.",
+    en: "No “experts agree”. Every article comes from something we did ourselves — with a date, numbers and a link so you can repeat it.",
+    sk: "Žiadne „experti sa zhodujú“. Každý článok vychádza z niečoho, čo sme urobili sami — s dátumom, číslami a odkazom, aby ste si to mohli zopakovať.",
+  },
+  "blog.min": { cs: "min čtení", en: "min read", sk: "min čítania" },
+  "blog.cist": { cs: "Číst →", en: "Read →", sk: "Čítať →" },
+  "blog.zpet": { cs: "Všechny články", en: "All articles", sk: "Všetky články" },
+  "blog.cta.n": { cs: "GROVE CLOUD", en: "GROVE CLOUD", sk: "GROVE CLOUD" },
+  "blog.cta.h": { cs: "Stejná ochrana pro vaši appku", en: "The same protection for your app", sk: "Rovnaká ochrana pre vašu aplikáciu" },
+  "blog.cta.p": {
+    cs: "Nasazení z GitHubu, Defender přibalený při buildu, sken po každém nasazení. Bez zásahu do kódu.",
+    en: "Deploy from GitHub, Defender bundled at build time, a scan after every deploy. No code changes.",
+    sk: "Nasadenie z GitHubu, Defender pribalený pri builde, sken po každom nasadení. Bez zásahu do kódu.",
+  },
+  "blog.cta.btn": { cs: "Jak nás chrání →", en: "How it protects you →", sk: "Ako nás chráni →" },
+
   // ── Stránka /jak-to-funguje ──────────────────────────────────────────────
   "meta.jak.d": {
     cs: "Připoj GitHub, klikni Nasadit. Grove Cloud pozná stack, postaví appku, dá jí adresu a certifikát, po každém pushi nasadí novou verzi a proskenuje ji.",

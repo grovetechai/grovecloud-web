@@ -1,0 +1,9 @@
+---
+import Sablona from "../../sekce/Clanek.astro";
+import { CLANKY } from "../../data/clanky";
+export function getStaticPaths() {
+  return CLANKY.map((c) => ({ params: { slug: c.slug }, props: { clanek: c } }));
+}
+const { clanek } = Astro.props;
+---
+<Sablona clanek={clanek} />

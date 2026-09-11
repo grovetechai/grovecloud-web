@@ -1,0 +1,66 @@
+---
+/**
+ * Detail článku. Obsah přichází z src/data/clanky.ts (tři jazyky vždy).
+ * Mezinadpisy / seznamy / poznámky se poznají z prefixu řádku — žádné HTML
+ * v datech, žádný inline skript (CSP 'self').
+ */
+import Base from "../layouts/Base.astro";
+import { prekladacZUrl } from "../i18n/utils";
+import type { Clanek } from "../data/clanky";
+interface Props { clanek: Clanek }
+const { clanek } = Astro.props;
+const { t, l, jazyk } = prekladacZUrl(Astro.url);
+const txt = clanek.text[jazyk];
+const fmt = (iso: string) => new Date(iso).toLocaleDateString(jazyk === "en" ? "en-GB" : jazyk === "sk" ? "sk-SK" : "cs-CZ", { day: "numeric", month: "long", year: "numeric" });
+
+// Sousední položky seznamu spojíme do jednoho <ul>.
+type Blok = { typ: "h2" | "p" | "q"; text: string } | { typ: "ul"; items: string[] };
+const bloky: Blok[] = [];
+for (const r of txt.telo) {
+  if (r.startsWith("## ")) bloky.push({ typ: "h2", text: r.slice(3) });
+  else if (r.startsWith("> ")) bloky.push({ typ: "q", text: r.slice(2) });
+  else if (r.startsWith("- ")) {
+    const last = bloky[bloky.length - 1];
+    if (last && last.typ === "ul") last.items.push(r.slice(2)); else bloky.push({ typ: "ul", items: [r.slice(2)] });
+  } else bloky.push({ typ: "p", text: r });
+}
+---
+<Base title={`${txt.titulek} — Grove Cloud`} description={txt.perex} path={`/blog/${clanek.slug}`}>
+  <section>
+    <div class="wrap">
+      <article class="clanek">
+        <a class="zpet" href={l("/blog")}>← {t("blog.zpet")}</a>
+        <div class="eyebrow" style="margin-top:18px">{fmt(clanek.datum)} · {clanek.minut} {t("blog.min")}</div>
+        <h1 class="reveal" style="font-size:clamp(30px,4vw,46px);margin-top:10px">{txt.titulek}</h1>
+        <p class="sub reveal" data-i="1" style="max-width:none">{txt.perex}</p>
+        <div class="telo">
+          {bloky.map((b) =>
+            b.typ === "h2" ? <h2>{b.text}</h2>
+            : b.typ === "q" ? <blockquote>{b.text}</blockquote>
+            : b.typ === "ul" ? <ul>{b.items.map((i) => <li>{i}</li>)}</ul>
+            : <p>{b.text}</p>
+          )}
+        </div>
+        <div class="cta card">
+          <div class="n">{t("blog.cta.n")}</div>
+          <h3>{t("blog.cta.h")}</h3>
+          <p>{t("blog.cta.p")}</p>
+          <a class="btn" href={l("/bezpecnost")}>{t("blog.cta.btn")}</a>
+        </div>
+      </article>
+    </div>
+  </section>
+</Base>
+<style>
+  .clanek { max-width: 760px; }
+  .zpet { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .zpet:hover { color: var(--red); }
+  .telo { margin-top: 30px; font-size: 17px; line-height: 1.65; }
+  .telo h2 { font-size: 24px; margin: 34px 0 10px; }
+  .telo p { margin: 0 0 16px; }
+  .telo ul { margin: 0 0 16px 22px; padding: 0; }
+  .telo li { margin: 4px 0; }
+  .telo blockquote { margin: 18px 0; padding: 14px 18px; border-left: 3px solid var(--red); background: #fff; border-radius: 0 10px 10px 0; color: var(--muted); font-size: 15.5px; }
+  .cta { margin-top: 40px; }
+  .btn { display: inline-block; margin-top: 12px; background: var(--red); color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 800; text-decoration: none; }
+</style>
