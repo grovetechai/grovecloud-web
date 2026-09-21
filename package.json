@@ -5,12 +5,14 @@
   "type": "module",
   "description": "Marketingový web grovecloud.cz — statický Astro, hostovaný na Grove Cloud (Starter).",
   "scripts": {
+    "start": "node scripts/start.mjs",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check"
   },
   "dependencies": {
-    "astro": "^5.13.0"
+    "astro": "^5.13.0",
+    "serve-handler": "^6.1.7"
   }
 }
