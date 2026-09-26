@@ -69,9 +69,9 @@ export const ui = {
     sk: "Ochránime. Strážime.",
   },
   "hero.lead": {
-    cs: "Připojte GitHub a za pár minut běžíte v evropském cloudu. Každé nasazení projde {n} kontrolami a za běhu vás chrání AI GroveDefender.",
-    en: "Connect GitHub and you're live in a European cloud in minutes. Every deployment runs {n} checks, and AI GroveDefender protects it at runtime.",
-    sk: "Pripojte GitHub a o pár minút bežíte v európskom cloude. Každé nasadenie prejde {n} kontrolami a za behu vás chráni AI GroveDefender.",
+    cs: "Připojte GitHub a za pár minut běžíte v evropském cloudu. Po nasazení Grove Check prověří veřejnou adresu až {n} kontrolami podle typu aplikace. AI GroveDefender chrání provoz po zapojení.",
+    en: "Connect GitHub and you're live in a European cloud in minutes. After deployment, Grove Check scans the public address with up to {n} checks depending on the app. AI GroveDefender protects runtime traffic once connected.",
+    sk: "Pripojte GitHub a o pár minút bežíte v európskom cloude. Po nasadení Grove Check preverí verejnú adresu až {n} kontrolami podľa typu aplikácie. AI GroveDefender chráni prevádzku po zapojení.",
   },
   "hero.cta1": { cs: "Nasadit aplikaci →", en: "Deploy an app →", sk: "Nasadiť aplikáciu →" },
   "hero.cta2": { cs: "Zkontrolovat web zdarma", en: "Scan your site for free", sk: "Skontrolovať web zadarmo" },
@@ -94,9 +94,9 @@ export const ui = {
     sk: "Jedna platforma namiesto štyroch nespojených nástrojov.",
   },
   "retez.sub": {
-    cs: "Hosting, bezpečnostní kontrola, runtime ochrana a provozní dohled spolu mluví. Nález ze skenu se propíše do ochrany, výpadek do vašeho e-mailu.",
-    en: "Hosting, security scanning, runtime protection and monitoring talk to each other. A scan finding turns into a protection rule; an outage turns into an email.",
-    sk: "Hosting, bezpečnostná kontrola, runtime ochrana a prevádzkový dohľad spolu hovoria. Nález zo skenu sa prepíše do ochrany, výpadok do vášho e-mailu.",
+    cs: "Hosting, bezpečnostní kontrola, runtime ochrana a provozní dohled spolu mluví. Nálezy skenu a události ochrany vidíte na jednom místě; na výpadek vás upozorníme e-mailem.",
+    en: "Hosting, security scanning, runtime protection and monitoring talk to each other. Review scan findings and protection events in one place; get an email when your app goes down.",
+    sk: "Hosting, bezpečnostná kontrola, runtime ochrana a prevádzkový dohľad spolu hovoria. Nálezy skenu a udalosti ochrany vidíte na jednom mieste; na výpadok vás upozorníme e-mailom.",
   },
   "retez.1.d": {
     cs: "Vyberete repozitář. Detekce projde kořen i podsložky a řekne, z čeho se aplikace skládá.",
@@ -110,9 +110,9 @@ export const ui = {
     sk: "Nasadenie do európskeho cloudu. Statika na zdieľaný server, dynamická aplikácia do vlastného kontajnera.",
   },
   "retez.3.d": {
-    cs: "{n} kontrol proti veřejné adrese hned po nasazení. Hlavičky, TLS, uniklé klíče, malware.",
-    en: "{n} checks against the public address right after deployment. Headers, TLS, leaked keys, malware.",
-    sk: "{n} kontrol proti verejnej adrese hneď po nasadení. Hlavičky, TLS, uniknuté kľúče, malware.",
+    cs: "Až {n} kontrol veřejné adresy hned po nasazení podle typu aplikace. Hlavičky, TLS, uniklé klíče, malware.",
+    en: "Up to {n} checks of the public address after deployment, depending on the app. Headers, TLS, leaked keys, malware.",
+    sk: "Až {n} kontrol verejnej adresy po nasadení podľa typu aplikácie. Hlavičky, TLS, uniknuté kľúče, malware.",
   },
   "retez.4.d": {
     cs: "Ochrana za běhu: prompt injection, únik dat, podezřelé požadavky. Volitelně jedním řádkem v kódu.",
