@@ -1,0 +1,335 @@
+---
+// Domovská stránka grovecloud.cz — návrh G „Příkaz“ (3. 10. 2026).
+// Jeden komponent pro CS i EN (texty v T). Animace jsou čisté CSS + malý
+// skript pro psaní příkazu; při prefers-reduced-motion se vše ukáže hned.
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/jetbrains-mono";
+import pricing from "../data/pricing.json";
+import { cenaTarifu, odkaz } from "../i18n/utils";
+import type { Jazyk } from "../i18n/ui";
+interface Props { jazyk: Jazyk }
+const { jazyk } = Astro.props;
+// Ceny 1:1 s aplikací (pricing.json se generuje z hlavního repa).
+const st: any = (pricing as any).stacks;
+const WEB = cenaTarifu(st.find((x: any) => x.key === "static")?.prices?.starter, jazyk) ?? "";
+const APPKA = cenaTarifu(st.find((x: any) => x.key === "api")?.prices?.host, jazyk) ?? "";
+const NULA = cenaTarifu({ czk: 0, eur: 0, usd: 0 }, jazyk) ?? "0";
+
+const APP = "https://grovetechai.com/grovecloud";
+const utm = (c: string) => `${APP}?utm_source=grovecloud.cz&utm_medium=web&utm_campaign=${c}`;
+const DOCS = "https://grovetechai.com/docs/grovecloud";
+
+const T = {
+  cs: {
+    eyebrow: "Jak nasadit appku na GroveCloud:",
+    prikaz: "nasaď mi appku",
+    vysledky: [
+      ["✓ appka založena", "ok"],
+      ["… build · kontrola · přepnutí", "bezi"],
+      ["✓ nasazeno za 1:13", "ok"],
+      ["✓ moje-appka.grovecloud.cz", "ok"],
+      ["✓ skóre 94/100", "red"],
+    ],
+    lead: ["To je celý návod. Řekneš to Claude Code, Cursoru nebo Windsurfu a appka za pár minut běží. Zkontrolovaná, izolovaná, zálohovaná. ", "V Evropě."],
+    cta: "Vyzkoušet 7 dní zdarma",
+    ctaDocs: "Jak to připojit",
+    sticker: "7 DNÍ ZDARMA · BEZ KARTY · BEZ HÁČKU ·",
+    stickerOd: "pak od",
+    cena: WEB,
+    mesicne: "měsíčně",
+    pas: ["7 dní zdarma", `od ${WEB}`, "nasaď z Claude Code", "data v EU", "bez karty"],
+    stdTitle: ["Tohle umí každý pořádný cloud.", "My taky."],
+    std: ["Nasazení z Gitu", "Náhled pro každý pull request", "Návrat jedním klikem", "Nasazení bez výpadku", "Postupné nasazení (canary)", "Vlastní domény, HTTPS, CDN", "Automatické škálování", "Metriky a logy", "Proměnné pro produkci a náhledy", "Deploy hooky a CI", "20+ frameworků a monorepa", "Ochrana heslem nebo jen pro tým"],
+    navicTitle: ["Tohle umíme ", "navíc."],
+    navic: [
+      ["Nasazení z Claude Code", "Agent appku založí, nasadí a čte logy. Když nasazení selže, dostane přesné zadání opravy."],
+      ["Kontrola zranitelností", "Kritická zranitelnost nasazení zastaví. SBOM ke každé verzi."],
+      ["Izolace appek", "Vlastní síť a minimum oprávnění. Na ostatní appky nevidí."],
+      ["AI Defender", "Ochrana za běhu proti injekcím a zneužití AI promptů."],
+      ["Zálohy 2× + zkouška obnovy", "Na dvou serverech. Každý týden zálohu opravdu obnovíme."],
+      ["Databáze jedním klikem", "PostgreSQL, Redis a úložiště bez dalšího účtu."],
+      ["Sken po každém nasazení", "Bezpečnostní kontrola webu se skóre, automaticky."],
+      ["Česky, faktura v korunách", "Servery v Norimberku, podpora od lidí, kteří tomu rozumí."],
+    ],
+    noc: [["Nová verze spadla.", "Jinde ti zazvoní telefon. Pyžamo, kafe, SSH."], ["Spíš.", "GroveCloud vrátil předchozí verzi sám. Ráno najdeš e-mail: vyřešeno."]],
+    cenaTitle: "Cena, kterou nemusíš počítat.",
+    tarify: [
+      ["Statický web", WEB, "měsíčně · HTTPS, zálohy, ochranné hlavičky"],
+      ["Appka", APPKA, "měsíčně · vlastní kontejner, dohled, kontrola zranitelností"],
+      ["Než se rozhodneš", NULA, "7 dní zdarma · bez karty · nic se samo nestrhne"],
+    ],
+    bezDph: "Ceny bez DPH. Faktura v korunách.",
+    cenik: "Celý ceník",
+    konec: "tvůj tah",
+    konecCta: "7 dní zdarma, bez karty →",
+    konecPod: `Pak od ${WEB} měsíčně bez DPH. Česky, s fakturou.`,
+  },
+  en: {
+    eyebrow: "How to deploy an app on GroveCloud:",
+    prikaz: "deploy my app",
+    vysledky: [
+      ["✓ app created", "ok"],
+      ["… build · checks · switch", "bezi"],
+      ["✓ deployed in 1:13", "ok"],
+      ["✓ my-app.grovecloud.cz", "ok"],
+      ["✓ score 94/100", "red"],
+    ],
+    lead: ["That's the whole tutorial. Tell Claude Code, Cursor or Windsurf and your app is live in minutes. Scanned, isolated, backed up. ", "In Europe."],
+    cta: "Try 7 days free",
+    ctaDocs: "How to connect",
+    sticker: "7 DAYS FREE · NO CARD · NO CATCH ·",
+    stickerOd: "then from",
+    cena: WEB,
+    mesicne: "per month",
+    pas: ["7 days free", `from ${WEB}`, "deploy from Claude Code", "data in the EU", "no card"],
+    stdTitle: ["Every serious cloud does this.", "So do we."],
+    std: ["Deploys from Git", "A preview for every pull request", "One-click rollback", "Zero-downtime deploys", "Canary releases", "Custom domains, HTTPS, CDN", "Autoscaling", "Metrics and logs", "Variables for production and previews", "Deploy hooks and CI", "20+ frameworks and monorepos", "Password or team-only access"],
+    navicTitle: ["What we do ", "on top."],
+    navic: [
+      ["Deploy from Claude Code", "Your agent creates the app, deploys it and reads the logs. When a deploy fails, it gets an exact fix brief."],
+      ["Vulnerability gate", "A critical vulnerability stops the deploy. An SBOM for every version."],
+      ["App isolation", "Its own network and minimal privileges. It can't see other apps."],
+      ["AI Defender", "Runtime protection against injections and AI prompt abuse."],
+      ["Backups 2× + restore drills", "On two servers. Every week we actually restore a backup."],
+      ["One-click databases", "PostgreSQL, Redis and object storage without another account."],
+      ["Scan after every deploy", "An automatic security check of your site, with a score."],
+      ["EU servers, real humans", "Servers in Nuremberg, support from people who understand it."],
+    ],
+    noc: [["The new version crashed.", "Elsewhere your phone rings. Pyjamas, coffee, SSH."], ["You sleep.", "GroveCloud rolled back on its own. In the morning: an email saying it's fixed."]],
+    cenaTitle: "Pricing you don't have to calculate.",
+    tarify: [
+      ["Static site", WEB, "per month · HTTPS, backups, security headers"],
+      ["App", APPKA, "per month · own container, monitoring, vulnerability gate"],
+      ["Before you decide", NULA, "7 days free · no card · nothing gets charged"],
+    ],
+    bezDph: "Prices excl. VAT.",
+    cenik: "Full pricing",
+    konec: "your move",
+    konecCta: "7 days free, no card →",
+    konecPod: `Then from ${WEB} per month excl. VAT.`,
+  },
+  sk: {
+    eyebrow: "Ako nasadiť appku na GroveCloud:",
+    prikaz: "nasaď mi appku",
+    vysledky: [["✓ appka založená", "ok"], ["… build · kontrola · prepnutie", "bezi"], ["✓ nasadené za 1:13", "ok"], ["✓ moja-appka.grovecloud.cz", "ok"], ["✓ skóre 94/100", "red"]],
+    lead: ["To je celý návod. Povieš to Claude Code, Cursoru alebo Windsurfu a appka o pár minút beží. Skontrolovaná, izolovaná, zálohovaná. ", "V Európe."],
+    cta: "Vyskúšať 7 dní zadarmo",
+    ctaDocs: "Ako to pripojiť",
+    sticker: "7 DNÍ ZADARMO · BEZ KARTY · BEZ HÁČIKA ·",
+    stickerOd: "potom od",
+    cena: WEB,
+    mesicne: "mesačne",
+    pas: ["7 dní zadarmo", `od ${WEB}`, "nasaď z Claude Code", "dáta v EÚ", "bez karty"],
+    stdTitle: ["Toto vie každý poriadny cloud.", "My tiež."],
+    std: ["Nasadenie z Gitu", "Náhľad pre každý pull request", "Návrat jedným klikom", "Nasadenie bez výpadku", "Postupné nasadenie (canary)", "Vlastné domény, HTTPS, CDN", "Automatické škálovanie", "Metriky a logy", "Premenné pre produkciu a náhľady", "Deploy hooky a CI", "20+ frameworkov a monorepá", "Ochrana heslom alebo len pre tím"],
+    navicTitle: ["Toto vieme ", "navyše."],
+    navic: [
+      ["Nasadenie z Claude Code", "Agent appku založí, nasadí a číta logy. Keď nasadenie zlyhá, dostane presné zadanie opravy."],
+      ["Kontrola zraniteľností", "Kritická zraniteľnosť nasadenie zastaví. SBOM ku každej verzii."],
+      ["Izolácia appiek", "Vlastná sieť a minimum oprávnení. Na ostatné appky nevidí."],
+      ["AI Defender", "Ochrana za behu proti injekciám a zneužitiu AI promptov."],
+      ["Zálohy 2× + skúška obnovy", "Na dvoch serveroch. Každý týždeň zálohu naozaj obnovíme."],
+      ["Databázy jedným klikom", "PostgreSQL, Redis a úložisko bez ďalšieho účtu."],
+      ["Sken po každom nasadení", "Bezpečnostná kontrola webu so skóre, automaticky."],
+      ["Servery v EÚ, ľudská podpora", "Servery v Norimberku, podpora od ľudí, ktorí tomu rozumejú."],
+    ],
+    noc: [["Nová verzia spadla.", "Inde ti zazvoní telefón. Pyžamo, káva, SSH."], ["Spíš.", "GroveCloud vrátil predchádzajúcu verziu sám. Ráno nájdeš e-mail: vyriešené."]],
+    cenaTitle: "Cena, ktorú nemusíš počítať.",
+    tarify: [["Statický web", WEB, "mesačne · HTTPS, zálohy, ochranné hlavičky"], ["Appka", APPKA, "mesačne · vlastný kontajner, dohľad, kontrola zraniteľností"], ["Kým sa rozhodneš", NULA, "7 dní zadarmo · bez karty · nič sa samo nestrhne"]],
+    bezDph: "Ceny bez DPH.",
+    cenik: "Celý cenník",
+    konec: "tvoj ťah",
+    konecCta: "7 dní zadarmo, bez karty →",
+    konecPod: `Potom od ${WEB} mesačne bez DPH.`,
+  },
+}[jazyk];
+const cenikHref = odkaz(jazyk, "/cena");
+const mrak = "M7 19h10.2a4.3 4.3 0 0 0 .6-8.56A6.2 6.2 0 0 0 5.9 9.6 4.8 4.8 0 0 0 7 19z";
+---
+<div class="g">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="eyebrow">{T.eyebrow}</div>
+      <div class="cmd" aria-label={T.prikaz}><span class="red">&gt;</span> <span class="typed" data-text={T.prikaz}>{T.prikaz}</span><span class="kurzor">_</span></div>
+      <ul class="chips" aria-hidden="true">
+        {T.vysledky.map(([t, k], i) => <li class={`chip ${k}`} style={`--i:${i}`}>{t}</li>)}
+      </ul>
+      <p class="lead">{T.lead[0]}<span class="red">{T.lead[1]}</span></p>
+      <div class="ctas">
+        <a class="btn btn-red" href={utm("g-hero")} rel="noopener">{T.cta}</a>
+        <a class="btn btn-link" href={DOCS} rel="noopener">{T.ctaDocs} ›</a>
+      </div>
+      <div class="sticker" role="img" aria-label={`${T.sticker} ${T.stickerOd} ${T.cena} ${T.mesicne}`}>
+        <svg class="sticker-ring" viewBox="0 0 230 230" aria-hidden="true">
+          <defs><path id="g-kruh" d="M115 115 m-92 0 a92 92 0 1 1 184 0 a92 92 0 1 1 -184 0" /></defs>
+          <circle cx="115" cy="115" r="112" fill="#FD192F" />
+          <text font-family="Manrope Variable, Manrope, sans-serif" font-weight="800" font-size="15" letter-spacing="3.1" fill="#fff"><textPath href="#g-kruh">{T.sticker}</textPath></text>
+        </svg>
+        <div class="sticker-in" aria-hidden="true"><span>{T.stickerOd}</span><b>{T.cena}</b><span>{T.mesicne}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pas" aria-hidden="true">
+    <div class="pas-in">
+      {[0, 1].map(() => T.pas.map((p) => <><span>{p}</span><span class="hv">★</span></>))}
+    </div>
+  </div>
+
+  <section class="wrap dva">
+    <div>
+      <h2>{T.stdTitle[0]}<br /><span class="seda">{T.stdTitle[1]}</span></h2>
+      <ul class="std">
+        {T.std.map((s) => <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>{s}</li>)}
+      </ul>
+    </div>
+    <div class="navic">
+      <h2>{T.navicTitle[0]}<span class="red">{T.navicTitle[1]}</span></h2>
+      <ul>
+        {T.navic.map(([t, p]) => <li><div class="nt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={mrak} /></svg>{t}</div><p>{p}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap cena">
+    <h2>{T.cenaTitle}</h2>
+    <div class="tarify">
+      {T.tarify.map(([n, c, p], i) => <div class={`tarif t${i}`}><div class="tn">{n}</div><div class="tc">{c}</div><div class="tp">{p}</div></div>)}
+    </div>
+    <p class="pozn">{T.bezDph} <a href={cenikHref}>{T.cenik} ›</a></p>
+  </section>
+
+  <section class="wrap noc">
+    <div class="karta svetla">
+      <div class="cas">3:14</div>
+      <div class="nt">{T.noc[0][0]}</div>
+      <p>{T.noc[0][1]}</p>
+    </div>
+    <div class="karta tmava">
+      <div class="spi" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d={mrak} fill="#FD192F" /><path d="M9 14.6q1 .8 2 0M13 14.6q1 .8 2 0" fill="none" stroke="#fff" stroke-width=".9" stroke-linecap="round" /></svg>
+        <span class="z z1">z</span><span class="z z2">Z</span>
+      </div>
+      <div class="cas">3:14</div>
+      <div class="nt">{T.noc[1][0]}</div>
+      <p>{T.noc[1][1]}</p>
+    </div>
+  </section>
+
+  <section class="wrap konec">
+    <div class="cmd"><span class="red">&gt;</span> {T.konec}<span class="kurzor">_</span></div>
+    <a class="btn btn-red btn-big" href={utm("g-final")} rel="noopener">{T.konecCta}</a>
+    <p>{T.konecPod}</p>
+  </section>
+</div>
+
+<script>
+  // Psaní příkazu v heru + postupné ukazování výsledků (opakuje se).
+  const el = document.querySelector<HTMLElement>(".g .hero .typed");
+  const chips = document.querySelectorAll<HTMLElement>(".g .hero .chip");
+  const klid = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (el && !klid) {
+    const text = el.dataset.text || "";
+    const casy = [1600, 2600, 6200, 6800, 7400];
+    const kolo = () => {
+      el.textContent = "";
+      chips.forEach((c) => c.classList.remove("on", "done"));
+      [...text].forEach((ch, i) => setTimeout(() => { el.textContent += ch; }, 60 * i + 300));
+      chips.forEach((c, i) => setTimeout(() => c.classList.add("on"), casy[i]));
+      // „… build" se po nasazení změní na hotovo (zmizí, nahradí ho další čip)
+      setTimeout(() => chips[1]?.classList.add("done"), 6200);
+    };
+    kolo();
+    setInterval(kolo, 11000);
+  } else {
+    chips.forEach((c) => c.classList.add("on"));
+    chips[1]?.classList.add("done");
+  }
+</script>
+
+<style>
+  .g { --navy: #082054; --red: #FD192F; --cream: #F1F0EB; --muted: #5C606B; background: var(--cream); color: var(--navy); font-family: "Manrope Variable", Manrope, system-ui, sans-serif; overflow: hidden; }
+  .g .wrap { max-width: 1300px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+  .g .red { color: var(--red); }
+  .g .seda { color: #8A8F9C; }
+  .g h2 { margin: 0; font-weight: 800; font-size: clamp(34px, 4.6vw, 64px); line-height: 1.02; letter-spacing: -.04em; }
+
+  .g .hero-in { position: relative; padding-top: 72px; padding-bottom: 80px; }
+  .g .eyebrow { font-weight: 800; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+  .g .cmd { margin-top: 18px; font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace; font-weight: 800; font-size: clamp(42px, 8.4vw, 124px); line-height: 1.02; letter-spacing: -.05em; word-break: break-word; max-width: 1000px; }
+  .g .kurzor { color: var(--red); animation: g-blik 1s step-end infinite; }
+  .g .chips { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; min-height: 48px; }
+  .g .chip { font: 700 15px "JetBrains Mono Variable", "JetBrains Mono", monospace; border-radius: 999px; padding: 10px 16px; background: var(--navy); color: #fff; opacity: 0; transform: translateY(8px); transition: opacity .35s, transform .35s; }
+  .g .chip.on { opacity: 1; transform: none; }
+  .g .chip.bezi { background: #FDE68A; color: var(--navy); }
+  .g .chip.bezi.done { display: none; }
+  .g .chip.red { background: var(--red); }
+  .g .lead { margin: 34px 0 0; font-weight: 700; font-size: clamp(20px, 2.3vw, 29px); line-height: 1.38; max-width: 760px; }
+  .g .ctas { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .g .btn { display: inline-block; text-decoration: none; font-weight: 800; border-radius: 999px; }
+  .g .btn-red { background: #C80B1F; color: #fff; font-size: 18px; padding: 17px 28px; box-shadow: 0 10px 26px rgba(253, 25, 47, .35); }
+  .g .btn-red:hover { background: #A90819; }
+  .g .btn-link { background: transparent; color: var(--navy); font-size: 17px; padding: 17px 8px; }
+  .g .btn-big { font-size: 22px; padding: 22px 38px; margin-top: 34px; }
+
+  .g .sticker { position: absolute; right: 30px; top: 56px; width: 230px; height: 230px; }
+  .g .sticker-ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: g-toc 18s linear infinite; }
+  .g .sticker-in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; font-weight: 800; font-size: 14px; }
+  .g .sticker-in b { font-size: 52px; line-height: 1; letter-spacing: -.04em; }
+
+  .g .pas { background: var(--red); color: #fff; overflow: hidden; }
+  .g .pas-in { display: flex; gap: 44px; width: max-content; padding: 22px 0; font-weight: 800; font-size: clamp(34px, 5vw, 62px); letter-spacing: -.03em; text-transform: uppercase; white-space: nowrap; animation: g-jizda 24s linear infinite; }
+  .g .pas .hv { opacity: .7; }
+
+  .g .dva { padding-top: 96px; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 40px; align-items: start; }
+  .g .std { list-style: none; margin: 28px 0 0; padding: 0; }
+  .g .std li { display: flex; gap: 14px; align-items: center; padding: 13px 0; border-bottom: 1px solid rgba(8, 32, 84, .15); font-weight: 700; font-size: 18px; }
+  .g .std svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: var(--navy); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .g .navic { background: var(--navy); color: #fff; border-radius: 32px; padding: 36px; }
+  .g .navic ul { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+  .g .navic .nt { display: flex; gap: 12px; align-items: center; font-weight: 800; font-size: 20px; }
+  .g .navic svg { width: 22px; height: 22px; fill: var(--red); flex-shrink: 0; }
+  .g .navic p { margin: 4px 0 0 34px; font-weight: 500; font-size: 15px; line-height: 1.5; color: #C9D4F2; }
+
+  .g .cena { padding-top: 96px; }
+  .g .tarify { margin-top: 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .g .tarif { border-radius: 28px; padding: 30px; background: #fff; border: 2px solid var(--navy); }
+  .g .tarif.t2 { background: var(--red); border-color: var(--red); color: #fff; }
+  .g .tn { font-weight: 700; font-size: 15px; opacity: .75; }
+  .g .tc { margin-top: 6px; font-weight: 800; font-size: clamp(44px, 5vw, 64px); letter-spacing: -.045em; line-height: 1; }
+  .g .tp { margin-top: 10px; font-weight: 600; font-size: 15px; line-height: 1.45; opacity: .85; }
+  .g .pozn { margin: 14px 0 0; font-weight: 600; font-size: 14px; color: var(--muted); }
+  .g .pozn a { color: var(--navy); font-weight: 800; }
+
+  .g .noc { padding-top: 96px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .g .karta { position: relative; border-radius: 32px; padding: 36px; }
+  .g .svetla { background: #fff; border: 2px solid var(--navy); }
+  .g .tmava { background: var(--navy); color: #fff; }
+  .g .cas { font: 800 72px "JetBrains Mono Variable", "JetBrains Mono", monospace; letter-spacing: -.05em; }
+  .g .karta .nt { margin-top: 4px; font-weight: 800; font-size: 24px; }
+  .g .karta p { margin: 14px 0 0; font-weight: 600; font-size: 17px; line-height: 1.55; color: var(--muted); }
+  .g .tmava p { color: #C9D4F2; }
+  .g .spi { position: absolute; right: 30px; top: 30px; width: 100px; height: 68px; }
+  .g .spi svg { width: 100%; height: 100%; }
+  .g .z { position: absolute; font-weight: 800; color: #C9D4F2; animation: g-zzz 2.6s ease-out infinite; }
+  .g .z1 { right: -6px; top: -4px; font-size: 20px; }
+  .g .z2 { right: -18px; top: -24px; font-size: 26px; animation-delay: 1.3s; }
+
+  .g .konec { padding-top: 110px; padding-bottom: 110px; text-align: center; }
+  .g .konec .cmd { margin-left: auto; margin-right: auto; }
+  .g .konec p { margin: 14px 0 0; font-weight: 700; font-size: 16px; color: var(--muted); }
+
+  @keyframes g-blik { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }
+  @keyframes g-toc { to { transform: rotate(360deg) } }
+  @keyframes g-jizda { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+  @keyframes g-zzz { 0% { transform: translate(0, 0); opacity: 0 } 30% { opacity: 1 } 100% { transform: translate(12px, -30px); opacity: 0 } }
+
+  @media (max-width: 900px) {
+    .g .sticker { position: relative; right: auto; top: auto; width: 190px; height: 190px; margin: 36px auto 0; }
+    .g .sticker-in b { font-size: 42px; }
+    .g .hero-in { padding-top: 40px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .g .sticker-ring, .g .pas-in, .g .z, .g .kurzor { animation: none; }
+  }
+</style>
