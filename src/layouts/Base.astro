@@ -11,8 +11,11 @@ interface Props {
   description: string;
   /** Cesta bez domény, např. "/cena". */
   path?: string;
+  /** Tmavá stránka se stromem (úvod „Kořen Grove Cloud“, 13. 10. 2026):
+   *  vlastní hlavička ve scéně, tmavá patička, skript průchodu kořenem. */
+  tmava?: boolean;
 }
-const { title, description, path = "/" } = Astro.props;
+const { title, description, path = "/", tmava = false } = Astro.props;
 const site = "https://grovecloud.cz";
 const jazyk = jazykZUrl(Astro.url);
 const t = prekladac(jazyk);
@@ -97,12 +100,15 @@ const schema = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#082054" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    {/* Průchod kořenem musí rozhodnout PŘED vykreslením (jinak by stránka
+        bliknula hotová a pak skočila zpět). Externí soubor kvůli CSP 'self'. */}
+    {tmava && <script is:inline src="/grove-pruchod.js"></script>}
   </head>
-  <body>
+  <body class:list={{ tmava }}>
     <a class="skip-link" href="#main">{t("a11y.preskocit")}</a>
-    <Header />
+    {!tmava && <Header />}
     <main id="main"><slot /></main>
-    <Footer />
+    {tmava ? <div class="tma-pata"><Footer /></div> : <Footer />}
     <script src="../scripts/reveal.ts"></script>
     {/* Bezcookie pageview beacon — víme tím, kolik lidí na web přijde. Bez
         cookies, bez ID, IP se neukládá; externí soubor kvůli CSP 'self'. */}

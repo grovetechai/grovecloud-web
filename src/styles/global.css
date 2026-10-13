@@ -48,3 +48,11 @@ section { padding: 90px 0; }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 @media (max-width: 900px) { .grid3 { grid-template-columns: 1fr; } .wrap { padding: 0 20px; } section { padding: 64px 0; } }
+
+/* Tmavá stránka se stromem (úvod, 13. 10. 2026): tmavé pozadí a patička
+   přebarvená přes proměnné — komponenta Footer zůstává jedna pro celý web. */
+body.tmava { background: #050506; color: #F2F3F5; }
+.tma-pata { background: #050506; --line: #1C1E24; --muted: #8D929C; --navy: #F2F3F5; --ink: #F2F3F5; }
+.tma-pata .ftr { margin-top: 0; }
+/* Pečeť je světlá karta — uvnitř tmavé patičky jí vracíme světlé barvy (čitelnost). */
+.tma-pata .pecet-pas { --line: #e6e9f0; --muted: #5b6478; --navy: #082054; --ink: #0b1226; }

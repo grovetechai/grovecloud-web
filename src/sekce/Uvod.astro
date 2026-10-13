@@ -1,14 +1,13 @@
 ---
 /**
- * Homepage Grove Cloud — návrh G „Příkaz" (2026-10-03).
- *
- * Celá stránka stojí na jednom příkazu: „> nasaď mi appku_" (Claude Code).
- * Obsah a texty pro cs/en/sk žijí v `src/components/HomeG.astro`.
+ * Homepage Grove Cloud — „Kořen Grove Cloud“ (13. 10. 2026), navazuje na strom
+ * na grovetechai.com (průchod kořenem). Texty cs/en/sk v `src/components/HomeKoren.astro`.
+ * Předchozí návrh G „Příkaz“ zůstává v `src/components/HomeG.astro`.
  * Původní sekce (VoxelHero, GroveChain, TryIt, …) zůstávají v repu
  * a dají se vrátit, kdyby bylo potřeba.
  */
 import Base from "../layouts/Base.astro";
-import HomeG from "../components/HomeG.astro";
+import HomeKoren from "../components/HomeKoren.astro";
 import pricing from "../data/pricing.json";
 import { prekladacZUrl, cenaTarifu } from "../i18n/utils";
 const { jazyk, t } = prekladacZUrl(Astro.url);
@@ -16,6 +15,6 @@ const KONTROL = pricing.checks.universal;
 const statika: any = (pricing as any).stacks.find((x: any) => x.key === "static");
 const STARTER = cenaTarifu(statika?.prices?.starter, jazyk) ?? "";
 ---
-<Base title={t("meta.index.t")} description={t("meta.index.d", { n: KONTROL, cena: STARTER })} path="/">
-  <HomeG jazyk={jazyk} />
+<Base title={t("meta.index.t")} description={t("meta.index.d", { n: KONTROL, cena: STARTER })} path="/" tmava>
+  <HomeKoren jazyk={jazyk} />
 </Base>

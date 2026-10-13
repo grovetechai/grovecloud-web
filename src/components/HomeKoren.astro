@@ -1,0 +1,411 @@
+---
+// Úvod grovecloud.cz — „Kořen Grove Cloud“ (schváleno Ondřejem 13. 10. 2026).
+//
+// Navazuje na strom na grovetechai.com: STEJNÁ scéna 1440×900, stejné souřadnice
+// stromu, kořenů a uzlů (client/src/pages/landing-strom.tsx v hlavním repu).
+// Kdo přijde z grovetechai.com, uvidí průchod kořenem Grove Cloud (viz
+// public/grove-pruchod.js + src/scripts/koren.ts). Ostatní vidí rovnou výsledek.
+//
+// VÝCHOZÍ (bez data-ph) = výsledný stav. Fáze home / pick / dive jsou výjimky —
+// bez JavaScriptu je tak stránka vždy úplná.
+//
+// CENÍK: dokud není v aplikaci nový ceník (balíček Grove), ukazujeme dnešní
+// tarify z pricing.json a 7 dní zdarma. Po nasazení nového ceníku přepnout
+// NOVY_CENIK na true → Grove 990 Kč, 14 dní, Ceník → grovetechai.com/pricing
+// (čísla 1:1 se shared/grove-cenik.ts v hlavním repu).
+const NOVY_CENIK = false;
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/jetbrains-mono";
+import { odkaz, cestaBezJazyka, cenaTarifu } from "../i18n/utils";
+import pricing from "../data/pricing.json";
+import { JAZYKY, type Jazyk } from "../i18n/ui";
+import { appUrl } from "../lib/app-url";
+interface Props { jazyk: Jazyk }
+const { jazyk } = Astro.props;
+const l = (c: string) => odkaz(jazyk, c);
+const G = "https://grovetechai.com";
+const CENIK = NOVY_CENIK ? (jazyk === "en" ? `${G}/en/pricing` : `${G}/pricing`) : odkaz(jazyk, "/cena");
+const DNI = NOVY_CENIK ? 14 : 7;
+const st: any = (pricing as any).stacks;
+const WEB = cenaTarifu(st.find((x: any) => x.key === "static")?.prices?.starter, jazyk) ?? "";
+const APPKA = cenaTarifu(st.find((x: any) => x.key === "api")?.prices?.host, jazyk) ?? "";
+const DOCS = `${G}/docs/grovecloud`;
+const KC = (n: number) => jazyk === "en" ? `${n.toLocaleString("en-US")} CZK` : `${n.toLocaleString(jazyk === "sk" ? "sk-SK" : "cs-CZ")} Kč`;
+const GROVE = KC(990);
+const cista = cestaBezJazyka(Astro.url);
+const jazyky = (Object.keys(JAZYKY) as Jazyk[]).map((j) => ({ kod: j, href: odkaz(j, cista), akt: j === jazyk }));
+
+const T = {
+  cs: {
+    nav: [["Jak funguje", "/jak-to-funguje"], ["Bezpečnost", "/bezpecnost"], ["Ceník", CENIK], ["Stav", "/stav"], ["Blog", "/blog"]],
+    login: "Přihlásit",
+    homeH: "Silná AI roste z pevných kořenů.",
+    homeSub: "Stavíme AI. Kořeny jí dává naše bezpečnost a provoz v EU.",
+    uzly: ["AI Studio", "Grove Check", "Grove Shield", "Grove Cloud"],
+    scanK: "Otestujte svůj web zdarma",
+    hub: "GROVE CLOUD",
+    eyebrow: "Kořen provozu · Grove",
+    h1: ["Nasaď.", "Prověříme.", "Pohlídáme."],
+    sub: "Hosting v EU pro appky stavěné s AI. Nasadíš z Claude Code, Cursoru nebo GitHubu — sken, ochrana a zálohy jsou v ceně.",
+    prikaz: "nasaď mi appku",
+    prikazPod: "Claude Code, Cursor, Windsurf",
+    cta: `Vyzkoušet ${DNI} dní zdarma`,
+    docs: "Jak to připojit",
+    duvera: "Bez karty · data v EU · faktura v Kč · člen SKAUI",
+    mody: [["Nasazení", "z Claude Code a Gitu", "/jak-to-funguje"], ["Ochrana", "sken, izolace, Defender", "/bezpecnost"], ["Zálohy", "2 servery, zkouška obnovy", "/jak-to-funguje"], ["Data v EU", "servery v Norimberku", "/stav"]],
+    noc: [["Nová verze spadla.", "Jinde ti zazvoní telefon. Pyžamo, kafe, SSH."], ["Spíš.", "Grove Cloud vrátil předchozí verzi sám. Ráno najdeš e-mail: vyřešeno."]],
+    vCeneH: "V ceně, ne za příplatek.",
+    vCene: [
+      ["Nasazení z Claude Code", "Agent appku založí, nasadí a čte logy. Když nasazení selže, dostane přesné zadání opravy."],
+      ["Sken po každém nasazení", "Kritická zranitelnost nasazení zastaví. Izolace appek a AI Defender za běhu."],
+      ["Zálohy 2× + zkouška obnovy", "Na dvou serverech. Každý týden zálohu opravdu obnovíme. Návrat verze jedním klikem."],
+      ["Česky, v EU", "Servery v Norimberku, faktura v korunách, podpora od lidí, kteří tomu rozumí."],
+    ],
+    cena: NOVY_CENIK ? `Grove ${GROVE} měsíčně — hosting projektu, Grove Check i Shield v jednom.` : `Statický web od ${WEB}, appka od ${APPKA} měsíčně.`,
+    cenaPod: `${DNI} dní zdarma bez karty. Ceny bez DPH, faktura v korunách.`,
+    cenik: "Celý ceník",
+  },
+  en: {
+    nav: [["How it works", "/jak-to-funguje"], ["Security", "/bezpecnost"], ["Pricing", CENIK], ["Status", "/stav"], ["Blog", "/blog"]],
+    login: "Log in",
+    homeH: "Strong AI grows from solid roots.",
+    homeSub: "We build AI. Our security and EU hosting are its roots.",
+    uzly: ["AI Studio", "Grove Check", "Grove Shield", "Grove Cloud"],
+    scanK: "Test your website for free",
+    hub: "GROVE CLOUD",
+    eyebrow: "The hosting root · Grove",
+    h1: ["Deploy.", "We check it.", "We watch it."],
+    sub: "EU hosting for apps built with AI. Deploy from Claude Code, Cursor or GitHub — scans, protection and backups included.",
+    prikaz: "deploy my app",
+    prikazPod: "Claude Code, Cursor, Windsurf",
+    cta: `Try ${DNI} days free`,
+    docs: "How to connect",
+    duvera: "No card · data in the EU · SKAUI member",
+    mody: [["Deploys", "from Claude Code and Git", "/jak-to-funguje"], ["Protection", "scans, isolation, Defender", "/bezpecnost"], ["Backups", "2 servers, restore drills", "/jak-to-funguje"], ["EU data", "servers in Nuremberg", "/stav"]],
+    noc: [["The new version crashed.", "Elsewhere your phone rings. Pyjamas, coffee, SSH."], ["You sleep.", "Grove Cloud rolled back on its own. In the morning: an email saying it's fixed."]],
+    vCeneH: "Included, not an add-on.",
+    vCene: [
+      ["Deploy from Claude Code", "Your agent creates the app, deploys it and reads the logs. When a deploy fails, it gets an exact fix brief."],
+      ["Scan after every deploy", "A critical vulnerability stops the deploy. App isolation and AI Defender at runtime."],
+      ["Backups 2× + restore drills", "On two servers. Every week we actually restore a backup. One-click rollback."],
+      ["EU servers, real humans", "Servers in Nuremberg, support from people who understand it."],
+    ],
+    cena: NOVY_CENIK ? `Grove ${GROVE} per month — hosting, Grove Check and Shield in one.` : `Static sites from ${WEB}, apps from ${APPKA} per month.`,
+    cenaPod: `${DNI} days free, no card. Prices excl. VAT.`,
+    cenik: "Full pricing",
+  },
+  sk: {
+    nav: [["Ako funguje", "/jak-to-funguje"], ["Bezpečnosť", "/bezpecnost"], ["Cenník", CENIK], ["Stav", "/stav"], ["Blog", "/blog"]],
+    login: "Prihlásiť",
+    homeH: "Silná AI rastie z pevných koreňov.",
+    homeSub: "Staviame AI. Korene jej dáva naša bezpečnosť a prevádzka v EÚ.",
+    uzly: ["AI Studio", "Grove Check", "Grove Shield", "Grove Cloud"],
+    scanK: "Otestujte svoj web zadarmo",
+    hub: "GROVE CLOUD",
+    eyebrow: "Koreň prevádzky · Grove",
+    h1: ["Nasaď.", "Preveríme.", "Postrážime."],
+    sub: "Hosting v EÚ pre appky stavané s AI. Nasadíš z Claude Code, Cursoru alebo GitHubu — sken, ochrana a zálohy sú v cene.",
+    prikaz: "nasaď mi appku",
+    prikazPod: "Claude Code, Cursor, Windsurf",
+    cta: `Vyskúšať ${DNI} dní zadarmo`,
+    docs: "Ako to pripojiť",
+    duvera: "Bez karty · dáta v EÚ · člen SKAUI",
+    mody: [["Nasadenie", "z Claude Code a Gitu", "/jak-to-funguje"], ["Ochrana", "sken, izolácia, Defender", "/bezpecnost"], ["Zálohy", "2 servery, skúška obnovy", "/jak-to-funguje"], ["Dáta v EÚ", "servery v Norimberku", "/stav"]],
+    noc: [["Nová verzia spadla.", "Inde ti zazvoní telefón. Pyžamo, káva, SSH."], ["Spíš.", "Grove Cloud vrátil predchádzajúcu verziu sám. Ráno nájdeš e-mail: vyriešené."]],
+    vCeneH: "V cene, nie za príplatok.",
+    vCene: [
+      ["Nasadenie z Claude Code", "Agent appku založí, nasadí a číta logy. Keď nasadenie zlyhá, dostane presné zadanie opravy."],
+      ["Sken po každom nasadení", "Kritická zraniteľnosť nasadenie zastaví. Izolácia appiek a AI Defender za behu."],
+      ["Zálohy 2× + skúška obnovy", "Na dvoch serveroch. Každý týždeň zálohu naozaj obnovíme. Návrat verzie jedným klikom."],
+      ["Servery v EÚ, ľudská podpora", "Servery v Norimberku, podpora od ľudí, ktorí tomu rozumejú."],
+    ],
+    cena: NOVY_CENIK ? `Grove ${GROVE} mesačne — hosting projektu, Grove Check aj Shield v jednom.` : `Statický web od ${WEB}, appka od ${APPKA} mesačne.`,
+    cenaPod: `${DNI} dní zadarmo bez karty. Ceny bez DPH.`,
+    cenik: "Celý cenník",
+  },
+}[jazyk];
+
+const MOD_X = [800, 960, 1120, 1280];
+const KORENY = MOD_X.map((x) => {
+  const dir = x < 1040 ? -1 : 1;
+  return `M1040 280 L1040 410 Q1040 440 ${1040 + dir * 30} 440 L${x - dir * 30} 440 Q${x} 440 ${x} 470 L${x} 586`;
+});
+const href = (h: string) => (h.startsWith("http") ? h : l(h));
+---
+<div class="ks">
+  {/* ═════ DESKTOP: scéna 1440×900 ═════ */}
+  <div class="ks-obal">
+    <div class="ks-scena">
+      {/* SVĚT ze stromu grovetechai.com — při průchodu se posune (kamera sjede kořenem) */}
+      <div class="ks-svet" aria-hidden="true">
+        <div class="ks-tree ks-zare"></div>
+        <canvas class="ks-strom ks-tree" width="1440" height="900"></canvas>
+        <svg class="ks-svg" width="1440" height="900" viewBox="0 0 1440 900">
+          <defs><filter id="ksGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+          <g fill="none" stroke="#FF2A3D" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+            <path class="ks-home" d="M607 600 Q607 640 567 640 L340 640 Q300 640 300 672" stroke-width="1.6" />
+            <path class="ks-home" d="M607 600 Q607 640 647 640 L700 640 Q720 640 720 660 L720 704" stroke-width="1.6" />
+            <path class="ks-home" d="M787 600 Q787 640 747 640 L740 640 Q720 640 720 660" stroke-width="1.6" />
+            <path class="ks-root" d="M787 600 Q787 640 827 640 L1100 640 Q1140 640 1140 672" stroke-width="1.6" />
+            <path class="ks-home" d="M601 606 Q597 652 553 652 L352 652 Q312 652 312 676" stroke-width="0.7" opacity="0.45" />
+            <path d="M793 606 Q797 652 841 652 L1088 652 Q1128 652 1128 676" stroke-width="0.7" opacity="0.45" />
+            <path class="ks-home" d="M753 736 L905 736 Q925 736 925 756 L925 772" stroke-width="1.3" />
+            <path class="ks-home" d="M884 392 C930 392 958 328 998 326" stroke-width="1.6" />
+          </g>
+          <g fill="none" stroke-linecap="round" filter="url(#ksGlow)">
+            <path class="ks-pulse ks-home" d="M607 600 Q607 640 567 640 L340 640 Q300 640 300 672" />
+            <path class="ks-pulse ks-p1 ks-home" d="M607 600 Q607 640 647 640 L700 640 Q720 640 720 660 L720 704" />
+            <path class="ks-pulse ks-p2" d="M787 600 Q787 640 827 640 L1100 640 Q1140 640 1140 672" />
+            <path class="ks-pulse ks-p3 ks-home" d="M753 736 L905 736 Q925 736 925 756 L925 772" />
+            <path class="ks-run" d="M787 600 Q787 640 827 640 L1100 640 Q1140 640 1140 672" />
+          </g>
+        </svg>
+        <p class="ks-home ks-homeh">{T.homeH}</p>
+        <p class="ks-home ks-homesub">{T.homeSub}</p>
+        <div class="ks-home ks-uzel" style="left:180px;top:672px;width:240px"><span class="ks-dot" style="width:56px;height:56px"><span style="width:14px;height:14px;background:#fff"></span></span><span class="ks-un">{T.uzly[0]}</span></div>
+        <div class="ks-home ks-uzel" style="left:600px;top:704px;width:240px"><span class="ks-dot" style="width:64px;height:64px"><span style="width:16px;height:16px;background:#FF2A3D"></span></span><span class="ks-un">{T.uzly[1]}</span></div>
+        <div class="ks-home ks-uzel" style="left:840px;top:772px;width:170px;gap:8px"><span class="ks-dot" style="width:28px;height:28px"><span style="width:8px;height:8px;background:#FF2A3D"></span></span><span class="ks-un" style="font-size:16px">{T.uzly[2]}</span></div>
+        <div class="ks-uzel" style="left:1020px;top:672px;width:240px"><span class="ks-dot ks-hub" style="width:56px;height:56px"><span class="ks-hubcore" style="width:14px;height:14px"></span></span><span class="ks-un ks-home">{T.uzly[3]}</span></div>
+        <div class="ks-home ks-scanpill"><span class="ks-mono ks-scank"><span class="ks-bod"></span>{T.scanK}</span><span class="ks-pill"><span>vasweb.cz</span><b>→</b></span></div>
+      </div>
+
+      {/* KOŘENY GROVE CLOUDU — vyrostou z uzlu */}
+      <svg class="ks-svg" aria-hidden="true" width="1440" height="900" viewBox="0 0 1440 900">
+        <defs><filter id="ksGlow2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+        <g fill="none" stroke="#FF2A3D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+          {KORENY.map((d, i) => <path class="ks-grow" style={`--d:${i === 1 || i === 2 ? ".1s" : "0s"}`} d={d} />)}
+        </g>
+        <g class="ks-newp" fill="none" stroke-linecap="round" filter="url(#ksGlow2)">
+          {KORENY.map((d, i) => <path class="ks-pulse" style={`animation-delay:${1.2 + i * 0.5}s`} d={d} />)}
+        </g>
+      </svg>
+
+      <span class="ks-po ks-mono ks-hubl" style="--d:.2s">{T.hub}</span>
+      {T.mody.map(([n, p, h], i) => (
+        <a class="ks-po ks-mod" href={href(h)} style={`left:${MOD_X[i] - 75}px;--d:${0.7 + i * 0.1}s`}>
+          <span class="ks-dot" style="width:44px;height:44px"><span style="width:12px;height:12px;background:#FF2A3D"></span></span>
+          <span class="ks-mn">{n}</span><span class="ks-mono ks-mp">{p}</span>
+        </a>
+      ))}
+
+      <p class="ks-po ks-mono ks-eyebrow" style="--d:.15s">{T.eyebrow}</p>
+      <h1 class="ks-po ks-h1" style="--d:.25s">{T.h1[0]}<br />{T.h1[1]}<br /><span>{T.h1[2]}</span></h1>
+      <p class="ks-po ks-sub" style="--d:.35s">{T.sub}</p>
+      <div class="ks-po ks-akce" style="--d:.45s">
+        <div class="ks-mono ks-prikaz"><span class="ks-r">&gt;</span> {T.prikaz}<span class="ks-pod"> · {T.prikazPod}</span></div>
+        <div class="ks-tl">
+          <a class="ks-btn" href={appUrl("hero")} rel="noopener">{T.cta}</a>
+          <a class="ks-link" href={DOCS} rel="noopener">{T.docs} →</a>
+        </div>
+      </div>
+      <p class="ks-po ks-mono ks-duvera" style="--d:.5s">{T.duvera}</p>
+
+      <header class="ks-hlava">
+        <span class="ks-znacka">
+          <a href={G} aria-label="Grove Tech AI"><img src="/grove-logo-white.png" alt="Grove Tech AI" width="116" height="38" /></a>
+          <a class="ks-mono ks-cloud" href={l("/")}>/ cloud</a>
+        </span>
+        <nav class="ks-nav" aria-label="Menu">
+          {T.nav.map(([n, h]) => <a class="ks-po" href={href(h)} rel={h.startsWith("http") ? "noopener" : undefined}>{n}</a>)}
+          <span class="ks-po ks-jazyky" role="group" aria-label="Jazyk">
+            {jazyky.map((j) => <a href={j.href} hreflang={j.kod} aria-current={j.akt ? "true" : undefined} class:list={{ akt: j.akt }}>{j.kod.toUpperCase()}</a>)}
+          </span>
+          <a class="ks-login" href={appUrl("nav-login")} rel="noopener">{T.login}</a>
+        </nav>
+      </header>
+    </div>
+  </div>
+
+  {/* ═════ MOBIL: bez animace, jako strom na grovetechai.com ═════ */}
+  <div class="ks-mobil">
+    <header class="ks-mhlava">
+      <span class="ks-znacka"><a href={G} aria-label="Grove Tech AI"><img src="/grove-logo-white.png" alt="Grove Tech AI" width="91" height="30" /></a><a class="ks-mono ks-cloud" href={l("/")}>/ cloud</a></span>
+      <a class="ks-mlogin" href={appUrl("nav-login")} rel="noopener">{T.login}</a>
+    </header>
+    <div class="ks-mstrom"><canvas class="ks-strom" data-crown="1"></canvas></div>
+    <div class="ks-mobsah">
+      <p class="ks-mono ks-eyebrow">{T.eyebrow}</p>
+      <h1 class="ks-h1">{T.h1[0]}<br />{T.h1[1]}<br /><span>{T.h1[2]}</span></h1>
+      <p class="ks-sub">{T.sub}</p>
+      <div class="ks-mono ks-prikaz"><span class="ks-r">&gt;</span> {T.prikaz}</div>
+      <a class="ks-btn" href={appUrl("hero")} rel="noopener">{T.cta}</a>
+      <p class="ks-mono ks-duvera">{T.duvera}</p>
+    </div>
+    <div class="ks-mkarty">
+      {T.mody.map(([n, p, h]) => (
+        <a href={href(h)}><span class="ks-dot" style="width:36px;height:36px"><span style="width:10px;height:10px;background:#FF2A3D"></span></span><span class="ks-mk"><b>{n}</b><span>{p}</span></span><span class="ks-r">→</span></a>
+      ))}
+    </div>
+    <nav class="ks-mnav" aria-label="Menu">{T.nav.map(([n, h]) => <a href={href(h)}>{n}</a>)}</nav>
+  </div>
+
+  {/* ═════ POD SCÉNOU ═════ */}
+  <section class="ks-sekce ks-prvni">
+    <div class="ks-wrap ks-noc">
+      <div class="ks-karta"><div class="ks-mono ks-cas">3:14</div><div class="ks-kn">{T.noc[0][0]}</div><p>{T.noc[0][1]}</p></div>
+      <div class="ks-karta ks-karta-r"><div class="ks-mono ks-cas ks-r">3:14</div><div class="ks-kn">{T.noc[1][0]}</div><p>{T.noc[1][1]}</p></div>
+    </div>
+  </section>
+
+  <section class="ks-sekce ks-bez-horni">
+    <div class="ks-wrap">
+      <h2 class="ks-h2">{T.vCeneH}</h2>
+      <div class="ks-ctyri">
+        {T.vCene.map(([n, p]) => <div class="ks-bod4"><div class="ks-bn">{n}</div><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="ks-sekce ks-bez-horni">
+    <div class="ks-wrap">
+      <div class="ks-cena">
+        <div><div class="ks-cn">{T.cena}</div><div class="ks-cp">{T.cenaPod}</div></div>
+        <a class="ks-bila" href={CENIK} rel="noopener">{T.cenik}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="../scripts/koren.ts"></script>
+
+<style>
+  .ks { --r: #FF2A3D; --ink: #F2F3F5; --mut: #A3A8B3; --mut2: #6E737D; background: #050506; color: var(--ink); font-family: "Manrope Variable", Manrope, system-ui, sans-serif; overflow-x: clip; }
+  .ks a { color: var(--ink); text-decoration: none; }
+  .ks a:hover { color: #fff; }
+  .ks-mono { font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace; }
+  .ks-r { color: var(--r) !important; }
+
+  /* scéna */
+  .ks-obal { --s: 1; width: 100%; height: calc(900px * var(--s)); display: flex; justify-content: center; overflow: hidden; background: radial-gradient(ellipse 34% 30% at 50% 40%, #16060A 0%, #050506 72%); }
+  .ks-scena { position: relative; width: 1440px; height: 900px; flex: none; transform: scale(var(--s)); transform-origin: 50% 0; }
+  .ks-svet { position: absolute; inset: 0; transform: translate(-100px, -450px); transition: transform 1.15s cubic-bezier(.65, 0, .35, 1); }
+  .ks-svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  .ks-strom { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; display: block; }
+  .ks-zare { position: absolute; left: 470px; top: 560px; width: 500px; height: 90px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255, 42, 61, .22) 0%, rgba(255, 42, 61, 0) 70%); }
+  .ks-tree { opacity: .4; transition: opacity 1.15s; }
+
+  .ks-pulse { stroke: #fff; stroke-width: 2.4; stroke-dasharray: 14 900; stroke-dashoffset: 914; animation: ksPl 4.2s cubic-bezier(.5, 0, .5, 1) infinite; }
+  .ks-p1 { animation-delay: 1.1s; } .ks-p2 { animation-delay: .5s; } .ks-p3 { animation-delay: 2.2s; animation-duration: 3s; }
+  @keyframes ksPl { 0% { stroke-dashoffset: 914; opacity: 0 } 8% { opacity: 1 } 85% { opacity: 1 } 100% { stroke-dashoffset: 0; opacity: 0 } }
+  .ks-root { stroke-width: 2.6; transition: stroke-width .4s; }
+  .ks-run { stroke: #fff; stroke-width: 3; stroke-dasharray: 18 900; stroke-dashoffset: 918; opacity: 0; }
+  .ks-scena[data-ph="pick"] .ks-run { animation: ksRun .8s cubic-bezier(.4, 0, .6, 1) forwards; }
+  @keyframes ksRun { 0% { stroke-dashoffset: 918; opacity: 1 } 90% { opacity: 1 } 100% { stroke-dashoffset: 0; opacity: 0 } }
+
+  .ks-dot { border-radius: 50%; background: #0B0B0D; border: 2px solid var(--r); box-shadow: 0 0 34px rgba(255, 42, 61, .55); display: flex; align-items: center; justify-content: center; flex: none; transition: box-shadow .3s, transform .3s; }
+  .ks-dot > span { border-radius: 50%; }
+  .ks-hub { transform: scale(1.18); box-shadow: 0 0 0 8px rgba(255, 42, 61, .18), 0 0 70px rgba(255, 42, 61, .95); }
+  .ks-hubcore { background: var(--r); transition: background .4s; }
+  .ks-uzel { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .ks-un { font-size: 22px; font-weight: 600; }
+
+  .ks-home { opacity: 0; visibility: hidden; transition: opacity .5s, visibility 0s linear .5s; }
+  .ks-homeh { position: absolute; left: 0; top: 84px; width: 1440px; margin: 0; text-align: center; font-size: 34px; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; }
+  .ks-homesub { position: absolute; left: 0; top: 132px; width: 1440px; margin: 0; text-align: center; font: 13px "JetBrains Mono Variable", monospace; letter-spacing: .04em; color: var(--mut); }
+  .ks-scanpill { position: absolute; left: 1004px; top: 318px; width: 380px; display: flex; flex-direction: column; gap: 10px; }
+  .ks-scank { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .12em; color: #FF8A95; text-transform: uppercase; }
+  .ks-bod { width: 14px; height: 14px; border-radius: 50%; background: var(--r); box-shadow: 0 0 0 5px rgba(255, 42, 61, .18), 0 0 26px rgba(255, 42, 61, .9); margin-left: -7px; }
+  .ks-pill { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid var(--r); border-radius: 999px; padding: 5px 5px 5px 18px; background: rgba(10, 10, 12, .85); color: #6E737D; font-size: 15px; box-shadow: 0 0 34px rgba(255, 42, 61, .35); }
+  .ks-pill b { background: #E0102D; color: #fff; border-radius: 999px; padding: 10px 20px; }
+
+  .ks-po { opacity: 1; transform: none; transition: opacity .6s, transform .6s; transition-delay: var(--d, 0s); }
+  .ks-grow { stroke-dasharray: 640; stroke-dashoffset: 0; transition: stroke-dashoffset 1.1s cubic-bezier(.5, 0, .3, 1); transition-delay: var(--d, 0s); }
+
+  /* ── fáze průchodu (výjimky; výchozí = výsledek) ─────────────────────── */
+  .ks-scena[data-ph="home"] .ks-svet, .ks-scena[data-ph="pick"] .ks-svet, :global(html[data-pruchod]) .ks-scena .ks-svet { transform: none; }
+  .ks-scena[data-ph="home"] .ks-tree, .ks-scena[data-ph="pick"] .ks-tree, :global(html[data-pruchod]) .ks-scena .ks-tree { opacity: 1; }
+  .ks-scena[data-ph="home"] .ks-home, :global(html[data-pruchod]) .ks-scena .ks-home { opacity: 1; visibility: visible; transition: none; }
+  .ks-scena[data-ph="home"] .ks-hub, :global(html[data-pruchod]) .ks-scena .ks-hub { transform: none; box-shadow: 0 0 34px rgba(255, 42, 61, .55); }
+  .ks-scena[data-ph="home"] .ks-hubcore, :global(html[data-pruchod]) .ks-scena .ks-hubcore { background: #fff; }
+  .ks-scena[data-ph="home"] .ks-root, :global(html[data-pruchod]) .ks-scena .ks-root { stroke-width: 1.6; }
+  .ks-scena[data-ph="home"] .ks-po, .ks-scena[data-ph="pick"] .ks-po, .ks-scena[data-ph="dive"] .ks-po, :global(html[data-pruchod]) .ks-scena .ks-po { opacity: 0; transform: translateY(14px); visibility: hidden; transition: none; }
+  .ks-scena[data-ph="home"] .ks-grow, .ks-scena[data-ph="pick"] .ks-grow, .ks-scena[data-ph="dive"] .ks-grow, :global(html[data-pruchod]) .ks-scena .ks-grow { stroke-dashoffset: 640; transition: none; }
+  .ks-scena[data-ph="home"] .ks-newp, .ks-scena[data-ph="pick"] .ks-newp, .ks-scena[data-ph="dive"] .ks-newp, :global(html[data-pruchod]) .ks-scena .ks-newp { opacity: 0; }
+
+  /* výsledný stav */
+  .ks-hubl { position: absolute; left: 1104px; top: 241px; font-size: 13px; letter-spacing: .12em; color: #FF8A95; }
+  .ks-mod { position: absolute; top: 586px; width: 150px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .ks-mod:hover .ks-dot, .ks-mod:focus-visible .ks-dot { box-shadow: 0 0 0 6px rgba(255, 42, 61, .18), 0 0 46px rgba(255, 42, 61, .75); transform: scale(1.08); }
+  .ks-mod:focus-visible { outline: 2px solid #FF5A69; outline-offset: 6px; border-radius: 12px; }
+  .ks-mn { font-size: 18px; font-weight: 600; }
+  .ks-mp { font-size: 12px; color: var(--mut); line-height: 1.5; }
+  .ks-eyebrow { position: absolute; left: 80px; top: 214px; margin: 0; font-size: 12px; letter-spacing: .14em; color: #FF8A95; text-transform: uppercase; }
+  .ks-h1 { position: absolute; left: 80px; top: 246px; width: 600px; margin: 0; font-size: 54px; line-height: 1.06; letter-spacing: -.03em; font-weight: 700; }
+  .ks-h1 span { color: var(--r); }
+  .ks-sub { position: absolute; left: 80px; top: 450px; width: 520px; margin: 0; font-size: 17px; line-height: 1.6; color: var(--mut); }
+  .ks-akce { position: absolute; left: 80px; top: 548px; width: 520px; display: flex; flex-direction: column; gap: 14px; }
+  .ks-prikaz { border: 1px solid rgba(255, 255, 255, .12); background: rgba(10, 10, 12, .85); border-radius: 12px; padding: 14px 18px; font-size: 15px; color: #C9CDD6; }
+  .ks-pod { color: var(--mut2); }
+  .ks-tl { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .ks-btn { display: inline-block; background: #E0102D; color: #fff !important; font-weight: 600; font-size: 15px; padding: 14px 22px; border-radius: 999px; box-shadow: 0 0 34px rgba(255, 42, 61, .35); min-height: 44px; box-sizing: border-box; }
+  .ks-btn:hover { background: var(--r); }
+  .ks-link { color: #C9CDD6 !important; font-size: 15px; }
+  .ks-duvera { position: absolute; left: 80px; top: 690px; margin: 0; font-size: 12px; color: var(--mut2); letter-spacing: .04em; text-transform: uppercase; }
+
+  .ks-hlava { position: absolute; left: 0; top: 0; width: 1440px; box-sizing: border-box; padding: 28px 56px; display: flex; align-items: center; justify-content: space-between; }
+  .ks-znacka { display: flex; align-items: center; gap: 12px; }
+  .ks-znacka img { height: 38px; width: auto; display: block; }
+  .ks-cloud { font-size: 13px; color: var(--mut) !important; letter-spacing: .04em; }
+  .ks-nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
+  .ks-nav > a { color: #C9CDD6 !important; }
+  .ks-jazyky { display: inline-flex; gap: 2px; border: 1px solid #2A2D35; border-radius: 999px; padding: 2px; }
+  .ks-jazyky a { font: 600 12px "JetBrains Mono Variable", monospace; padding: 4px 10px; border-radius: 999px; color: #9AA0AB !important; }
+  .ks-jazyky a.akt { background: #E0102D; color: #fff !important; }
+  .ks-login { background: #E0102D; color: #fff !important; font-weight: 600; padding: 12px 20px; border-radius: 10px; }
+
+  /* mobil */
+  .ks-mobil { display: none; background: radial-gradient(ellipse 80% 40% at 50% 18%, #1A0709 0%, #050506 75%); padding-bottom: 40px; }
+  .ks-mhlava { padding: 18px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .ks-mhlava img { height: 30px; }
+  .ks-mlogin { font-size: 14px; font-weight: 600; padding: 12px 14px; border: 1px solid #2A2D35; border-radius: 10px; }
+  .ks-mstrom { height: 220px; opacity: .85; }
+  .ks-mstrom .ks-strom { position: static; width: 100%; height: 100%; }
+  .ks-mobsah { margin: 8px 16px 0; display: flex; flex-direction: column; gap: 14px; }
+  .ks-mobsah .ks-eyebrow, .ks-mobsah .ks-h1, .ks-mobsah .ks-sub, .ks-mobsah .ks-duvera { position: static; width: auto; }
+  .ks-mobsah .ks-h1 { font-size: 36px; }
+  .ks-mobsah .ks-sub { font-size: 15px; }
+  .ks-mobsah .ks-btn { text-align: center; }
+  .ks-mkarty { margin: 28px 16px 0; display: flex; flex-direction: column; gap: 10px; }
+  .ks-mkarty a { display: flex; align-items: center; gap: 14px; padding: 16px; border: 1px solid #23252C; border-radius: 14px; }
+  .ks-mk { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .ks-mk b { font-size: 17px; font-weight: 600; }
+  .ks-mk span { font-size: 13px; color: var(--mut); }
+  .ks-mnav { margin: 24px 16px 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+  .ks-mnav a { color: #C9CDD6 !important; padding: 6px 0; }
+
+  /* pod scénou */
+  .ks-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; box-sizing: border-box; }
+  .ks-sekce { padding: 96px 0; border-top: 1px solid rgba(255, 255, 255, .07); }
+  .ks-bez-horni { border-top: 0; padding-top: 0; }
+  .ks-prvni { padding-top: 56px; }
+  .ks-noc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .ks-karta { border: 1px solid rgba(255, 255, 255, .08); border-radius: 20px; padding: 36px; }
+  .ks-karta-r { border-color: rgba(255, 42, 61, .45); background: rgba(255, 42, 61, .05); }
+  .ks-cas { font-size: 44px; color: var(--mut2); }
+  .ks-kn { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
+  .ks-karta p { margin: 0; color: var(--mut); font-size: 16px; line-height: 1.6; }
+  .ks-h2 { margin: 0 0 28px; font-size: 32px; letter-spacing: -.025em; font-weight: 500; }
+  .ks-ctyri { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .ks-bod4 { border-top: 1px solid var(--r); padding-top: 16px; }
+  .ks-bn { font-weight: 600; margin-bottom: 6px; }
+  .ks-bod4 p { margin: 0; color: var(--mut); font-size: 14px; line-height: 1.55; }
+  .ks-cena { display: flex; justify-content: space-between; align-items: center; gap: 24px; border: 1px solid rgba(255, 255, 255, .10); border-radius: 20px; padding: 32px 40px; }
+  .ks-cn { font-size: 22px; font-weight: 500; }
+  .ks-cp { font-size: 15px; color: var(--mut); margin-top: 6px; }
+  .ks-bila { background: #fff; color: #050506 !important; font-weight: 600; font-size: 15px; padding: 14px 22px; border-radius: 99px; white-space: nowrap; }
+
+  @media (max-width: 819px) {
+    .ks-obal { display: none; }
+    .ks-mobil { display: block; }
+    .ks-wrap { padding: 0 16px; }
+    .ks-sekce { padding: 56px 0; }
+    .ks-bez-horni { padding-top: 0; }
+    .ks-noc, .ks-ctyri { grid-template-columns: 1fr; }
+    .ks-cena { flex-direction: column; align-items: stretch; padding: 24px 20px; text-align: left; }
+    .ks-bila { text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ks-pulse, .ks-run { display: none; }
+    .ks-svet, .ks-po, .ks-grow, .ks-tree, .ks-home { transition: none !important; }
+  }
+</style>
