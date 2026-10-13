@@ -6,7 +6,12 @@
 (function () {
   try {
     var html = document.documentElement;
-    var vynutit = /[?&]pruchod=1(&|$)/.test(location.search);
+    // Strom na grovetechai.com odkazuje na grovecloud.cz/#koren (referrer tam
+    // nejde použít — grovetechai.com posílá Referrer-Policy: no-referrer).
+    // Kotvu hned smažeme, aby se průchod při obnovení neopakoval.
+    var zeStromu = location.hash === "#koren";
+    if (zeStromu) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
+    var vynutit = zeStromu || /[?&]pruchod=1(&|$)/.test(location.search);
     if (!vynutit) {
       var r = document.referrer;
       if (!r) return;
