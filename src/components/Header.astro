@@ -8,7 +8,8 @@ const path = cista;
 const items = [
   { href: "/jak-to-funguje", label: t("nav.jak") },
   { href: "/bezpecnost", label: t("nav.bezpecnost") },
-  { href: "/cena", label: t("nav.cenik") },
+  // Nový ceník (13. 10. 2026): jeden balíček Grove — ceník je na grovetechai.com.
+  { href: jazyk === "en" ? "https://grovetechai.com/en/pricing" : "https://grovetechai.com/pricing", label: t("nav.cenik") },
   { href: "/stav", label: t("nav.stav") },
   { href: "/blog", label: t("nav.blog") },
 ];
@@ -31,7 +32,9 @@ const G = "https://grovetechai.com";
     <a class="by" href={G} rel="noopener">by Grove Tech AI</a>
   </span>
   <nav aria-label={t("a11y.hlavni")}>
-    {items.map((i) => <a href={l(i.href)} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
+    {items.map((i) => i.href.startsWith("http")
+      ? <a href={i.href} rel="noopener">{i.label}</a>
+      : <a href={l(i.href)} aria-current={path === i.href ? "page" : undefined}>{i.label}</a>)}
     {/* Odkaz na mateřský web patří do NAVIGACE, ne jen do drobného „by" u loga.
         Grove Cloud nemá působit jako cizí firma — za hostingem stojí produkty
         a reference, které prodávají i jeho. */}
