@@ -8,14 +8,17 @@
 // Žádný JavaScript (CSP `script-src 'self'` tu nic neřeší) — stránka je úplná
 // i bez skriptů.
 //
-// CENA: 690 Kč/web je zatím návrh z analýzy (claude/grove-wordpress-analyza).
-// Dokud ji Ondřej nepotvrdí, UKAZAT_CENU = false → místo ceny jen 14 dní zdarma.
-// Po potvrzení přepnout na true (a zkontrolovat CENA_WEB).
+// CENA (potvrzeno Ondřejem 26. 10. 2026): WordPress jede v balíčku Grove —
+// 990 Kč měsíčně (1 projekt v ceně, s Grove Check a Shield), každý další web
+// 690 Kč (GROVE_CENY_CZK.projektNavic v shared/grove-cenik.ts hlavního repa).
+// Čísla musí sedět s tím, co účtuje aplikace — při změně ceníku upravit tady.
+// 14 dní zdarma = zkušební doba Grove (GROVE_ZKUSEBNI_DNY).
 //
 // FAKTA o PHP2Shell (21. 10. 2026): první útoky 7:43 UTC = 9:43 SELČ, opravy
 // PHP 14:00 UTC = 16:00 SELČ, úřady v NL a FI weby preventivně vypnuly.
 // Zdroj: claude/linkedin-php2shell-kdo-ceka-2026-10-22 (CERT-EU 2026-018).
-const UKAZAT_CENU = false;
+const UKAZAT_CENU = true;
+const CENA_GROVE = 990;
 const CENA_WEB = 690;
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/jetbrains-mono";
@@ -66,8 +69,8 @@ const T = {
     dodP: "Jeden účet na desítky webů, souhrnný přehled a report pro každého klienta pod tvou hlavičkou. Vztah s klientem zůstává tvůj, provoz a bezpečnost držíme my.",
     dodCta: "Chci vědět víc",
     dodPredmet: "Grove WordPress pro dodavatele webů",
-    cena: UKAZAT_CENU ? `Grove WordPress ${KC(CENA_WEB)} měsíčně za web` : "Grove WordPress — 14 dní zdarma",
-    cenaPod: UKAZAT_CENU ? "14 dní zdarma bez karty. Prvních 10 webů přestěhujeme zdarma. Ceny bez DPH, faktura v korunách." : "Bez platební karty. Faktura v korunách, data v EU.",
+    cena: UKAZAT_CENU ? `Grove ${KC(CENA_GROVE)} měsíčně — první web v ceně, každý další ${KC(CENA_WEB)}` : "Grove WordPress — 14 dní zdarma",
+    cenaPod: UKAZAT_CENU ? "Včetně Grove Check a Grove Shield. 14 dní zdarma bez karty, prvních 10 webů přestěhujeme zdarma. Ceny bez DPH, faktura v korunách." : "Bez platební karty. Faktura v korunách, data v EU.",
     cenaCta: "Vyzkoušet zdarma",
     faqH: "Na co se ptáte.",
     faq: [
@@ -110,8 +113,8 @@ const T = {
     dodP: "One account for dozens of sites, a combined overview and a report for each client under your name. The client relationship stays yours; we run operations and security.",
     dodCta: "Tell me more",
     dodPredmet: "Grove WordPress for web agencies",
-    cena: UKAZAT_CENU ? `Grove WordPress ${KC(CENA_WEB)} per site per month` : "Grove WordPress — 14 days free",
-    cenaPod: UKAZAT_CENU ? "14 days free, no card. We move your first 10 sites for free. Prices excl. VAT." : "No credit card. Data in the EU.",
+    cena: UKAZAT_CENU ? `Grove ${KC(CENA_GROVE)} per month — first site included, each extra ${KC(CENA_WEB)}` : "Grove WordPress — 14 days free",
+    cenaPod: UKAZAT_CENU ? "Grove Check and Grove Shield included. 14 days free, no card; we move your first 10 sites for free. Prices excl. VAT." : "No credit card. Data in the EU.",
     cenaCta: "Try it free",
     faqH: "What people ask.",
     faq: [
@@ -154,8 +157,8 @@ const T = {
     dodP: "Jeden účet na desiatky webov, súhrnný prehľad a report pre každého klienta pod tvojou hlavičkou. Vzťah s klientom zostáva tvoj, prevádzku a bezpečnosť držíme my.",
     dodCta: "Chcem vedieť viac",
     dodPredmet: "Grove WordPress pre dodávateľov webov",
-    cena: UKAZAT_CENU ? `Grove WordPress ${KC(CENA_WEB)} mesačne za web` : "Grove WordPress — 14 dní zadarmo",
-    cenaPod: UKAZAT_CENU ? "14 dní zadarmo bez karty. Prvých 10 webov presťahujeme zadarmo. Ceny bez DPH." : "Bez platobnej karty. Dáta v EÚ.",
+    cena: UKAZAT_CENU ? `Grove ${KC(CENA_GROVE)} mesačne — prvý web v cene, každý ďalší ${KC(CENA_WEB)}` : "Grove WordPress — 14 dní zadarmo",
+    cenaPod: UKAZAT_CENU ? "Vrátane Grove Check a Grove Shield. 14 dní zadarmo bez karty, prvých 10 webov presťahujeme zadarmo. Ceny bez DPH." : "Bez platobnej karty. Dáta v EÚ.",
     cenaCta: "Vyskúšať zadarmo",
     faqH: "Na čo sa pýtate.",
     faq: [
