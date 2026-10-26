@@ -1,0 +1,435 @@
+---
+// Stránka grovecloud.cz/wordpress — Grove WordPress (návrh schválen 26. 10. 2026).
+//
+// Styl „Kořen“ jako úvod (HomeKoren.astro): tmavé pozadí, červená #FF2A3D,
+// Manrope + JetBrains Mono, karty 9:43 jako 3:14 na úvodu. Strom v hero je
+// kořen Grove WordPress a čtyři větve — to, co za zákazníka hlídáme.
+//
+// Žádný JavaScript (CSP `script-src 'self'` tu nic neřeší) — stránka je úplná
+// i bez skriptů.
+//
+// CENA: 690 Kč/web je zatím návrh z analýzy (claude/grove-wordpress-analyza).
+// Dokud ji Ondřej nepotvrdí, UKAZAT_CENU = false → místo ceny jen 14 dní zdarma.
+// Po potvrzení přepnout na true (a zkontrolovat CENA_WEB).
+//
+// FAKTA o PHP2Shell (21. 10. 2026): první útoky 7:43 UTC = 9:43 SELČ, opravy
+// PHP 14:00 UTC = 16:00 SELČ, úřady v NL a FI weby preventivně vypnuly.
+// Zdroj: claude/linkedin-php2shell-kdo-ceka-2026-10-22 (CERT-EU 2026-018).
+const UKAZAT_CENU = false;
+const CENA_WEB = 690;
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/jetbrains-mono";
+import { odkaz, cestaBezJazyka } from "../i18n/utils";
+import { JAZYKY, type Jazyk } from "../i18n/ui";
+import { appUrl } from "../lib/app-url";
+interface Props { jazyk: Jazyk }
+const { jazyk } = Astro.props;
+const l = (c: string) => odkaz(jazyk, c);
+const G = "https://grovetechai.com";
+const CENIK = jazyk === "en" ? `${G}/en/pricing` : `${G}/pricing`;
+const KC = (n: number) => jazyk === "en" ? `${n.toLocaleString("en-US")} CZK` : `${n.toLocaleString(jazyk === "sk" ? "sk-SK" : "cs-CZ")} Kč`;
+const cista = cestaBezJazyka(Astro.url);
+const jazyky = (Object.keys(JAZYKY) as Jazyk[]).map((j) => ({ kod: j, href: odkaz(j, cista), akt: j === jazyk }));
+const mail = (predmet: string) => `mailto:cloud@grovetechai.com?subject=${encodeURIComponent(predmet)}`;
+
+const T = {
+  cs: {
+    nav: [["Jak funguje", "/jak-to-funguje"], ["WordPress", "/wordpress"], ["Bezpečnost", "/bezpecnost"], ["Ceník", CENIK], ["Stav", "/stav"], ["Blog", "/blog"]],
+    login: "Přihlásit",
+    eyebrow: "Kořen provozu · WordPress",
+    h1: ["WordPress.", "Záplatujeme.", "Pohlídáme."],
+    sub: "Spravovaný WordPress v EU. Když vyjde díra v PHP, opravu nasadíme my. Když je zranitelný plugin, dozvíš se to od nás dřív než od útočníka.",
+    cta: "Vyzkoušet 14 dní zdarma",
+    stehovat: "Přestěhujeme ti web",
+    stehovatPredmet: "Stěhování WordPressu na Grove Cloud",
+    duvera: "PHP 8.4 · MariaDB · zálohy co 6 h · data v EU · bez karty",
+    koren: "GROVE WORDPRESS",
+    vetve: [["Záplaty", "PHP i WordPress, bez tvého kliknutí"], ["PHP štít", "při díře, než vyjde oprava"], ["Zálohy", "co 6 hodin, 2 servery"], ["Grove Check", "sken webu a pluginů v ceně"]],
+    pribehK: "Středa 21. října 2026 · díra v PHP (PHP2Shell)",
+    pribeh: [["Útoky začaly.", "Oprava PHP vyšla až v 16:00. Kdo čekal na hosting nebo správce, byl šest hodin pozadu. Úřady v Nizozemsku a Finsku weby radši vypnuly."], ["Štít nahoře.", "Na Grove Cloudu zapneme PHP štít na všech webech najednou: útok se zastaví dřív, než se dostane k PHP. Opravu pak nasadíme sami, jakmile vyjde — ty nemusíš dělat nic."]],
+    hlidameH: "Co hlídáme my.",
+    hlidame: [
+      ["Záplaty ve stejný den", "Nová verze PHP nebo WordPressu? Přestavíme nejdřív jeden web na zkoušku, pak ostatní. Když neprojde kontrolou, běží dál ta stará."],
+      ["PHP štít", "Virtuální záplata při díře, na kterou ještě není oprava. Zastaví útok před PHP — na všech webech jedním přepnutím."],
+      ["Zálohy co 6 hodin", "Databáze i média, kopie na druhém serveru a každý týden zkouška obnovy, že ze zálohy jde web opravdu vrátit."],
+      ["Grove Check v ceně", "Pravidelný sken webu. Zranitelný plugin? Dozvíš se to od nás dřív než od útočníka — i s tím, co aktualizovat."],
+    ],
+    vychoziK: "Zapnuté od prvního dne",
+    vychoziH: "Bezpečné nastavení, které nikdo nezapomene.",
+    vychoziP: "Všechny weby běží z jedné image, kterou udržujeme my. Žádný web není výjimka.",
+    vychozi: ["XML-RPC vypnuté", "žádné PHP v nahraných souborech", "verze WordPressu skrytá", "editor souborů v administraci vypnutý", "instalace jen s klíčem vlastníka", "pluginy se aktualizují samy", "web neběží jako root", "každý web v oddělené síti"],
+    hraniceH: "Jasná hranice.",
+    nase: ["Naše", "Server, PHP, jádro WordPressu, databáze, zálohy, bezpečnost a to, aby web běžel."],
+    tvoje: ["Tvoje", "Obsah, pluginy a vzhled. Když plugin web rozbije, vrátíme zálohu a řekneme ti, který to byl."],
+    dodK: "Připravujeme",
+    dodH: "Spravuješ weby obcí nebo firem?",
+    dodP: "Jeden účet na desítky webů, souhrnný přehled a report pro každého klienta pod tvou hlavičkou. Vztah s klientem zůstává tvůj, provoz a bezpečnost držíme my.",
+    dodCta: "Chci vědět víc",
+    dodPredmet: "Grove WordPress pro dodavatele webů",
+    cena: UKAZAT_CENU ? `Grove WordPress ${KC(CENA_WEB)} měsíčně za web` : "Grove WordPress — 14 dní zdarma",
+    cenaPod: UKAZAT_CENU ? "14 dní zdarma bez karty. Prvních 10 webů přestěhujeme zdarma. Ceny bez DPH, faktura v korunách." : "Bez platební karty. Faktura v korunách, data v EU.",
+    cenaCta: "Vyzkoušet zdarma",
+    faqH: "Na co se ptáte.",
+    faq: [
+      ["Jak se k vám web přestěhuje?", "Pošleš nám přístup ke stávajícímu hostingu nebo zálohu. Web přeneseme, otestujeme na naší adrese a teprve pak přepneme doménu."],
+      ["Co když plugin rozbije web?", "Vrátíme poslední zálohu (nejvýš 6 hodin starou) a řekneme ti, který plugin to byl."],
+      ["Posílá WordPress e-maily?", "Přes plugin pro SMTP a tvou e-mailovou službu. Pomůžeme ti ho nastavit."],
+      ["Kde jsou data?", "Na serverech v Norimberku (EU), zálohy na druhém serveru tamtéž. Žádný přenos mimo EU."],
+    ],
+  },
+  en: {
+    nav: [["How it works", "/jak-to-funguje"], ["WordPress", "/wordpress"], ["Security", "/bezpecnost"], ["Pricing", CENIK], ["Status", "/stav"], ["Blog", "/blog"]],
+    login: "Log in",
+    eyebrow: "The hosting root · WordPress",
+    h1: ["WordPress.", "We patch it.", "We watch it."],
+    sub: "Managed WordPress in the EU. When a PHP hole goes public, we roll out the fix. When a plugin is vulnerable, you hear it from us before an attacker finds it.",
+    cta: "Try 14 days free",
+    stehovat: "We'll move your site",
+    stehovatPredmet: "Moving a WordPress site to Grove Cloud",
+    duvera: "PHP 8.4 · MariaDB · backups every 6 h · EU data · no card",
+    koren: "GROVE WORDPRESS",
+    vetve: [["Patches", "PHP and WordPress, no clicks from you"], ["PHP shield", "for a hole before the fix ships"], ["Backups", "every 6 hours, 2 servers"], ["Grove Check", "site and plugin scans included"]],
+    pribehK: "Wednesday 21 October 2026 · PHP hole (PHP2Shell)",
+    pribeh: [["Attacks began.", "The PHP fix only shipped at 16:00. Anyone waiting for their host or admin was six hours behind. Government offices in the Netherlands and Finland took their sites offline."], ["Shield up.", "On Grove Cloud we switch on the PHP shield for every site at once: the attack stops before it reaches PHP. We then roll out the fix ourselves as soon as it ships — you don't have to do anything."]],
+    hlidameH: "What we watch.",
+    hlidame: [
+      ["Same-day patches", "New PHP or WordPress version? We rebuild one site first as a test, then the rest. If it fails the checks, the old one keeps running."],
+      ["PHP shield", "A virtual patch for a hole that has no fix yet. Stops the attack before PHP — on every site with one switch."],
+      ["Backups every 6 hours", "Database and media, a copy on a second server and a weekly restore drill proving the site really comes back."],
+      ["Grove Check included", "Regular site scans. Vulnerable plugin? You hear it from us before an attacker finds it — with what to update."],
+    ],
+    vychoziK: "On from day one",
+    vychoziH: "Secure settings nobody forgets.",
+    vychoziP: "Every site runs from one image that we maintain. No site is an exception.",
+    vychozi: ["XML-RPC off", "no PHP in uploaded files", "WordPress version hidden", "admin file editor off", "install only with the owner's key", "plugins update themselves", "site doesn't run as root", "each site on its own network"],
+    hraniceH: "A clear line.",
+    nase: ["Ours", "Server, PHP, WordPress core, database, backups, security and keeping the site up."],
+    tvoje: ["Yours", "Content, plugins and design. If a plugin breaks the site, we restore a backup and tell you which one it was."],
+    dodK: "Coming soon",
+    dodH: "Run websites for towns or companies?",
+    dodP: "One account for dozens of sites, a combined overview and a report for each client under your name. The client relationship stays yours; we run operations and security.",
+    dodCta: "Tell me more",
+    dodPredmet: "Grove WordPress for web agencies",
+    cena: UKAZAT_CENU ? `Grove WordPress ${KC(CENA_WEB)} per site per month` : "Grove WordPress — 14 days free",
+    cenaPod: UKAZAT_CENU ? "14 days free, no card. We move your first 10 sites for free. Prices excl. VAT." : "No credit card. Data in the EU.",
+    cenaCta: "Try it free",
+    faqH: "What people ask.",
+    faq: [
+      ["How does my site move to you?", "Send us access to your current hosting or a backup. We move the site, test it on our address and only then switch the domain."],
+      ["What if a plugin breaks the site?", "We restore the latest backup (at most 6 hours old) and tell you which plugin it was."],
+      ["Does WordPress send emails?", "Through an SMTP plugin and your email service. We'll help you set it up."],
+      ["Where is the data?", "On servers in Nuremberg (EU), backups on a second server there too. Nothing leaves the EU."],
+    ],
+  },
+  sk: {
+    nav: [["Ako funguje", "/jak-to-funguje"], ["WordPress", "/wordpress"], ["Bezpečnosť", "/bezpecnost"], ["Cenník", CENIK], ["Stav", "/stav"], ["Blog", "/blog"]],
+    login: "Prihlásiť",
+    eyebrow: "Koreň prevádzky · WordPress",
+    h1: ["WordPress.", "Záplatujeme.", "Postrážime."],
+    sub: "Spravovaný WordPress v EÚ. Keď vyjde diera v PHP, opravu nasadíme my. Keď je zraniteľný plugin, dozvieš sa to od nás skôr ako od útočníka.",
+    cta: "Vyskúšať 14 dní zadarmo",
+    stehovat: "Presťahujeme ti web",
+    stehovatPredmet: "Sťahovanie WordPressu na Grove Cloud",
+    duvera: "PHP 8.4 · MariaDB · zálohy každých 6 h · dáta v EÚ · bez karty",
+    koren: "GROVE WORDPRESS",
+    vetve: [["Záplaty", "PHP aj WordPress, bez tvojho kliknutia"], ["PHP štít", "pri diere, kým vyjde oprava"], ["Zálohy", "každých 6 hodín, 2 servery"], ["Grove Check", "sken webu a pluginov v cene"]],
+    pribehK: "Streda 21. októbra 2026 · diera v PHP (PHP2Shell)",
+    pribeh: [["Útoky začali.", "Oprava PHP vyšla až o 16:00. Kto čakal na hosting alebo správcu, bol šesť hodín pozadu. Úrady v Holandsku a Fínsku weby radšej vypli."], ["Štít hore.", "Na Grove Cloude zapneme PHP štít na všetkých weboch naraz: útok sa zastaví skôr, než sa dostane k PHP. Opravu potom nasadíme sami, hneď ako vyjde — ty nemusíš robiť nič."]],
+    hlidameH: "Čo strážime my.",
+    hlidame: [
+      ["Záplaty v ten istý deň", "Nová verzia PHP alebo WordPressu? Prestavíme najprv jeden web na skúšku, potom ostatné. Keď neprejde kontrolou, beží ďalej tá stará."],
+      ["PHP štít", "Virtuálna záplata pri diere, na ktorú ešte nie je oprava. Zastaví útok pred PHP — na všetkých weboch jedným prepnutím."],
+      ["Zálohy každých 6 hodín", "Databáza aj médiá, kópia na druhom serveri a každý týždeň skúška obnovy, že zo zálohy sa web naozaj vráti."],
+      ["Grove Check v cene", "Pravidelný sken webu. Zraniteľný plugin? Dozvieš sa to od nás skôr ako od útočníka — aj s tým, čo aktualizovať."],
+    ],
+    vychoziK: "Zapnuté od prvého dňa",
+    vychoziH: "Bezpečné nastavenie, na ktoré nikto nezabudne.",
+    vychoziP: "Všetky weby bežia z jednej image, ktorú udržiavame my. Žiadny web nie je výnimka.",
+    vychozi: ["XML-RPC vypnuté", "žiadne PHP v nahraných súboroch", "verzia WordPressu skrytá", "editor súborov v administrácii vypnutý", "inštalácia len s kľúčom vlastníka", "pluginy sa aktualizujú samy", "web nebeží ako root", "každý web v oddelenej sieti"],
+    hraniceH: "Jasná hranica.",
+    nase: ["Naše", "Server, PHP, jadro WordPressu, databáza, zálohy, bezpečnosť a to, aby web bežal."],
+    tvoje: ["Tvoje", "Obsah, pluginy a vzhľad. Keď plugin web rozbije, vrátime zálohu a povieme ti, ktorý to bol."],
+    dodK: "Pripravujeme",
+    dodH: "Spravuješ weby obcí alebo firiem?",
+    dodP: "Jeden účet na desiatky webov, súhrnný prehľad a report pre každého klienta pod tvojou hlavičkou. Vzťah s klientom zostáva tvoj, prevádzku a bezpečnosť držíme my.",
+    dodCta: "Chcem vedieť viac",
+    dodPredmet: "Grove WordPress pre dodávateľov webov",
+    cena: UKAZAT_CENU ? `Grove WordPress ${KC(CENA_WEB)} mesačne za web` : "Grove WordPress — 14 dní zadarmo",
+    cenaPod: UKAZAT_CENU ? "14 dní zadarmo bez karty. Prvých 10 webov presťahujeme zadarmo. Ceny bez DPH." : "Bez platobnej karty. Dáta v EÚ.",
+    cenaCta: "Vyskúšať zadarmo",
+    faqH: "Na čo sa pýtate.",
+    faq: [
+      ["Ako sa k vám web presťahuje?", "Pošleš nám prístup k súčasnému hostingu alebo zálohu. Web prenesieme, otestujeme na našej adrese a až potom prepneme doménu."],
+      ["Čo keď plugin rozbije web?", "Vrátime poslednú zálohu (najviac 6 hodín starú) a povieme ti, ktorý plugin to bol."],
+      ["Posiela WordPress e-maily?", "Cez plugin pre SMTP a tvoju e-mailovú službu. Pomôžeme ti ho nastaviť."],
+      ["Kde sú dáta?", "Na serveroch v Norimbergu (EÚ), zálohy na druhom serveri tamtiež. Žiadny prenos mimo EÚ."],
+    ],
+  },
+}[jazyk];
+
+const href = (h: string) => (h.startsWith("http") ? h : l(h));
+---
+<div class="wp">
+  <header class="wp-hlava">
+    <span class="wp-znacka">
+      <a href={G} aria-label="Grove Tech AI"><img src="/grove-logo-white.png" alt="Grove Tech AI" width="116" height="38" /></a>
+      <a class="wp-mono wp-cloud" href={l("/")}>/ cloud</a>
+    </span>
+    <nav class="wp-nav" aria-label="Menu">
+      {T.nav.map(([n, h]) => (
+        <a href={href(h)} rel={h.startsWith("http") ? "noopener" : undefined} aria-current={h === "/wordpress" ? "page" : undefined} class:list={{ akt: h === "/wordpress" }}>{n}</a>
+      ))}
+      <span class="wp-jazyky" role="group" aria-label="Jazyk">
+        {jazyky.map((j) => <a href={j.href} hreflang={j.kod} aria-current={j.akt ? "true" : undefined} class:list={{ akt: j.akt }}>{j.kod.toUpperCase()}</a>)}
+      </span>
+      <a class="wp-login" href={appUrl("nav-login")} rel="noopener">{T.login}</a>
+    </nav>
+    <a class="wp-mlogin" href={appUrl("nav-login")} rel="noopener">{T.login}</a>
+  </header>
+
+  <section class="wp-hero">
+    <div class="wp-text">
+      <p class="wp-mono wp-eyebrow">{T.eyebrow}</p>
+      <h1 class="wp-h1">{T.h1[0]}<br />{T.h1[1]}<br /><span>{T.h1[2]}</span></h1>
+      <p class="wp-sub">{T.sub}</p>
+      <div class="wp-tl">
+        <a class="wp-btn" href={appUrl("wp-hero")} rel="noopener">{T.cta}</a>
+        <a class="wp-link" href={mail(T.stehovatPredmet)}>{T.stehovat} →</a>
+      </div>
+      <p class="wp-mono wp-duvera">{T.duvera}</p>
+    </div>
+
+    <div class="wp-strom" aria-hidden="true">
+      <div class="wp-koren">
+        <span class="wp-dot wp-dot-velka"><span></span></span>
+        <span class="wp-mono wp-korenl">{T.koren}</span>
+      </div>
+      <div class="wp-kmen"></div>
+      <div class="wp-vetve">
+        {T.vetve.map(([n, p]) => (
+          <div class="wp-vetev">
+            <span class="wp-dot"><span></span></span>
+            <b>{n}</b>
+            <span class="wp-mono">{p}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce wp-sekce-cara">
+    <div class="wp-wrap">
+      <p class="wp-mono wp-kicker">{T.pribehK}</p>
+      <div class="wp-dve">
+        <div class="wp-karta"><div class="wp-mono wp-cas">9:43</div><h2 class="wp-kn">{T.pribeh[0][0]}</h2><p>{T.pribeh[0][1]}</p></div>
+        <div class="wp-karta wp-karta-r"><div class="wp-mono wp-cas wp-r">9:43</div><h2 class="wp-kn">{T.pribeh[1][0]}</h2><p>{T.pribeh[1][1]}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce">
+    <div class="wp-wrap">
+      <h2 class="wp-h2">{T.hlidameH}</h2>
+      <div class="wp-ctyri">
+        {T.hlidame.map(([n, p]) => <div class="wp-bod4"><h3>{n}</h3><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce wp-sekce-mala">
+    <div class="wp-wrap">
+      <div class="wp-box wp-vychozi">
+        <div class="wp-vychozi-t">
+          <p class="wp-mono wp-kicker wp-r">{T.vychoziK}</p>
+          <h2 class="wp-h2b">{T.vychoziH}</h2>
+          <p class="wp-p">{T.vychoziP}</p>
+        </div>
+        <ul class="wp-mono wp-seznam">
+          {T.vychozi.map((x) => <li><span class="wp-r" aria-hidden="true">✓</span> {x}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce">
+    <div class="wp-wrap">
+      <h2 class="wp-h2">{T.hraniceH}</h2>
+      <div class="wp-dve">
+        <div class="wp-karta wp-karta-r"><h3 class="wp-r">{T.nase[0]}</h3><p>{T.nase[1]}</p></div>
+        <div class="wp-karta"><h3>{T.tvoje[0]}</h3><p>{T.tvoje[1]}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce wp-sekce-mala">
+    <div class="wp-wrap">
+      <div class="wp-box wp-radek">
+        <div class="wp-radek-t">
+          <span class="wp-mono wp-stitek">{T.dodK}</span>
+          <h2 class="wp-h2b">{T.dodH}</h2>
+          <p class="wp-p">{T.dodP}</p>
+        </div>
+        <a class="wp-obrys" href={mail(T.dodPredmet)}>{T.dodCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce wp-sekce-mala">
+    <div class="wp-wrap">
+      <div class="wp-cena">
+        <div><div class="wp-cn">{T.cena}</div><div class="wp-cp">{T.cenaPod}</div></div>
+        <a class="wp-bila" href={appUrl("wp-cena")} rel="noopener">{T.cenaCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wp-sekce">
+    <div class="wp-wrap">
+      <h2 class="wp-h2">{T.faqH}</h2>
+      <div class="wp-faq">
+        {T.faq.map(([q, a]) => <div><h3>{q}</h3><p>{a}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <nav class="wp-mnav" aria-label="Menu">{T.nav.map(([n, h]) => <a href={href(h)} aria-current={h === "/wordpress" ? "page" : undefined}>{n}</a>)}</nav>
+</div>
+
+<style>
+  .wp { --r: #FF2A3D; --ink: #F2F3F5; --mut: #A3A8B3; --mut2: #6E737D; background: #050506; color: var(--ink); font-family: "Manrope Variable", Manrope, system-ui, sans-serif; overflow-x: clip; }
+  .wp a { color: var(--ink); text-decoration: none; }
+  .wp a:hover { color: #fff; }
+  .wp a:focus-visible { outline: 2px solid #FF5A69; outline-offset: 4px; border-radius: 8px; }
+  .wp h1, .wp h2, .wp h3, .wp p { margin: 0; }
+  .wp-mono { font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace; }
+  .wp-r { color: var(--r) !important; }
+
+  /* hlavička — stejná jako na úvodu */
+  .wp-hlava { max-width: 1440px; margin: 0 auto; box-sizing: border-box; padding: 28px 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .wp-znacka { display: flex; align-items: center; gap: 12px; }
+  .wp-znacka img { height: 38px; width: auto; display: block; }
+  .wp-cloud { font-size: 13px; color: var(--mut) !important; letter-spacing: .04em; }
+  .wp-nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
+  .wp-nav > a { color: #C9CDD6 !important; }
+  .wp-nav > a.akt { color: var(--ink) !important; font-weight: 600; box-shadow: inset 0 -2px 0 var(--r); padding-bottom: 3px; }
+  .wp-jazyky { display: inline-flex; gap: 2px; border: 1px solid #2A2D35; border-radius: 999px; padding: 2px; }
+  .wp-jazyky a { font: 600 12px "JetBrains Mono Variable", monospace; padding: 4px 10px; border-radius: 999px; color: #9AA0AB !important; }
+  .wp-jazyky a.akt { background: #E0102D; color: #fff !important; }
+  .wp-login { background: #E0102D; color: #fff !important; font-weight: 600; padding: 12px 20px; border-radius: 10px; }
+  .wp-mnav { display: none; margin: 0 16px 40px; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+  .wp-mnav a { color: #C9CDD6 !important; padding: 6px 0; }
+  .wp-mnav a[aria-current] { color: var(--ink) !important; font-weight: 600; }
+  .wp-mlogin { display: none; font-size: 14px; font-weight: 600; padding: 12px 14px; border: 1px solid #2A2D35; border-radius: 10px; }
+
+  /* hero */
+  .wp-hero { max-width: 1440px; margin: 0 auto; box-sizing: border-box; padding: 72px 80px 104px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: center; background: radial-gradient(ellipse 40% 50% at 72% 45%, #16060A 0%, rgba(5, 5, 6, 0) 72%); }
+  .wp-text { display: flex; flex-direction: column; gap: 22px; }
+  .wp-eyebrow { font-size: 12px; letter-spacing: .14em; color: #FF8A95; text-transform: uppercase; }
+  .wp-h1 { font-size: 58px; line-height: 1.04; letter-spacing: -.035em; font-weight: 700; }
+  .wp-h1 span { color: var(--r); }
+  .wp-sub { font-size: 18px; line-height: 1.6; color: var(--mut); max-width: 540px; }
+  .wp-tl { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+  .wp-btn { display: inline-block; background: #E0102D; color: #fff !important; font-weight: 600; font-size: 15px; padding: 14px 22px; border-radius: 999px; box-shadow: 0 0 34px rgba(255, 42, 61, .35); min-height: 44px; box-sizing: border-box; }
+  .wp-btn:hover { background: var(--r); }
+  .wp-link { color: #C9CDD6 !important; font-size: 15px; padding: 10px 0; }
+  .wp-duvera { font-size: 12px; color: var(--mut2); letter-spacing: .06em; text-transform: uppercase; }
+
+  /* strom: kořen + 4 větve */
+  .wp-strom { display: flex; flex-direction: column; align-items: center; }
+  .wp-koren { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .wp-korenl { font-size: 12px; letter-spacing: .14em; color: #FF8A95; }
+  .wp-dot { width: 30px; height: 30px; border-radius: 50%; background: #0B0B0D; border: 2px solid var(--r); box-shadow: 0 0 30px rgba(255, 42, 61, .5); display: flex; align-items: center; justify-content: center; flex: none; position: relative; z-index: 1; }
+  .wp-dot > span { width: 9px; height: 9px; border-radius: 50%; background: var(--r); }
+  .wp-dot-velka { width: 60px; height: 60px; box-shadow: 0 0 0 8px rgba(255, 42, 61, .14), 0 0 70px rgba(255, 42, 61, .8); }
+  .wp-dot-velka > span { width: 16px; height: 16px; }
+  .wp-kmen { width: 2px; height: 56px; background: linear-gradient(var(--r), rgba(255, 42, 61, .7)); margin-top: 12px; }
+  .wp-vetve { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); position: relative; }
+  /* vodorovná větev mezi středy krajních sloupců (12,5 % → 87,5 %) */
+  .wp-vetve::before { content: ""; position: absolute; top: 0; left: 12.5%; right: 12.5%; height: 2px; background: rgba(255, 42, 61, .7); }
+  .wp-vetev { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 0 6px; }
+  .wp-vetev::before { content: ""; width: 2px; height: 46px; background: rgba(255, 42, 61, .7); margin-bottom: -10px; }
+  .wp-vetev b { font-size: 17px; font-weight: 600; margin-top: 4px; }
+  .wp-vetev .wp-mono { font-size: 11.5px; line-height: 1.5; color: var(--mut); max-width: 150px; }
+
+  /* sekce */
+  .wp-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; box-sizing: border-box; }
+  .wp-sekce { padding: 0 0 96px; }
+  .wp-sekce-cara { border-top: 1px solid rgba(255, 255, 255, .07); padding-top: 96px; }
+  .wp-sekce-mala { padding-bottom: 72px; }
+  .wp-kicker { font-size: 12px; letter-spacing: .14em; color: var(--mut); text-transform: uppercase; margin-bottom: 24px !important; }
+  .wp-dve { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .wp-karta { border: 1px solid rgba(255, 255, 255, .08); border-radius: 20px; padding: 36px; display: flex; flex-direction: column; gap: 10px; }
+  .wp-karta-r { border-color: rgba(255, 42, 61, .45); background: rgba(255, 42, 61, .05); }
+  .wp-karta h3 { font-size: 18px; font-weight: 600; }
+  .wp-karta p { color: var(--mut); font-size: 16px; line-height: 1.65; }
+  .wp-cas { font-size: 44px; color: var(--mut2); }
+  .wp-kn { font-size: 26px; font-weight: 600; letter-spacing: -.02em; }
+  .wp-h2 { margin: 0 0 32px !important; font-size: 32px; letter-spacing: -.025em; font-weight: 500; }
+  .wp-ctyri { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+  .wp-bod4 { border-top: 1px solid var(--r); padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .wp-bod4 h3 { font-size: 16px; font-weight: 600; }
+  .wp-bod4 p { color: var(--mut); font-size: 14px; line-height: 1.6; }
+
+  .wp-box { border: 1px solid rgba(255, 255, 255, .10); border-radius: 20px; padding: 40px; }
+  .wp-h2b { font-size: 26px; letter-spacing: -.02em; font-weight: 600; line-height: 1.25; }
+  .wp-p { color: var(--mut); font-size: 15px; line-height: 1.6; }
+  .wp-vychozi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 40px; align-items: start; background: #0A0A0C; }
+  .wp-vychozi-t { display: flex; flex-direction: column; gap: 12px; }
+  .wp-vychozi-t .wp-kicker { margin-bottom: 0 !important; }
+  .wp-seznam { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 28px; font-size: 13px; color: #D0D3D9; line-height: 1.5; }
+  .wp-radek { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .wp-radek-t { display: flex; flex-direction: column; gap: 12px; max-width: 720px; }
+  .wp-stitek { align-self: flex-start; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #C9CDD6; border: 1px solid #3A3B42; border-radius: 999px; padding: 5px 10px; }
+  .wp-obrys { border: 1px solid #3A3B42; border-radius: 999px; padding: 13px 22px; font-weight: 600; font-size: 15px; white-space: nowrap; }
+  .wp-obrys:hover { border-color: var(--r); }
+  .wp-cena { display: flex; justify-content: space-between; align-items: center; gap: 24px; border: 1px solid rgba(255, 42, 61, .35); border-radius: 20px; padding: 32px 40px; background: rgba(255, 42, 61, .04); }
+  .wp-cn { font-size: 22px; font-weight: 600; }
+  .wp-cp { font-size: 15px; color: var(--mut); margin-top: 6px; }
+  .wp-bila { background: #fff; color: #050506 !important; font-weight: 600; font-size: 15px; padding: 14px 22px; border-radius: 99px; white-space: nowrap; }
+  .wp-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 48px; }
+  .wp-faq > div { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid rgba(255, 255, 255, .08); padding-top: 18px; }
+  .wp-faq h3 { font-size: 17px; font-weight: 600; }
+  .wp-faq p { color: var(--mut); font-size: 15px; line-height: 1.6; }
+
+  @media (max-width: 1180px) {
+    .wp-hlava { padding: 24px 32px; }
+    .wp-nav { gap: 16px; font-size: 14px; }
+    .wp-hero { padding: 48px 32px 88px; gap: 40px; }
+    .wp-h1 { font-size: 48px; }
+  }
+  @media (max-width: 1023px) {
+    .wp-nav { display: none; }
+    .wp-mlogin { display: inline-block; }
+    .wp-mnav { display: flex; }
+    .wp-hero { grid-template-columns: 1fr; }
+    .wp-ctyri { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .wp-vychozi { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 819px) {
+    .wp-hlava { padding: 18px 16px; }
+    .wp-znacka img { height: 30px; }
+    .wp-hero { padding: 24px 16px 56px; background: radial-gradient(ellipse 80% 40% at 50% 70%, #1A0709 0%, rgba(5, 5, 6, 0) 75%); }
+    .wp-h1 { font-size: 38px; }
+    .wp-sub { font-size: 16px; }
+    .wp-tl { flex-direction: column; align-items: stretch; gap: 8px; }
+    .wp-btn { text-align: center; }
+    .wp-link { text-align: center; }
+    /* strom na mobilu: kořen a pod ním karty větví (jako na úvodu) */
+    .wp-kmen { height: 28px; }
+    .wp-vetve { grid-template-columns: 1fr; gap: 10px; }
+    .wp-vetve::before, .wp-vetev::before { display: none; }
+    .wp-vetev { flex-direction: row; text-align: left; gap: 14px; padding: 14px 16px; border: 1px solid #23252C; border-radius: 14px; flex-wrap: wrap; }
+    .wp-vetev b { margin: 0; }
+    .wp-vetev .wp-mono { max-width: none; flex-basis: 100%; padding-left: 44px; margin-top: -8px; }
+    .wp-wrap { padding: 0 16px; }
+    .wp-sekce { padding-bottom: 56px; }
+    .wp-sekce-cara { padding-top: 56px; }
+    .wp-dve, .wp-ctyri, .wp-faq, .wp-seznam { grid-template-columns: 1fr; }
+    .wp-karta, .wp-box { padding: 24px 20px; }
+    .wp-cas { font-size: 36px; }
+    .wp-kn { font-size: 22px; }
+    .wp-h2 { font-size: 26px; margin-bottom: 24px !important; }
+    .wp-radek, .wp-cena { flex-direction: column; align-items: stretch; padding: 24px 20px; }
+    .wp-obrys, .wp-bila { text-align: center; }
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+/**
+ * Grove WordPress — spravovaný WordPress na Grove Cloudu (26. 10. 2026).
+ * Texty cs/en/sk v `src/components/WordpressKoren.astro`, tmavý styl „Kořen“
+ * jako úvod. Stránka se zveřejní až po nasazení platformy (šablona WordPress,
+ * MariaDB, PHP štít) — slibuje jen to, co aplikace umí.
+ */
+import Base from "../layouts/Base.astro";
+import WordpressKoren from "../components/WordpressKoren.astro";
+import { prekladacZUrl } from "../i18n/utils";
+const { jazyk, t } = prekladacZUrl(Astro.url);
+---
+<Base title={t("meta.wordpress.t")} description={t("meta.wordpress.d")} path="/wordpress" tmava>
+  <WordpressKoren jazyk={jazyk} />
+</Base>

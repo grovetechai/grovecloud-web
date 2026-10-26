@@ -10,7 +10,8 @@ export const APP_BASE = "https://grovetechai.com/grovecloud";
 
 export type AppCampaign =
   | "nav-login" | "hero" | "jak" | "faq" | "final"
-  | `cenik-${string}`;
+  | `cenik-${string}`
+  | `wp-${string}`;
 
 export function appUrl(campaign: AppCampaign): string {
   const q = new URLSearchParams({

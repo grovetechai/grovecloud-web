@@ -21,6 +21,11 @@ a runtime ochranu AI GroveDefender.
   restart nebo eskalace na člověka.
 - **Zálohy a rollback.** Verzované image, návrat na předchozí verzi jedním
   kliknutím.
+- **Spravovaný WordPress (Grove WordPress).** Šablona WordPressu na PHP 8.4
+  a MariaDB. Nové verze image PHP/WordPressu nasazujeme sami (nejdřív jeden
+  web na zkoušku, pak ostatní). Při díře v PHP bez opravy můžeme na všech
+  WordPressech zapnout PHP štít (Caddy zastaví nahrávání souborů multipart
+  dřív, než se dostane k PHP). Zálohy databáze a wp-content co 6 hodin.
 
 ## Co Grove Cloud nedělá
 
@@ -35,6 +40,9 @@ Tohle je tu schválně — model, který cituje jen marketingová tvrzení, uved
   ne všech.
 - Automatické nasazení po `git push` vyžaduje jednorázové vložení webhooku do
   repozitáře. Adresu i tajemství vygenerujeme, vložit je musí zákazník.
+- U WordPressu odpovídáme za server, PHP, jádro, databázi a zálohy. Pluginy,
+  šablony a obsah jsou zákazníka; pluginy se aktualizují samy, ale za jejich
+  kód neručíme. PHP štít je dočasná ochrana, ne náhrada opravy.
 
 ## Ceny
 
@@ -54,6 +62,7 @@ zastarat.
 
 - [Úvod](https://grovecloud.cz/): přehled služby
 - [Jak to funguje](https://grovecloud.cz/jak-to-funguje): cesta od repozitáře k běžící aplikaci
+- [WordPress](https://grovecloud.cz/wordpress): spravovaný WordPress, záplaty a PHP štít
 - [Bezpečnost](https://grovecloud.cz/bezpecnost): co se kontroluje a co ne
 - [Ceník](https://grovecloud.cz/cena): tarify a jak se cena počítá
 - [Stav služby](https://grovecloud.cz/stav): živý stav, měřeno každých 10 minut

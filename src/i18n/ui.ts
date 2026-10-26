@@ -300,6 +300,12 @@ export const ui = {
     en: "Connect GitHub and launch your app in a European cloud. After every deployment GroveCheck scans it ({n} checks), AI GroveDefender protects it at runtime and we check availability every 10 minutes. Static sites from {cena}.",
     sk: "Pripojte GitHub a spustite aplikáciu v európskom cloude. Po každom nasadení ju preverí GroveCheck ({n} kontrol), za behu ju chráni AI GroveDefender a dostupnosť strážime každých 10 minút. Statický web od {cena}.",
   },
+  "meta.wordpress.t": { cs: "WordPress — záplatujeme a pohlídáme | Grove Cloud", en: "WordPress — we patch it and watch it | Grove Cloud", sk: "WordPress — záplatujeme a postrážime | Grove Cloud" },
+  "meta.wordpress.d": {
+    cs: "Spravovaný WordPress v EU: záplaty PHP a WordPressu za tebe, PHP štít při zero-day, zálohy co 6 hodin na dvou serverech a Grove Check v ceně.",
+    en: "Managed WordPress in the EU: PHP and WordPress patches done for you, a PHP shield for zero-days, backups every 6 hours on two servers and Grove Check included.",
+    sk: "Spravovaný WordPress v EÚ: záplaty PHP a WordPressu za teba, PHP štít pri zero-day, zálohy každých 6 hodín na dvoch serveroch a Grove Check v cene.",
+  },
   "meta.cena.t": { cs: "Cena — Grove Cloud", en: "Pricing — Grove Cloud", sk: "Cena — Grove Cloud" },
   "meta.jak.t": { cs: "Jak to funguje — Grove Cloud", en: "How it works — Grove Cloud", sk: "Ako to funguje — Grove Cloud" },
   "meta.bezp.t": { cs: "Bezpečnost — Grove Cloud", en: "Security — Grove Cloud", sk: "Bezpečnosť — Grove Cloud" },
@@ -764,6 +770,7 @@ export const ui = {
   },
 
   "nav.blog": { cs: "Blog", en: "Blog", sk: "Blog" },
+  "nav.wordpress": { cs: "WordPress", en: "WordPress", sk: "WordPress" },
   "meta.blog.t": { cs: "Blog — Grove Cloud", en: "Blog — Grove Cloud", sk: "Blog — Grove Cloud" },
   "meta.blog.d": {
     cs: "Co jsme nasadili, změřili a co z toho vyšlo. Články o bezpečném hostingu appek a AI agentů — s čísly, daty a odkazy na repa.",
